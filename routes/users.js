@@ -3,7 +3,7 @@ const express = require( "express" )
 
 // —— Route index
 router.get( "/", ( req, res, next ) => {
-    res.render( "Tuduuuuuuu", { } );
+    res.render( "users", { } );
 });
 
 module.exports = router;
