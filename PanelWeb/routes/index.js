@@ -17,4 +17,13 @@ router.get( "/test", async ( req, res, next ) => {
 
 });
 
+router.get( "/testuser", async ( req, res, next ) => {
+
+    const pmx = req.app.get( "pmx" );
+    let VMS = await pmx.getVMs( );
+
+    res.render( "testuser", { VMS } );
+
+});
+
 module.exports = router;

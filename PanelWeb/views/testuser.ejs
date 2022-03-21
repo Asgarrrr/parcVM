@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <title>Test module utilisateur</title>
+    </head>
+
+    <body>
+
+        <main class="container">
+
+            <h1> Module de test espace utilisateur </h1>
+
+            <div class="card">
+
+                <div class="card-body">
+                    <button id="startVMs"       type="button" class="btn btn-warning">Démarrer</button>
+                    <button id="stopVMs"        type="button" class="btn btn-warning">Stopper</button>
+                    <button id="restartButton"  type="button" class="btn btn-warning">Redémarrer</button>
+
+                </div>
+
+            </div>
+
+            <table class="table" id="vmTable">
+
+                <thead>
+                    <tr>
+                        <th scope="col">
+                            <input class="form-check-input" type="checkbox" id="checkAll" />
+                        </th>
+                        <th scope="col">ID</th>
+                        <th scope="col">Nom</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Actions</th>
+
+                    </tr>
+                </thead>
+
+                <tbody id="VMContent">
+
+                    <% for (let VM of VMS) { %>
+                        <tr id="VM-<%= VM.vmid %>">
+                            <td>
+                                <input class="form-check-input" type="checkbox" />
+                            </td>
+                            <td><%= VM.vmid %></td>
+                            <td id="VM-<%= VM.vmid %>-name"><%= VM.name %></td>
+                            <td id="VM-<%= VM.vmid %>-status"><%= VM.status %></td>
+                            <td>
+
+                            </td>
+                        </tr>
+                    <% } %>
+
+                </tbody>
+
+            </table>
+
+        </main>
+
+    </body>
+
+    <script src="/javascripts/appuser.js"></script>
+
+</html>
