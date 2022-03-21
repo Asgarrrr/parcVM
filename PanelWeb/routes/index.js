@@ -8,4 +8,13 @@ router.get( "/", ( req, res, next ) => {
     } );
 });
 
+router.get( "/test", async ( req, res, next ) => {
+
+    const pmx = req.app.get( "pmx" );
+    let VMS = await pmx.getVMs( );
+
+    res.render( "test", { VMS } );
+
+});
+
 module.exports = router;
