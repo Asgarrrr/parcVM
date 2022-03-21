@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <title>Test</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+        <link rel="stylesheet" href="/stylesheets/style.css" />
+    </head>
+
+    <body>
+
+        <main class="container">
+
+            <h1> Module de test </h1>
+
+            <div class="card">
+
+                <div class="card-body">
+                    <button id="stopVMs"        type="button" class="btn btn-primary">Stopper</button>
+                    <button id="startVMs"       type="button" class="btn btn-primary">Démarrer</button>
+                    <button id="restartButton"  type="button" class="btn btn-primary">Redémarrer</button>
+                    <button id="deleteVMs"      type="button" class="btn btn-primary">Supprimer</button>
+                    <button id="creButton"      type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createModal">Créer</button>
+
+                </div>
+
+            </div>
+
+            <table class="table" id="vmTable">
+
+                <thead>
+                    <tr>
+                        <th scope="col">
+                            <input class="form-check-input" type="checkbox" id="checkAll" />
+                        </th>
+                        <th scope="col">ID</th>
+                        <th scope="col">Nom</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Actions</th>
+
+                    </tr>
+                </thead>
+
+                <tbody id="VMContent">
+
+                    <% for (let VM of VMS) { %>
+                        <tr id="VM-<%= VM.vmid %>">
+                            <td>
+                                <input class="form-check-input" type="checkbox" />
+                            </td>
+                            <td><%= VM.vmid %></td>
+                            <td id="VM-<%= VM.vmid %>-name"><%= VM.name %></td>
+                            <td id="VM-<%= VM.vmid %>-status"><%= VM.status %></td>
+                            <td>
+
+                            </td>
+                        </tr>
+                    <% } %>
+
+
+                </tbody>
+
+            </table>
+
+
+        </main>
+
+        <!-- Modal open with create button -->
+        <div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="createModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="createModalLabel">Créer une VM</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="createVMFrom">
+
+                            <div class="form-floating mb-3">
+                                <input type="number" class="form-control" id="createVMQuantity" placeholder="Quantité" value="1" min="1" max="999" required>
+                                <label for="name">Quantité</label>
+                                <div class="form-text d-none" id="4GoDansSaMere">Avec ses 4Go de ram, le cluster va ex plo ser ...</div>
+                            </div>
+
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="createVMName" placeholder="Nom des machines virtuelles" required>
+                                <label for="floatingInput">Nom</label>
+                                <div class="form-text">Utiliser $X pour créer un nombre autoincrémenté, vous pouvez aussi utiliser $X-Y pour créer un nombre incrémenté commençant par Y. Les espace sont remplacés par des -.</div>
+                            </div>
+
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="setCloseCreaVM" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button id="setValidCreaVM" type="button" class="btn btn-primary" data-bs-dismiss="modal" disabled>Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </body>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
+    <script src="https://cdn.socket.io/4.4.1/socket.io.min.js" integrity="sha384-fKnu0iswBIqkjxrhQCTZ7qlLHOFEgNkRmK2vaO/LbTZSXdJfAu6ewRBdwHPhBo/H" crossorigin="anonymous"></script>
+
+    <script src="/javascripts/app.js"></script>
+
+</html>
