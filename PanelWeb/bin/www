@@ -4,56 +4,131 @@ const app   = require( "../app" )
     , debug = require( "debug"  )( "projet:server" )
     , http  = require( "http"   );
 
-// —— Get port from environment and store in Express.
-const port = normalizePort( process.env.PORT || "3000" );
-app.set( "port", port );
+const PMX = require("../classes/pmx.js");
 
-// —— HTTP server.
-const server = http.createServer( app );
 
-// —— Listen on provided port, on all network interfaces.
-server.listen( port );
-server.on( "error", onError );
-server.on( "listening", onListening );
+( async ( ) => {
 
-// —— Normalize a port into a number, string, or false.
-function normalizePort( val ) {
+    const pmx = new PMX( process.env.APITOKEN, "192.168.64.104" );
 
-    const port = parseInt( val, 10 );
+    app.set( "pmx", pmx );
 
-    return isNaN( port ) ? val : port > 0 ? port : false;
+    // —— Get port from environment and store in Express.
+    const port = normalizePort( process.env.PORT || "3000" );
+    app.set( "port", port );
 
-}
+    // —— HTTP server.
+    const server = http.createServer( app );
 
-// —— Event listener for HTTP server "error" event.
-function onError( error ) {
-    if ( error.syscall !== "listen" )
-        throw error;
+    // —— Socket.io server.
+    const io = require( "socket.io" )( server );
 
-    const bind = typeof port === "string" ? `Pipe ${ port }` : `Port ${ port }`;
+    io.on( "connection", async ( socket ) => {
 
-    // —— Handle specific listen errors with super friendly messages :)
+        await pmx.unlock( );
 
-    switch ( error.code ) {
-        case "EACCES":
-            console.error( `${ bind } requires elevated privileges` );
-            process.exit( 1 );
-        case "EADDRINUSE":
-            console.error( `${ bind } is already in use` );
-            process.exit( 1 );
-        default:
-            // —— In all other cases, throw the error, because I don't know what to do.
+        console.log( await pmx.unlock( ) );
+
+        setInterval( async ( ) => socket.emit( "tasks", await pmx.getTasks( ) ), 1000 );
+
+        socket.on( "start", async ( IDs ) => {
+            await pmx.startVMs( IDs )
+        } );
+
+        socket.on( "stop", async ( IDs ) => {
+            await pmx.stopVMs( IDs )
+        } );
+
+        socket.on( "delete", async ( IDs ) => {
+            console.log( IDs )
+            await pmx.deleteVMs( IDs )
+        } );
+
+        socket.on( "createVMs", async ( { quantity, name } ) => {
+
+            name = name.trim( ).replace( /\s+/g, "-" );
+
+            const VMs = [];
+
+            for ( let index = 0; index < quantity; index++ ) {
+
+                if ( name.match( /\$X-\d+/gm ) ) {
+
+                    const startValue = name.match( /\$X-(\d+)/ );
+
+                    if ( !isNaN( parseInt( startValue[ 1 ] ) ) ) {
+                        VMs.push( { name: name.replace( /\$X-\d+/gm, index + parseInt( startValue[ 1 ] ) ) } );
+                    } else {
+                        VMs.push( { name: name.replace( /\$X-\d+/gm, index + 1 ), } );
+                    }
+
+                } else if ( name.match( /\$X/gm ) ) {
+
+                    VMs.push( { name: name.replace( /\$X/gm, index + 1 ), } );
+
+                } else {
+
+                    VMs.push( { name: name } );
+
+                }
+
+            }
+
+            pmx.createVMs( VMs );
+
+        } );
+
+        socket.on( "getVMs", async ( IDs ) => {
+            socket.emit( "VMs", await pmx.getVMs( IDs ) );
+        } );
+
+    });
+
+    // —— Listen on provided port, on all network interfaces.
+    server.listen( port );
+    server.on( "error", onError );
+    server.on( "listening", onListening );
+
+    // —— Normalize a port into a number, string, or false.
+    function normalizePort( val ) {
+
+        const port = parseInt( val, 10 );
+
+        return isNaN( port ) ? val : port > 0 ? port : false;
+
+    }
+
+    // —— Event listener for HTTP server "error" event.
+    function onError( error ) {
+        if ( error.syscall !== "listen" )
             throw error;
-  }
-}
 
-// —— Event listener for HTTP server "listening" event.
-function onListening() {
+        const bind = typeof port === "string" ? `Pipe ${ port }` : `Port ${ port }`;
 
-    const addr = server.address()
-        , bind = typeof addr === "string" ? `pipe ${ addr }` : `port ${ addr.port }`;
+        // —— Handle specific listen errors with super friendly messages :)
 
-    debug( `Listening on ${ bind }` );
-    console.log( `Listening on http://localhost:${ addr.port }` );
+        switch ( error.code ) {
+            case "EACCES":
+                console.error( `${ bind } requires elevated privileges` );
+                process.exit( 1 );
+            case "EADDRINUSE":
+                console.error( `${ bind } is already in use` );
+                process.exit( 1 );
+            default:
+                // —— In all other cases, throw the error, because I don't know what to do.
+                throw error;
+        }
+    }
 
-}
+    // —— Event listener for HTTP server "listening" event.
+    function onListening() {
+
+        const addr = server.address()
+            , bind = typeof addr === "string" ? `pipe ${ addr }` : `port ${ addr.port }`;
+
+        debug( `Listening on ${ bind }` );
+        console.log( `Listening on http://localhost:${ addr.port }` );
+
+    }
+
+})( );
