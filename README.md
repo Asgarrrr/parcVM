@@ -1,5 +1,5 @@
 # parcVM
-Automatisation de gestion de parc de VM
+Automation of VM park management
 
 ## Deployment
 To retrieve the deposit locally, type on shell
