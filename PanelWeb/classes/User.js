@@ -53,6 +53,17 @@ class User {
     
     }
 
+    EditUser(id, Nom, Prenom, Email, MDP) {
+
+      return new Promise( ( resolve, reject ) => {
+        this.bdd.query( "UPDATE users SET Nom = '"+Nom+"', Prenom = '"+Prenom+"', Email = '"+Email+"', MDP = '"+MDP+"' WHERE IdUser = '"+id+"'", function ( err, result ) {
+          if ( err ) reject( err )
+          resolve( result );
+        })
+      })
+    
+    }
+
 
 }
 
