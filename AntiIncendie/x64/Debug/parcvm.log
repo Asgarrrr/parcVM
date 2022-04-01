@@ -1,0 +1,12 @@
+﻿  'WHERE' n'est pas reconnu en tant que commande interne
+  ou externe, un programme exécutable ou un fichier de commandes.
+  Reading Qt configuration (C:/Qt/Qt/5.14.2/msvc2017_64/bin/qmake)
+  uic parcvm.ui
+  rcc parcvm.qrc
+  moc parcvm.h
+   RCC: Warning: No resources in 'C:\Users\Romain\source\repos\parcvm\parcvm\parcvm.qrc'.
+  parcvm.cpp
+  main.cpp
+  qrc_parcvm.cpp
+  moc_parcvm.cpp
+  parcvm.vcxproj -> C:\Users\Romain\source\repos\parcvm\x64\Debug\parcvm.exe
