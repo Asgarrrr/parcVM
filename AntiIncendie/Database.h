@@ -2,7 +2,7 @@
 
 #include <QObject>
 #include <QtSql/QtSql>
-#include <qsqldatabase.h>
+#include <QSqlDatabase.h>
 #include <QDebug>
 
 class Database : public QObject
