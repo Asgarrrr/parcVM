@@ -1,6 +1,7 @@
-#include "parcvm.h"
+
 #include <QtCore/QCoreApplication>
 #include "K8055Adapter.h"
+#include "parcvm.h"
 #include "Database.h"
 #include "Timer.h"
 #include <qdebug.h>
