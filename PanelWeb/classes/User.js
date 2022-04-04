@@ -23,7 +23,7 @@ class User {
     CreateUser(Nom, Prenom, Email, MDP) {
 
       return new Promise( ( resolve, reject ) => {
-        this.bdd.query( "INSERT INTO `users` VALUES ( NULL, '"+Nom+"', '"+Prenom+"', '"+Email+"', '"+MDP+"')", function ( err, result ) {
+        this.bdd.query( "INSERT INTO `users` VALUES ( NULL, '"+Nom+"', '"+Prenom+"', '"+Email+"', MD5('"+MDP+"'))", function ( err, result ) {
           if ( err ) reject( err )
           resolve( result );
         })

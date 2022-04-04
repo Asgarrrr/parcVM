@@ -13,8 +13,8 @@ const vm = require("./VM.js");
     
 
     //console.log( await test.GetAllUser() )
-    //await test.CreateUser("chris","lascossise","sdfsdfsdf@filsdepute.fr","")
-    //await bddvm.inservm("110")
+    //await test.CreateUser("ksjdf","lascsdfsdfossise","sdfsdfsdf@filsdepute.fr","prout")
+    //await bddvm.inservm("210")
     //await test.DeleteUser("7")
     //await test.GetUserbyId("1") 
     //await test.EditUser("4", "phillipouille", "greg", "mionculcestbonla","" ) 
