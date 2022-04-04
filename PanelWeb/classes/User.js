@@ -17,7 +17,7 @@ class User {
         })
       })
     
-    }ggs
+    }
 
 
     CreateUser(Nom, Prenom, Email, MDP) {
