@@ -34,7 +34,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|x64&apos;">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\Romain\source\repos\parcvm\parcvm\x64\Release\qmake\temp;C:\Qt\Qt\5.14.2\msvc2017_64\include;C:\Qt\Qt\5.14.2\msvc2017_64\include\QtWidgets;C:\Qt\Qt\5.14.2\msvc2017_64\include\QtGui;C:\Qt\Qt\5.14.2\msvc2017_64\include\QtANGLE;C:\Qt\Qt\5.14.2\msvc2017_64\include\QtCore;C:\Users\Romain\source\repos\parcvm\parcvm\x64\Release\qmake\temp;/include;C:\Qt\Qt\5.14.2\msvc2017_64\mkspecs\win32-msvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Romain\source\repos\parcvm\parcvm\x64\Release\qmake\temp;C:\Qt\Qt\5.14.2\msvc2017_64\include;C:\Qt\Qt\5.14.2\msvc2017_64\include\QtWidgets;C:\Qt\Qt\5.14.2\msvc2017_64\include\QtGui;C:\Qt\Qt\5.14.2\msvc2017_64\include\QtANGLE;C:\Qt\Qt\5.14.2\msvc2017_64\include\QtSql;C:\Qt\Qt\5.14.2\msvc2017_64\include\QtCore;C:\Users\Romain\source\repos\parcvm\parcvm\x64\Release\qmake\temp;/include;C:\Qt\Qt\5.14.2\msvc2017_64\mkspecs\win32-msvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>-Zc:rvalueCast -Zc:inline -Zc:strictStrings -Zc:throwingNew -Zc:referenceBinding -Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
       <AssemblerListingLocation>.\</AssemblerListingLocation>
       <BrowseInformation>false</BrowseInformation>
@@ -42,7 +42,7 @@
       <ExceptionHandling>Sync</ExceptionHandling>
       <ObjectFileName>.\</ObjectFileName>
       <Optimization>MaxSpeed</Optimization>
-      <PreprocessorDefinitions>_WINDOWS;UNICODE;_UNICODE;WIN32;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;NDEBUG;QT_NO_DEBUG;QT_WIDGETS_LIB;QT_GUI_LIB;QT_CORE_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_WINDOWS;UNICODE;_UNICODE;WIN32;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;NDEBUG;QT_NO_DEBUG;QT_WIDGETS_LIB;QT_GUI_LIB;QT_SQL_LIB;QT_CORE_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessToFile>false</PreprocessToFile>
       <ProgramDataBaseFileName></ProgramDataBaseFileName>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -51,7 +51,7 @@
       <WarningLevel>TurnOffAllWarnings</WarningLevel>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>C:\Qt\Qt\5.14.2\msvc2017_64\lib\Qt5Widgets.lib;C:\Qt\Qt\5.14.2\msvc2017_64\lib\Qt5Gui.lib;C:\Qt\Qt\5.14.2\msvc2017_64\lib\Qt5Core.lib;C:\Qt\Qt\5.14.2\msvc2017_64\lib\qtmain.lib;shell32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>C:\Qt\Qt\5.14.2\msvc2017_64\lib\Qt5Widgets.lib;C:\Qt\Qt\5.14.2\msvc2017_64\lib\Qt5Gui.lib;C:\Qt\Qt\5.14.2\msvc2017_64\lib\Qt5Sql.lib;C:\Qt\Qt\5.14.2\msvc2017_64\lib\Qt5Core.lib;C:\Qt\Qt\5.14.2\msvc2017_64\lib\qtmain.lib;shell32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>C:\openssl\lib;C:\Utils\my_sql\mysql-5.7.25-winx64\lib;C:\Utils\postgresql\pgsql\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>&quot;/MANIFESTDEPENDENCY:type=&apos;win32&apos; name=&apos;Microsoft.Windows.Common-Controls&apos; version=&apos;6.0.0.0&apos; publicKeyToken=&apos;6595b64144ccf1df&apos; language=&apos;*&apos; processorArchitecture=&apos;*&apos;&quot; %(AdditionalOptions)</AdditionalOptions>
       <DataExecutionPrevention>true</DataExecutionPrevention>
@@ -70,7 +70,7 @@
       <WarningLevel>0</WarningLevel>
     </Midl>
     <ResourceCompile>
-      <PreprocessorDefinitions>_WINDOWS;UNICODE;_UNICODE;WIN32;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;NDEBUG;QT_NO_DEBUG;QT_WIDGETS_LIB;QT_GUI_LIB;QT_CORE_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_WINDOWS;UNICODE;_UNICODE;WIN32;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;NDEBUG;QT_NO_DEBUG;QT_WIDGETS_LIB;QT_GUI_LIB;QT_SQL_LIB;QT_CORE_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
