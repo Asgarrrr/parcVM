@@ -76,6 +76,18 @@ class User {
     }
 
 
+    CreateSession(iduser, token) {
+
+      return new Promise( ( resolve, reject ) => {
+        this.bdd.query( "INSERT INTO `Sessions` VALUES ( NULL, '"+iduser+"', '"+token+"')", function ( err, result ) {
+          if ( err ) reject( err )
+          resolve( result );
+        })
+      })
+    
+    }
+
+
 }
 
 module.exports = User

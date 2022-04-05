@@ -19,5 +19,5 @@ const vm = require("./VM.js");
     //await test.GetUserbyId("1") 
     //await test.EditUser("4", "phillipouille", "greg", "mionculcestbonla","" ) 
     //console.log(await test.FindSession("8UUPP78GaljA100nXjAhVkZO6gkxvJPL5DEus7Vktd536wk1FET3NkuoktWik5Dc"))
-
+    await test.CreateSession("33","FKJDGHDFKGHDFLG")
 })( );
