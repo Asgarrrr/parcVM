@@ -67,7 +67,7 @@ class User {
     FindSession(Token) {
 
       return new Promise( ( resolve, reject ) => {
-        this.bdd.query( "SELECT * FROM users, Sessions WHERE Sessions.Token = '"+Token+"' AND Sessions.UserID = users.IdUser;", function ( err, result ) {
+        this.bdd.query( "SELECT users.IdUser, users.Nom, users.Email, users.Prenom FROM users, Sessions WHERE Sessions.Token = '"+Token+"' AND Sessions.UserID = users.IdUser;", function ( err, result ) {
           if ( err ) reject( err )
           resolve( result );
         })
