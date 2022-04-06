@@ -1,29 +1,57 @@
-const express = require( "express" )
-    , router  = express.Router();
+// ██████ Dependencies ████████████████████████████████████████████████████████
+
+const cookieParser  = require( "cookie-parser"  )
+    , express       = require( "express"        );
+
+const { deserializeSession } = require( "../Utils/sessions" );
+
+const router        = express.Router( );
+
+const User = require( "./../classes/User" );
 
 // —— Route index
-router.get( "/", ( req, res, next ) => {
+router.get( "/", deserializeSession, ( req, res, next ) => {
+
     res.render( "index", {
         title: "Tuduuuuuuu",
     } );
-});
-
-router.get( "/test", async ( req, res, next ) => {
-
-    const pmx = req.app.get( "pmx" );
-    let VMS = await pmx.getVMs( );
-
-    res.render( "test", { VMS } );
 
 });
 
-router.get( "/testuser", async ( req, res, next ) => {
+// —— login index
+router.get( "/login", ( req, res, next ) => {
 
-    const pmx = req.app.get( "pmx" );
-    let VMS = await pmx.getVMs( );
-
-    res.render( "testuser", { VMS } );
+    res.render( "login" );
 
 });
+
+router.post( "/login", ( req, res, next ) => {
+
+   try {
+
+        const { email, password } = req.body;
+
+        if ( !( email && password ) )
+            res.status( 418 ).send( "I'm a teapot" );
+
+        if ( !email )
+            res.status( 418  ).send( "Email required" );
+
+        if ( !password )
+            res.status( 418 ).send( "Password required" );
+
+        console.log( email, password )
+
+        const user = await new User( req.app.get( "BDD" ).getDB( ) );
+
+        .ConnectUser( email, password );
+
+    } catch ( error ) {
+        console.error( error )
+    }
+
+});
+
+
 
 module.exports = router;
