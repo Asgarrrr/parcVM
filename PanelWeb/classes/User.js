@@ -20,10 +20,10 @@ class User {
     }
 
 
-    CreateUser(Nom, Prenom, Email, MDP) {
+    CreateUser(Nom, Prenom, Email, MDP, admin) {
 
       return new Promise( ( resolve, reject ) => {
-        this.bdd.query( "INSERT INTO `users` VALUES ( NULL, '"+Nom+"', '"+Prenom+"', '"+Email+"', MD5('"+MDP+"'))", function ( err, result ) {
+        this.bdd.query( "INSERT INTO `users` VALUES ( NULL, '"+Nom+"', '"+Prenom+"', '"+Email+"', MD5('"+MDP+"'), '"+admin+"')", function ( err, result ) {
           if ( err ) reject( err )
           resolve( result );
         })
@@ -91,7 +91,7 @@ class User {
       
       return new Promise( ( resolve, reject ) => {
 
-        this.bdd.query( "SELECT Email, IdUser, Nom, Prenom FROM `users` WHERE Email = '"+email+"' AND  MD5('"+mdp+"') LIMIT 1;", function ( err, result ) {
+        this.bdd.query( "SELECT Email, IdUser, Nom, Prenom, admin FROM `users` WHERE Email = '"+email+"' AND  MD5('"+mdp+"') LIMIT 1;", function ( err, result ) {
           if ( err ) reject( err )
           resolve( result )
         })
