@@ -87,7 +87,22 @@ class User {
     
     }
 
+    ConnectUser(email, mdp){
+      
+      return new Promise( ( resolve, reject ) => {
+
+        this.bdd.query( "SELECT Email, IdUser, Nom, Prenom FROM `users` WHERE MD5('"+mdp+"') AND Email = '"+email+"' LIMIT 1;", function ( err, result ) {
+          if ( err ) reject( err )
+          resolve( result )
+        })
+      });
+
+    }
+
 
 }
 
 module.exports = User
+
+
+//SELECT MDP FROM `users` WHERE MD5("test");
