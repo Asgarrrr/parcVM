@@ -91,7 +91,7 @@ class User {
       
       return new Promise( ( resolve, reject ) => {
 
-        this.bdd.query( "SELECT Email, IdUser, Nom, Prenom FROM `users` WHERE MD5('"+mdp+"') AND Email = '"+email+"' LIMIT 1;", function ( err, result ) {
+        this.bdd.query( "SELECT Email, IdUser, Nom, Prenom FROM `users` WHERE Email = '"+email+"' AND  MD5('"+mdp+"') LIMIT 1;", function ( err, result ) {
           if ( err ) reject( err )
           resolve( result )
         })
