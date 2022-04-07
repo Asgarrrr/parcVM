@@ -87,6 +87,15 @@ class User {
     
     }
 
+    DeleteSession(token) {
+      return new Promise( ( resolve, reject ) => {
+        this.bdd.query( "DELETE FROM Sessions WHERE Token = '"+token+"'", function ( err, result ) {
+          if ( err ) reject( err )
+          resolve( result );
+        })
+      })
+    }
+
     ConnectUser(email, mdp){
       
       return new Promise( ( resolve, reject ) => {
