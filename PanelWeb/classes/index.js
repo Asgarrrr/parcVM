@@ -13,12 +13,12 @@ const vm = require("./VM.js");
     
 
     //console.log( await test.GetAllUser() )
-    await test.CreateUser("ksjdf","lascsdfsdfossise","sdfsdfsdf@filsdepute.fr","prout")
+    //await test.CreateUser("Ghyselen","Lucas","test@test.com","1234")
     //await bddvm.inservm("210")
     //await test.DeleteUser("7")
     //await test.GetUserbyId("1") 
     //await test.EditUser("4", "phillipouille", "greg", "mionculcestbonla","" ) 
-    //console.log(await test.FindSession("GHDyLRVGn8_NuAmhftMA3uvwAeMO3i0Dd"))
+    console.log(await test.FindSession("athGrn5VLvwmRXvpDCc-OUrEsHnjcuKk"))
     //await test.CreateSession("33","FKJDGHDFKGHDFLG")
     //console.log( await test.ConnectUser("duBon@Gros.cum", "test"))
 })( );
