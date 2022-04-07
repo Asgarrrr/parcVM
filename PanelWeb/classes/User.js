@@ -23,7 +23,7 @@ class User {
     CreateUser(Nom, Prenom, Email, MDP, admin) {
 
       return new Promise( ( resolve, reject ) => {
-        this.bdd.query( "INSERT INTO `users` VALUES ( NULL, '"+Nom+"', '"+Prenom+"', '"+Email+"', MD5('"+MDP+"'), "+admin+")", function ( err, result ) {
+        this.bdd.query( "INSERT INTO `users` VALUES ( NULL, '"+Nom+"', '"+Prenom+"', '"+Email+"', MD5('"+MDP+"'), "+(admin= 0)+")", function ( err, result ) {
           if ( err ) reject( err )
           resolve( result );
         })
@@ -67,7 +67,7 @@ class User {
     FindSession(Token) {
 
       return new Promise( ( resolve, reject ) => {
-        this.bdd.query( "SELECT users.IdUser, users.Nom, users.Email, users.Prenom FROM users, Sessions WHERE Sessions.Token = '"+Token+"' AND Sessions.UserID = users.IdUser;", function ( err, result ) {
+        this.bdd.query( "SELECT users.IdUser, users.Nom, users.Email, users.Prenom, users.admin FROM users, Sessions WHERE Sessions.Token = '"+Token+"' AND Sessions.UserID = users.IdUser;", function ( err, result ) {
           if ( err ) reject( err )
           resolve( result );
         })
