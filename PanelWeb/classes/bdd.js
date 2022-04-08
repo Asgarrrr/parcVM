@@ -11,7 +11,7 @@ class bdd {
 
 
 
-        this.db = mysql.createConnection({
+        this.bdd = mysql.createConnection({
 
             host: "192.168.65.201",
          
@@ -22,7 +22,7 @@ class bdd {
             database : ip
          
           })
-          this.db.connect(function(err) {
+          this.bdd.connect(function(err) {
             if (err) throw err;
             console.log("Connecté à la base de données MySQL!");
           })
@@ -35,9 +35,9 @@ class bdd {
 
     }
 
-    getDB ( ) {
+    getBDD ( ) {
 
-      return this.db;
+      return this.bdd;
 
     }
 
