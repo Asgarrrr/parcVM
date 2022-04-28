@@ -5,251 +5,289 @@
  * @date    2022-03-18
  */
 
-const axios  = require( "axios" );
-const https  = require( "https" );
+ const axios             = require( "axios" );
+ const https             = require( "https" );
+ const chalk             = require( "chalk" );
 
-module.exports = class PMX {
+ module.exports = class Proxmox {
 
-    constructor( apiToken, host, port = 8006, realm = "pam" ) {
+     constructor( apiToken, host, port = 8006 ) {
 
-        // —— Check if everything is ok
-        if ( !apiToken )
-            throw new Error( "No API token provided" );
+         // —— Check if everything is ok
+         if ( !apiToken )
+             throw new Error( "No API token provided" );
 
-        if ( !host )
-            throw new Error( "No host provided" );
+         if ( !host )
+             throw new Error( "No host provided" );
 
-        if ( !port )
-            throw new Error( "No port provided, default value is 8006" );
+         if ( !port )
+             throw new Error( "No port provided, default value is 8006" );
 
-        if ( !realm )
-            throw new Error( "No realm provided, default value is 'pam'" );
+         this.axios = axios.create({
+             baseURL     : `https://${ host }:${ port }/api2/json/`,
+             timeout     : 10000,
+             httpsAgent  : new https.Agent({ rejectUnauthorized: false }),
+             headers     : {
+                 "Authorization": `PVEAPIToken ${ apiToken }`,
+             },
+         });
 
-        this.axios = axios.create({
-            baseURL     : `https://${ host }:${ port }/api2/json/`,
-            timeout     : 3000,
-            httpsAgent  : new https.Agent({ rejectUnauthorized: false }),
-            headers     : {
-                "Authorization": `PVEAPIToken ${ apiToken }`,
-            },
-        });
 
-        this.axios.interceptors.response.use(
-            ( response  ) => response,
-            ( error     ) => error
-        );
+         this.axios.interceptors.response.use(
+             ( response  ) => response,
+             ( error     ) => ( { data: {  } } )
+         );
 
-        this.axios.get( ).catch( ( e ) => { throw new e(  `Unable to connect to ${ this.host }:${ this.port }, ${ error.message }` ); } );
+         this.axios.get( ).catch( ( e ) => {
+             throw new error(  `Unable to connect to ${ this.host }:${ this.port }, ${ error.message }` );
+         } );
 
-    }
+         this.queue = {
+             inProgress: [ ],
+             waiting   : [ ],
+         }
 
-    /**
-     * @brief   Get the list of all or specific nodes
-     * @param   { Array } [ nodes ] List of nodes to get
-     * @return  { Array }           List of nodes
-     * @throws  { Error }           If the request failed
-     */
-    async getNodes( IDS ) {
+         this.getVMs( );
+         this.getNextVMID( );
+         // this.deleteVM( );
 
-        const { data: { data } } = await this.axios.get( "nodes" );
+         setInterval( ( ) => {
 
-        if ( IDS )
-            return data.filter( ( node ) => IDS.includes( node.node ) );
+             this.getClusterEvents( ).then( ( data = [] ) => {
 
-        return data;
+                 data.filter( ( task ) => !task.endtime ).forEach( ( task ) => {
 
-    }
+                     if ( this.queue.inProgress.find( ( operation ) => operation.upid === task.upid ) )
+                         return;
 
-    /**
-     * @brief   Get the list of all or specific VMs
-     * @param   { Array } [ VMs ]  List of VMs to get
-     * @return  { Array }          List of VMs
-     * @throws  { Error }          If the request failed
-     * @todo    Add a filter to get only VMs with a specific status
-     */
-    async getVMs( IDs ) {
+                     this.queue.inProgress.push( task );
 
-        const nodes = await this.getNodes( );
+                 });
 
-        const VMs = await Promise.all( nodes.map( async ( node ) => {
+                 for ( const task of this.queue.inProgress ) {
+
+                     const taskDetails = data.find( ( t ) => t.upid === task.upid );
+
+                     if ( taskDetails && taskDetails.endtime ) {
+
+                         this.queue.inProgress.splice( this.queue.inProgress.indexOf( task ), 1 );
+
+                     }
+
+                 }
+
+             } );
+
+            for ( let taskInProgress of this.queue.inProgress ) {
+
+                if ( taskInProgress.run ) {
+
+                    if ( taskInProgress.run.name == "createVM" )
+                        this.lastVMID++
+
+                    taskInProgress.run.call( this, taskInProgress.args ).then( ( data ) => {
+
+                        console.log( chalk.green( `${ taskInProgress.upid } started` ) );
+
+                        taskInProgress.upid = data
+
+                        delete taskInProgress.run;
+                        delete taskInProgress.args;
+
+                    }).catch( ( e ) => {
+
+                        console.error( chalk.red( e.message ) );
+                        this.queue.inProgress.splice( this.queue.inProgress.indexOf( taskInProgress), 1 );
+
+                    }).finally( ( ) => {
+
+                    });
+
+                }
+
+            }
+
+             if ( this.queue.waiting.length && this.queue.inProgress.length < 5 ) {
+
+                 const slots = 5 - this.queue.inProgress.length;
+
+                 const tasks = this.queue.waiting.splice( 0, slots );
+                 this.getNextVMID( );
+                 this.queue.inProgress.push( ...tasks );
+
+             }
+
+         }, 1000 );
+
+         setInterval( ( ) => {
+
+            console.log( this.queue )
+
+        }, 100 );
+
+     }
+
+     /**
+      * @brief   Load last cluster events
+      * @return  Promise
+      */
+     async getClusterEvents( ) {
+
+         const { data: { data } } = await this.axios.get( "cluster/tasks" );
+         return data;
+
+     }
+
+     /**
+      * @brief   Get the list of all or specific nodes
+      * @param   { Array } [ nodes ] List of nodes to get
+      * @return  { Array }           List of nodes
+      * @throws  { Error }           If the request failed
+      */
+     async getNodes( IDS ) {
+
+         const { data: { data } } = await this.axios.get( "nodes" );
+
+         if ( IDS )
+             return data.filter( ( node ) => IDS.includes( node.node ) );
+
+         return data;
+
+     }
+
+     /**
+      * @brief   Get the list of all or specific VMs
+      * @param   { Array } [ VMs ] List of VMs to get
+      * @return  { Array }         List of VMs
+      * @throws  { Error }         If the request failed
+      * @todo    Query parameters ( Search criteria )
+      */
+     async getVMs( ID ) {
+
+         if ( ID && !Array.isArray( ID ) )
+             ID = [ ID ];
+
+         const nodes = await this.getNodes( );
+
+         if ( !nodes && !nodes.length )
+            return [ ];
+
+         const VMs = await Promise.all( nodes.map( async ( node ) => {
 
             const { data: { data } } = await this.axios.get( `nodes/${ node.node }/qemu` );
 
-            data.forEach( ( VM ) => VM.node = node.node );
+            for ( let vm of data ) {
 
-            if ( IDs )
-                return data.filter( ( VM ) => IDs.includes( VM.vmid ) );
+                const { data: { data: network } } = await this.axios.get( `nodes/${ node.node }/qemu/${ vm.vmid }/agent/network-get-interfaces` );
+
+                vm.network = network;
+                vm.node    = node.node;
+
+            }
 
             return data;
 
-        } ) );
+         } ) );
 
-        return VMs.flat( ).sort( ( a, b ) => a.vmid - b.vmid );
+         return VMs.flat().map ( ( VMs ) => Object.keys( VMs ).sort( ).reduce( ( res, key ) => ( res[ key ] = VMs[ key ], res ), { } ) );
 
-    }
+     }
 
-    /**
-     * @brief   Create multiple VMs
-     * @param   { Array } [ VMs ]  List of VMs to create
-     * @return  { Array }          List of tasks ID
-     * @throws  { Error }          If the request failed
-     */
-    async createVMs( VMs ) {
+     async startVM( ID ) {
 
-        const lastVMs = await this.getVMs( );
-        const lastVMID = lastVMs.reduce( ( max, VM ) => Math.max( max, VM.vmid ), 0 ) || 99;
+         const VM = await this.getVMs( ID );
 
-        const promises = VMs.map( ( VM, i ) => this.axios.post( `nodes/pve1/qemu`, {
-            vmid      : lastVMID + i + 1,
-            name      : VM.name || "Untitled",
-        } ) );
+         const { data: { data } } = await this.axios.post( `nodes/${ VM[ 0 ].node }/qemu/${ VM[ 0 ].vmid }/status/start` );
 
-        const tasks = await Promise.all( promises );
+         return data;
 
-        console.log( tasks );
+     }
 
-        // return tasks.map( ( task ) => task.data.data );
+     async stopVM( ID ) {
 
-    }
+         const VM = await this.getVMs( ID );
 
-    /**
-     * @brief   Delete multiple VMs
-     * @param   { Array } [ VMs ]  List of VMs to delete
-     * @return  { Array }          List of tasks ID
-     * @throws  { Error }          If the request failed
-     */
-    async deleteVMs( IDs ) {
+         if ( !VM.length || VM[ 0 ].status === "stopped" )
+             throw new Error( `VM ${ ID } is already stopped` );
 
-        let i = 0;
+         const { data: { data } } = await this.axios.post( `nodes/${ VM[ 0 ].node }/qemu/${ VM[ 0 ].vmid }/status/stop` );
 
-        const VMs = ( await this.getVMs( IDs ) ).filter( ( VM ) => IDs.includes( VM.vmid ) );
+         return data;
 
-        const tasks = await Promise.all( VMs.map( async ( VM ) => {
+     }
 
-            const { data: { data } } = await this.axios.delete( `nodes/${ VM.node }/qemu/${ VM.vmid }` );
-            return data;
+    async createVM( { ID, name } ) {
 
-        } ) ).catch( ( e ) => { console.log( i++ ) } );
+        const nodes = await this.getNodes( );
 
-        return tasks;
+        // Determine the most suitable node for the VM creation based on the available resources ( Memory, Disk, CPU )
+        const node = nodes.sort( ( a, b ) => {
 
-    }
+            const aCPU  = a.maxcpu - a.cpu;
+            const bCPU  = b.maxcpu - b.cpu;
 
-    /**
-     * @brief   Start a VM
-     * @param   { Array } [ VMs ]  List of VMs to start
-     * @return  { Array }          List of tasks ID
-     * @throws  { Error }          If the request failed
-     */
-    async startVMs( IDs ) {
+            const aMem  = a.maxmem - a.mem;
+            const bMem  = b.maxmem - b.mem;
 
-        const VMs = await this.getVMs( IDs );
+            const aDisk = a.disk.total - a.maxdisk;
+            const bDisk = b.disk.total - b.maxdisk;
 
-        const promises = VMs.map( ( VM ) => this.axios.post( `nodes/${ VM.node }/qemu/${ VM.vmid }/status/start` ) );
+            return ( aCPU * aMem * aDisk ) - ( bCPU * bMem * bDisk );
 
-        const tasks = await Promise.all( promises );
+        } )[ 0 ];
 
-        return tasks.map( ( task ) => task.data.data );
+        const { data: { data } } = await this.axios.post( `nodes/${ node.node }/qemu`, {
+            name,
+            vmid: ID,
+        } )
 
-    }
-
-    /**
-     * @brief   Stop a VM
-     * @param   { Array } [ VMs ]  List of VMs to stop
-     * @return  { Array }          List of tasks ID
-     * @throws  { Error }          If the request failed
-     */
-    async stopVMs( IDs ) {
-
-        const VMs = await this.getVMs( IDs );
-
-        const promises = VMs.map( ( VM ) => this.axios.post( `nodes/${ VM.node }/qemu/${ VM.vmid }/status/stop` ) );
-
-        const tasks = await Promise.all( promises );
-
-        return tasks.map( ( task ) => task.data.data );
-
-    }
-
-    /**
-     * @brief   Reboot a VM
-     * @param   { Array } [ VMs ]  List of VMs to reboot
-     * @return  { Array }          List of tasks ID
-     * @throws  { Error }          If the request failed
-     */
-    async rebootVMs( IDs ) {
-
-        const VMs = await this.getVMs( IDs );
-
-        const promises = VMs.map( ( VM ) => this.axios.post( `nodes/${ VM.node }/qemu/${ VM.vmid }/status/reboot` ) );
-
-        const tasks = await Promise.all( promises );
-
-        return tasks.map( ( task ) => task.data.data );
-
-    }
-
-    /**
-     * @brief   Get the list of all snapshots of a VM
-     * @param   { Array } [ VMs ]  List of VMs to get snapshots
-     * @return  { Array }          List of snapshots
-     * @throws  { Error }          If the request failed
-     */
-    async getSnapshots( IDs ) {
-
-        const VMs = await this.getVMs( IDs );
-
-        const promises = VMs.map( ( VM ) => this.axios.get( `nodes/${ VM.node }/qemu/${ VM.vmid }/snapshot` ) );
-
-        const snapshots = await Promise.all( promises );
-
-        return snapshots.map( ( snapshot ) => snapshot.data.data );
-
-    }
-
-    /**
-     * @brief   Create a snapshot of a VM
-     * @param   { Array } [ VMs ]  List of VMs to create a snapshot
-     * @return  { Array }          List of tasks ID
-     * @throws  { Error }          If the request failed
-     */
-    async createSnapshots( IDs, Snapname = "snapshot", Description = "Snapshot created by PMX" ) {
-
-        const VMs = await this.getVMs( IDs );
-
-        const promises = VMs.map( ( VM, i ) => this.axios.post( `nodes/${ VM.node }/qemu/${ VM.vmid }/snapshot`, {
-            node        : VM.node,
-            vmid        : VM.vmid,
-            snapname    : Array.isArray( Snapname ) ? Snapname[ i ] : Snapname,
-            description : Array.isArray( Sescription ) ? Sescription[ i ] : Sescription,
-        } ) );
-
-        const tasks = await Promise.all( promises );
-
-        return tasks.map( ( task ) => task.data.data );
-
-    }
-
-    /**
-     * @brief   Get all the tasks
-     * @return  { Array }          List of tasks
-     * @throws  { Error }          If the request failed
-     */
-    async getTasks( ) {
-
-        const { data: { data } } = await this.axios.get( "cluster/tasks" );
+        if ( !data )
+            throw new Error( `Failed to create VM ${ name }` );
 
         return data;
 
     }
 
-    async unlock( ) {
+    async deleteVM( ) {
 
-        const VMS = await this.getVMs( );
+        const vms = await this.getVMs( );
 
-        return VMS.map( ( VM ) => "qm unlock " + VM.vmid ).join( ";" );
-
+        for ( const iterator of vms ) {
+            if ( iterator.vmid !== 102 ) {
+                this.stopVM( iterator.vmid ).catch( ( error ) => { } );
+                await this.axios.delete( `nodes/${ iterator.node }/qemu/${ iterator.vmid }` );
+            }
+        }
 
     }
 
-}
+     async getNextVMID( ) {
+
+        try {
+            const { data: { data } } = await this.axios.get( `cluster/nextid` );
+            return data;
+        } catch ( error ) {
+            console.error( error );
+        }
+
+     }
+
+
+     pushTask( task, args, index ) {
+
+        try {
+
+            if ( this.queue.inProgress && this.queue.inProgress.length >= 5 )
+                this.queue.waiting.push( { run: task, args } );
+            else
+                this.queue.inProgress.push( { run: task, args } );
+
+        } catch ( error ) {
+
+            console.error( error );
+
+        }
+
+     }
+
+ }
