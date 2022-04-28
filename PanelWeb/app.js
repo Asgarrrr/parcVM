@@ -85,14 +85,37 @@ const indexRouter = require( "./routes/index" );
 
     } );
 
-    app.set( "BDD", await new BDD( process.env.DBLOGIN, process.env.DBPASS, process.env.DBTABLENAME ) );
+    const PMX   = new Proxmox( process.env.PROXMOXTOKEN, process.env.PROXMOXHOST, process.env.PROXMOXPORT );
+    const DB    = await new BDD( process.env.DBLOGIN, process.env.DBPASS, process.env.DBTABLENAME );
+
+    app.set( "PMX", PMX );
+    app.set( "BDD", DB  );
+
+    let VMS = await PMX.getVMs( );
+    setInterval( async ( ) => {
+        VMS = await PMX.getVMs( );
+    }, 1000 );
+
 
     io.on( "connection", ( socket ) => {
 
-        socket.on( ""
-
         const session = socket.request.session;
-        console.log( session )
+
+        socket.on( "update", async ( data ) => {
+
+            socket.emit( "update", VMS );
+
+        } );
+
+        socket.on( "createVMRequest", async ( data ) => {
+
+            let baseID = await PMX.getNextVMID( )
+
+            for ( const args of data )
+                PMX.pushTask( PMX.createVM, { ID: baseID++, name: args.name } );
+
+        } );
+
     });
 
 })( );
