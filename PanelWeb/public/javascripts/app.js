@@ -1,164 +1,115 @@
 
-// —— Query selectors
+$( document ).ready( ( ) => {
 
-// Creation of new VMs
-const createVMquantity  = document.getElementById( "createVMQuantity"   )
-    , createVMname      = document.getElementById( "createVMName"       )
-    , setValidCreaVM    = document.getElementById( "setValidCreaVM"     )
-    , createVMsModal    = document.getElementById( "createModal" );
+    console.log(
+        "%cSalut ! Systéme crée par Lucas Ghyselen & Jérémy Caruelle",
+        "background-image: url( 'http://orig11.deviantart.net/dcab/f/2011/158/1/6/nyan_cat_by_valcreon-d3iapfh.gif' ); background-repeat: no-repeat; background-size: cover; padding: 0px 0px 200px 0px; background-position: center center;",
+    );
 
-// Interfaces
-const vmList            = document.getElementById( "VMContent" )
-      stopVMs           = document.getElementById( "stopVMs" )
-      startVMs          = document.getElementById( "startVMs" )
-      deleteVMs         = document.getElementById( "deleteVMs" );
-      checkAll          = document.getElementById( "checkAll" );
+    console.log( "https://github.com/Asgarrrr", "https://github.com/LucasGLaPro" );
 
-( async ( ) => {
-
-    const socket = io( "http://localhost:3000", {} );
-
-    socket.on( "connect", ( ) => {
-
-        setInterval( ( ) => socket.emit( "getVMs" ) , 1000 );
-
-        createVMquantity.addEventListener( "change", ( ) => {
-
-            const aLittleTooMuch = document.getElementById( "4GoDansSaMere" );
-
-            createVMquantity.value > 300
-                ? aLittleTooMuch.classList.remove( "d-none" )
-                : aLittleTooMuch.classList.add( "d-none" );
-
-        });
-
-        createVMname.addEventListener( "keyup", ( e ) => {
-
-            createVMname.value.trim().length
-                ? createVMname.classList.remove( "is-invalid" )
-                : createVMname.classList.add( "is-invalid" );
-
-            canCreateVM( );
-
-        } );
-
-
-        createVMsModal.addEventListener( "show.bs.modal", ( ) => canCreateVM( ) );
-
-        setValidCreaVM.addEventListener( "click", ( ) => {
-
-            socket.emit( "createVMs", {
-                quantity: createVMquantity.value,
-                name    : createVMname.value,
-            } );
-
-            createVMquantity.value = 1;
-            createVMname.value     = "";
-
-        });
-
-        checkAll.addEventListener( "click", ( e ) => {
-            vmList.querySelectorAll( "input[type=checkbox]" ).forEach( ( input ) => input.checked = e.target.checked ? true : false );
-        } );
-
-        stopVMs.addEventListener( "click", ( ) => socket.emit( "stop", getSelectedVMs( ) ) );
-        startVMs.addEventListener( "click", ( ) => socket.emit( "start", getSelectedVMs( ) ) );
-        deleteVMs.addEventListener( "click", ( ) => socket.emit( "delete", getSelectedVMs( ) ) );
-
+    // Create a new websocket connection
+    const socket = io( "192.168.64.103", {
+        transports: [ "websocket" ],
     } );
 
-    socket.on( "VMs", ( VMs ) => {
+    let selected = 0;
 
-        // Get all VMs
-        const allVMs = [...document.getElementById( "VMContent" ).querySelectorAll( "tr" )].map( ( tr ) => tr.id );
+    // New DataTable
+    const table = $( "#table_id" ).DataTable( {
+        pageLength: 100,
+        columnDefs: [{
 
-        for ( let i = 0; i < VMs.length; i++ ) {
+            "defaultContent": "-",
+            "targets": "_all"
+        }],
+        columns: [
+            { data: "" },
+            { data: "ID" },
+            { data: "Name" },
+            { data: "Status" },
+            { data: "IP" },
+            { data: "Start date" },
+            { data: "Salary" },
+        ],
+        "select": {
+            style   : "multi",
+            items   : "row",
+            info    : false,
+            selector: 'td:first-child'
+        }
+    } );
 
-            const VM = VMs[i];
+    $( "tbody" ).selectable({
+        filter: ".vm-row",
+        selected: ( e, ui ) => {
 
-            if ( !allVMs.includes( `VM-${ VM.vmid }` ) ) {
+            $( ui.selected ).toggleClass( "table-primary", !onOff );
+            $( this ).find( ".selected" ).addClass( "ui-selected" );
 
-                console.log( VM )
+            selected = table.rows( ".table-primary" ).count( );
 
-                const tr = document.createElement( "tr" );
-                tr.id = `VM-${ VM.vmid }`;
-
-                const td = document.createElement( "td" );
-
-                const input = document.createElement( "input" );
-                input.setAttribute( "type", "checkbox" );
-                input.classList.add( "form-check-input" );
-
-                td.appendChild( input );
-                tr.appendChild( td );
-
-                const tdID = document.createElement( "td" );
-                tdID.innerHTML = VM.vmid
-                tr.appendChild( tdID );
-
-                const tdName = document.createElement( "td" );
-                tdName.innerText = VM.name;
-                tdName.id = `VM-${ VM.vmid }-name`;
-                tr.appendChild( tdName );
-
-                const tdState = document.createElement( "td" );
-                tdState.innerText = VM.status;
-                tdState.id = `VM-${ VM.vmid }-status`;
-                tr.appendChild( tdState );
-
-                const tdAction = document.createElement( "td" );
-                tdAction.id = `VM-${ VM.vmid }-action`;
-                tr.appendChild( tdAction );
-
-                vmList.appendChild( tr );
-
-                continue;
+            if ( selected <= 0 )
+                $( "#delete" ).prop( "disabled", true );
+            else
+                $( "#delete" ).prop( "disabled", false );
 
 
-            }
-
-            // Remove VMs from allVMs
-            allVMs.splice( allVMs.indexOf( `VM-${ VM.vmid }` ), 1 );
-
-            const status = document.getElementById( `VM-${ VM.vmid }-status` );
-
-            if ( status.innerHTML !== VM.status )
-                status.innerHTML = VM.status;
 
         }
+    }).mousedown( ( e ) => {
 
-
-        // Remove VMs from allVMs
-        allVMs.forEach( ( id ) => {
-
-            const tr = document.getElementById( id );
-
-            tr.remove( );
-
-        } );
-
+        onOff = $( e.target.parentNode ).hasClass( "table-primary" );
 
     });
 
+    socket.on( "connect", ( ) => {
+
+        console.log( " <> Connected to the server <> " );
+
+        socket.emit( "update" );
+        setInterval( ( ) => socket.emit( "update" ), 5000 );
+
+    } );
+
+    socket.on( "update", ( data ) => {
+
+        console.log( " <> Data received <> " );
+
+        for ( const VM of data ) {
+
+            // Find indexes of rows which have `Yes` in the second column
+            var indexes = table.rows( ).eq( 0 ).filter( function ( rowIdx ) {
+                return table.cell( rowIdx, 1 ).data() === VM.vmid ? true : false;
+            } );
 
 
-})( );
+            if ( !indexes.length ) {
 
-function canCreateVM( ) {
+                let IP = "?";
 
-    if (
-        createVMquantity.value.trim().length
-        && createVMname.value.trim().length
-    ) {
-        setValidCreaVM.disabled = false;
-    } else {
-        setValidCreaVM.disabled = true;
-    }
+                if ( VM.network ) {
+                    // Find on array the object with name
+                    const ipnet = VM.network.result.filter( ( obj ) => obj.name === "ens18" );
+                    IP = ipnet[ 0 ][ "ip-addresses" ].filter( ( obj ) => obj[ "ip-address-type" ] === "ipv4" )[ 0 ][ "ip-address" ];
 
-}
+                }
 
-function getSelectedVMs( ) {
+                const row = table.row.add( {
+                    "ID" : VM.vmid,
+                    "Name" : VM.name,
+                    "Status" : `<span class="badge bdg-${ VM.status }">${ VM.status.charAt( 0 ).toUpperCase() + VM.status.substring( 1 ) } </span>`,
+                    "IP" : IP,
+                    "Start date" : " de ",
+                    "Salary" : " de ",
 
-    return [...vmList.querySelectorAll( "input[type=checkbox]:checked" )].map( ( input ) => parseInt( input.parentNode.parentNode.id.substring( 3 ) ) );
+                } ).draw( );
 
-}
+                row.node().classList.add( "vm-row" );
+            }
+
+        }
+
+    } );
+
+} );
