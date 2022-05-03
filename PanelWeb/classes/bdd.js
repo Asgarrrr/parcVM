@@ -4,7 +4,7 @@
 
 
 class bdd {
-    constructor(login, mdp, ip){
+    constructor(ip, login, mdp, base){
         /*this.login = _login;
         this.mdp = _mdp;
         this.ip = _ip;*/
@@ -13,13 +13,13 @@ class bdd {
 
         this.bdd = mysql.createConnection({
 
-            host: "192.168.65.201",
+            host: ip,
          
             user: login,
          
             password: mdp,
 
-            database : ip
+            database : base
          
           })
           this.bdd.connect(function(err) {
