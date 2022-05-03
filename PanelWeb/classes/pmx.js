@@ -119,12 +119,6 @@
 
          }, 1000 );
 
-         setInterval( ( ) => {
-
-            console.log( this.queue )
-
-        }, 100 );
-
      }
 
      /**
@@ -169,8 +163,8 @@
 
          const nodes = await this.getNodes( );
 
-         if ( !nodes && !nodes.length )
-            return [ ];
+        if ( !nodes )
+            return [ ]
 
          const VMs = await Promise.all( nodes.map( async ( node ) => {
 
@@ -248,16 +242,26 @@
 
     }
 
-    async deleteVM( ) {
+    async deleteVM( IDs ) {
+
+        if ( !Array.isArray( IDs ) )
+            IDs = [ IDs ];
 
         const vms = await this.getVMs( );
 
-        for ( const iterator of vms ) {
-            if ( iterator.vmid !== 102 ) {
-                this.stopVM( iterator.vmid ).catch( ( error ) => { } );
-                await this.axios.delete( `nodes/${ iterator.node }/qemu/${ iterator.vmid }` );
-            }
-        }
+        if ( !vms.length )
+            throw new Error( `No VMs found` );
+
+        if ( !IDs )
+            IDs = vms.map( ( vm ) => vm.vmid );
+
+        const { data: { data } } = await this.axios.post( `nodes/${ vms[ 0 ].node }/qemu/delete`, {
+            vmid: IDs,
+        } );
+
+        return data;
+
+
 
     }
 
