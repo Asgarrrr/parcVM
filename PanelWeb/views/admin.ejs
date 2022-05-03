@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <link rel="icon" type="image/x-icon" href="./assets/logo/logo_small_icon_only_inverted.png">
+
+        <script src="https://kit.fontawesome.com/e341cf1ec8.js" crossorigin="anonymous"></script>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
+        <link rel="stylesheet" href="/stylesheets/style.css" />
+
+        <title>Administration</title>
+    </head>
+
+    <style>
+
+        html, body {
+            height: 100%;
+            background-color: #fafbfe;
+            overflow: hidden;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            animation: openSidebar 1s;
+            width: 64px;
+            padding: 5px;
+            background-color: #151a25;
+        }
+
+        @keyframes openSidebar {
+            0% {
+                left: -64px;
+            }
+            100% {
+                left: 0px;
+            }
+        }
+
+        .sidebar i {
+            font-size: 110px;
+        }
+
+        .sideContainer {
+            display: flex;
+            justify-content: center;
+            align-content: center;
+            width: 50px;
+            height: 50px;
+            flex-direction: column;
+            margin: 20px auto;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            color: rgb(202, 202, 202);
+        }
+
+        .sideContainer:hover {
+            background-color: #2169f6;
+            color: white;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .bdg-stopped {
+            background-color: #fdf3f5;
+            color: #dc3c62;
+        }
+
+        .bdg-running {
+            background-color: #f3fdf7;
+            color: #3cdc64;
+        }
+
+        .ui-selecting {
+            background: #e2e3e5;
+        }
+
+        .wrapper {
+            display: flex;
+            height: 100%;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .leftside-menu {
+            width: 260px;
+            z-index: 10;
+            background: #313a46;
+            bottom: 0;
+            position: fixed;
+            top: 0;
+            padding-top: 70px;
+            box-shadow: 0px 0px 35px 0px rgba(154,161,171,0.15)
+        }
+
+        .side-nav, .side-nav ul {
+            list-style-type: none;
+        }
+        .side-nav {
+            padding-left: 0;
+        }
+
+        .side-nav .side-nav-title {
+            padding: 12px 30px;
+            letter-spacing: .05em;
+            pointer-events: none;
+            cursor: default;
+            font-size: .6875rem;
+            text-transform: uppercase;
+            color: #8391a2;
+            font-weight: 700;
+        }
+
+        .side-nav .side-nav-link {
+            color: #8391a2;
+            display: block;
+            padding: 10px 30px;
+            font-size: .9375rem;
+            position: relative;
+            transition: all .4s;
+            list-style: none;
+            text-decoration: none;
+            padding: 8px 30px 8px 65px;
+        }
+
+        .side-nav .side-nav-link:hover {
+            color: #bccee4;
+        }
+
+        .side-nav .side-nav-link span {
+            vertical-align: middle;
+        }
+
+        .side-nav .side-nav-link svg {
+            display: inline-block;
+            line-height: 1.0625rem;
+            margin: 0 10px 0 0;
+            font-size: 1.1rem;
+            vertical-align: middle;
+            width: 20px;
+        }
+
+        .logo {
+            line-height: 70px;
+            width: 260px;
+            position: fixed;
+            top: 0;
+        }
+
+        .simplebar-content-wrapper {
+            direction: inherit;
+            box-sizing: border-box!important;
+            position: relative;
+            display: block;
+            height: 100%;
+            width: auto;
+            overflow: auto;
+            max-width: 100%;
+            max-height: 100%;
+            scrollbar-width: none;
+        }
+
+        .content-page {
+            margin-left: 260px;
+            overflow: hidden;
+            min-height: 100vh;
+            width: 100%;
+        }
+
+        #table_id {
+
+            width: 100%;
+            margin-bottom: 15vh;
+
+        }
+
+        #table_id thead {
+            background-color: #fafbfe;
+        }
+
+        #actions {
+            top: 5%
+        }
+
+    </style>
+
+    <body>
+
+        <div class="wrapper">
+
+            <div class="leftside-menu">
+                <a class="logo text-center" href="/">
+                    <!-- <span class="logo-sm"> <img src="./assets/logo/logo_small_icon_only_inverted.png" alt="Logo" style="width: 100%;"></span> -->
+                    <span class="logo-lg"> <img src="./assets/logo/logo_white_large.png" alt="Logo" height="40"></span>
+                </a>
+                <div>
+                    <div class="simplebar-wrapper">
+                        <div class="simplebar-height-auto-observer-wrapper">
+                            <div class="simplebar-height-auto-observer"></div>
+                        </div>
+                        <div class="simplebar-mask">
+                            <div class="simplebar-offset">
+                                <div class="simplebar-content-wrapper" tabindex="0" role="region" aria-label="scrollable content">
+                                    <div class="simplebar-content">
+                                        <ul class="side-nav" id="main-side-menu">
+                                            <li class="side-nav-title side-nav-item">Navigation</li>
+                                            <li class="side-nav-item">
+                                                <a class="side-nav-link-ref side-sub-nav-link side-nav-link" href="/">
+                                                    <i class="fa-regular fa-newspaper"></i>
+                                                    <span> Overview </span>
+                                                </a>
+                                            </li>
+                                            <li class="side-nav-item">
+                                                <a class="side-nav-link-ref side-sub-nav-link side-nav-link" href="/">
+                                                    <i class="fa-regular fa-newspaper"></i>
+                                                    <span> Machines </span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="simplebar-placeholder" style="width: auto; height: 1618px;"></div>
+                    </div>
+                    <div class="simplebar-track simplebar-horizontal" style="visibility: hidden;">
+                        <div class="simplebar-scrollbar simplebar-visible" style="width: 0px; display: none;"></div>
+                    </div>
+                    <div class="simplebar-track simplebar-vertical" style="visibility: visible;">
+                        <div class="simplebar-scrollbar simplebar-visible"
+                            style="height: 66px; display: block; transform: translate3d(0px, 0px, 0px);"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-page mt-5 overflow-auto">
+
+                <div class="container">
+
+                    <div class="card mb-5" id="actions">
+                        <div class="card-body">
+                            <button type="button" class="btn btn-danger" disabled>Delete</button>
+                        </div>
+                    </div>
+
+                    <table id="table_id" class="table table-hover" style="width:100%;">
+                        <thead class="sticky-top">
+                            <tr>
+                                <th>#</th>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Status</th>
+                                <th>IP</th>
+                                <th>Start date</th>
+                                <th>Salary</th>
+                            </tr>
+                        </thead>
+                    </table>
+
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+
+
+
+<!--
+        <div class="sidebar shadow-sm h-100 d-flex flex-column justify-content-between">
+
+            <div>
+
+                <div class="mb-5">
+
+                </div>
+
+                <div class="sideContainer">
+                    <i class="fa-solid fa-chart-line fa-xl"></i>
+                </div>
+                <div class="sideContainer" data-bs-toggle="tooltip" data-bs-placement="right" title="Gestion des machines virtuelles">
+                    <i class="fa-solid fa-server fa-xl"></i>
+                </div>
+                <div class="sideContainer">
+                    <i class="fa-solid fa-diagram-next fa-xl"></i>
+                </div>
+                <div class="sideContainer">
+                    <i class="fa-solid fa-user-graduate fa-xl"></i>
+                </div>
+                <div class="sideContainer">
+                    <i class="fa-solid fa-school-flag fa-xl"></i>
+                </div>
+                <div class="sideContainer" data-bs-toggle="tooltip" data-bs-placement="right" title="Monitoring anti-incendie">
+                    <i class="fa-solid fa-fire-extinguisher fa-xl"></i>
+                </div>
+
+            </div>
+            <div>
+
+                <div class="sideContainer">
+                    <i class="fa-solid fa-gear"></i>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="container mt-5">
+
+            <table id="table_id" class="table table-hover" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Status</th>
+                        <th>IP</th>
+                        <th>Start date</th>
+                        <th>Salary</th>
+                    </tr>
+                </thead>
+            </table>
+
+        </div> -->
+
+
+    </body>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
+    <script src="https://cdn.socket.io/4.4.1/socket.io.min.js" integrity="sha384-fKnu0iswBIqkjxrhQCTZ7qlLHOFEgNkRmK2vaO/LbTZSXdJfAu6ewRBdwHPhBo/H" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js" integrity="sha256-eTyxS0rkjpLEo16uXTS0uVCS4815lc40K2iVpWDvdSY=" crossorigin="anonymous"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+    <script src="https://cdn.datatables.net/select/1.2.0/js/dataTables.select.js"></script>
+
+
+    <script src="/javascripts/app.js"></script>
+
+
+
+    <script>
+
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        })
+
+    </script>
+
+</html>
