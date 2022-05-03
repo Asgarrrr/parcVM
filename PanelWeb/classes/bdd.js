@@ -24,7 +24,7 @@ class bdd {
           })
           this.bdd.connect(function(err) {
             if (err) throw err;
-            console.log("Connecté à la base de données MySQL!");
+            console.log("Connecté à la base de données Abyss 🏦");
           })
 
           /*db.query("SELECT * FROM users", function (err, result) {
