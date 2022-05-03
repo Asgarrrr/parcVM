@@ -63,3 +63,18 @@
     background-color: #131d35;
     height: 4em;
 }
+
+.leftside-menu{
+    animation-duration: 1s;
+    animation-name: slidein;
+}
+
+@keyframes slidein {
+    from {
+      width: 0px;
+    }
+  
+    to {
+      width: 260px;
+    }
+  }
