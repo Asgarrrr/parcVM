@@ -14,7 +14,8 @@ const createError   = require( "http-errors"     )
     , express       = require( "express"         )
     , path          = require( "path"            )
     , http          = require( "http"            );
-// —— Express routes
+
+    // —— Express routes
 const indexRouter = require( "./routes/index" );
 
 ( async ( ) => {
@@ -25,12 +26,14 @@ const indexRouter = require( "./routes/index" );
         , server = http.createServer( app )
         , io     = require( "socket.io" )(server);
 
+    const DB    = await new BDD( process.env.DBHOST, process.env.DBLOGIN, process.env.DBPASS, process.env.DBTABLENAME );
+
     // —— Session
     const sessionMiddleware = session({
         secret              : process.env.SESSION_SECRET,
         name                : process.env.SESSION_NAME,
-        resave              : false,
-        saveUninitialized   : false,
+        resave              : true,
+        saveUninitialized   : true,
         cookie              : {
             maxAge : 3600000 * 24
         },
@@ -86,7 +89,7 @@ const indexRouter = require( "./routes/index" );
     } );
 
     const PMX   = new Proxmox( process.env.PROXMOXTOKEN, process.env.PROXMOXHOST, process.env.PROXMOXPORT );
-    const DB    = await new BDD( process.env.DBLOGIN, process.env.DBPASS, process.env.DBTABLENAME );
+
 
     app.set( "PMX", PMX );
     app.set( "BDD", DB  );
@@ -108,6 +111,10 @@ const indexRouter = require( "./routes/index" );
         } );
 
         socket.on( "createVMRequest", async ( data ) => {
+
+            const session = socket.request.session;
+
+            console.log( session );
 
             let baseID = await PMX.getNextVMID( )
 
