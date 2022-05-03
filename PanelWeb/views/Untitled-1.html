@@ -1,0 +1,309 @@
+<style>
+    #sidebarContainer {
+        min-width: 70px;
+        transition: all 0.3s ease-in-out;
+    }
+
+    #sidebarContainer.open {
+        min-width: 270px;
+        transition: all 0.3s ease-in-out;
+    }
+
+    #sidebar {
+        min-width: 70px;
+        background-color: #f1f1f1;
+        position: fixed;
+        height: 100%;
+        transition: all 0.3s ease-in-out;
+    }
+
+    #sidebar.open {
+        min-width: 270px;
+    }
+
+    #switchSidebar {
+        border-radius: 50%;
+        background-color: #ffffff;
+        position: fixed;
+        width: 30px;
+        height: 30px;
+        left: 55px;
+        z-index: 100;
+        top: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: all 0.3s ease-in-out;
+    }
+
+    #switchSidebar>svg {
+        width: 15px;
+        fill: #414244;
+    }
+
+    #switchSidebar.open {
+        left: 255px;
+        transition: all 0.3s ease-in-out;
+    }
+
+    #switchSidebar.open>svg {
+        transform: rotate(180deg);
+    }
+
+    .bdg-stopped {
+        background-color: #fdf3f5;
+        color: #dc3c62;
+    }
+
+    .ui-selecting {
+        background: #e2e3e5;
+    }
+</style>
+
+<div class="d-flex h-100">
+
+    <style>
+        html,
+        body {
+            height: 100%;
+        }
+
+        #navSide {
+
+            background-color: white;
+            min-width: 65px;
+            height: 100%;
+
+        }
+
+        .navContainer {
+            padding: 26px;
+        }
+    </style>
+
+    <div id="navSide">
+        <div class="d-flex flex-column justify-content-center align-items-center">
+            <div class="navContainer" data-bs-toggle="tooltip" data-bs-placement="left" title="Projects">
+                <i class="fa-solid fa-user"></i>
+            </div>
+            <div class="navContainer">
+                <i class="fa-solid fa-user"></i>
+            </div>
+            <div class="navContainer">
+                <i class="fa-solid fa-user"></i>
+            </div>
+            <div class="navContainer">
+                <i class="fa-solid fa-user"></i>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="sidebarContainer" class="open">
+
+        <div id="sidebar" class="open">
+
+
+        </div>
+
+    </div>
+    <div id="switchSidebar" class="open">
+        <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+            x="0px" y="0px" viewBox="0 0 330 330" style="enable-background:new 0 0 330 330;" xml:space="preserve">
+            <path id="XMLID_222_"
+                d="M250.606,154.389l-150-149.996c-5.857-5.858-15.355-5.858-21.213,0.001  c-5.857,5.858-5.857,15.355,0.001,21.213l139.393,139.39L79.393,304.394c-5.857,5.858-5.857,15.355,0.001,21.213  C82.322,328.536,86.161,330,90,330s7.678-1.464,10.607-4.394l149.999-150.004c2.814-2.813,4.394-6.628,4.394-10.606  C255,161.018,253.42,157.202,250.606,154.389z" />
+        </svg>
+    </div>
+
+    <div class="container">
+
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            Créer des machines
+        </button>
+
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="createVMFrom">
+
+                            <div class="form-floating mb-3">
+                                <input type="number" class="form-control" id="createVMQuantity" placeholder="Quantité"
+                                    value="10" min="1" max="999" required>
+                                <label for="name">Quantité</label>
+                                <div class="form-text d-none" id="4GoDansSaMere">Avec ses 4Go de ram, le
+                                    cluster va ex plo ser ...</div>
+                            </div>
+
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="createVMName"
+                                    placeholder="Nom des machines virtuelles" required value="$X">
+                                <label for="floatingInput">Nom</label>
+                                <div class="form-text">Utiliser $X pour créer un nombre autoincrémenté, vous
+                                    pouvez aussi utiliser $X-Y pour créer un nombre incrémenté commençant
+                                    par Y. Les espace sont remplacés par des -.</div>
+                            </div>
+
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" id="createVMRequest">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <button type="button" class="btn btn-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom"
+            title="Tooltip on bottom">
+            Tooltip on bottom
+        </button>
+
+        <table id="table_id" class="table table-hover" style="width:100%">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Status</th>
+                    <th>IP</th>
+                    <th>Start date</th>
+                    <th>Salary</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+
+    <style>
+        .ui-draggable .ui-dialog-titlebar {
+            cursor: move;
+        }
+
+        .ui-draggable-handle {
+            -ms-touch-action: none;
+            touch-action: none;
+        }
+
+        ui-selectable {
+            -ms-touch-action: none;
+            touch-action: none;
+        }
+
+        .ui-selectable-helper {
+            position: absolute;
+            z-index: 100;
+            border: 1px dotted black;
+        }
+
+        .ui-selectmenu-menu {
+            padding: 0;
+            margin: 0;
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: none;
+        }
+
+        .ui-selectmenu-menu .ui-menu {
+            overflow: auto;
+            overflow-x: hidden;
+            padding-bottom: 1px;
+        }
+
+        .ui-selectmenu-menu .ui-menu .ui-selectmenu-optgroup {
+            font-size: 1em;
+            font-weight: bold;
+            line-height: 1.5;
+            padding: 2px 0.4em;
+            margin: 0.5em 0 0 0;
+            height: auto;
+            border: 0;
+        }
+
+        .ui-selectmenu-open {
+            display: block;
+        }
+
+        .ui-selectmenu-text {
+            display: block;
+            margin-right: 20px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .ui-selectmenu-button.ui-button {
+            text-align: left;
+            white-space: nowrap;
+            width: 14em;
+        }
+
+        .ui-selectmenu-icon.ui-icon {
+            float: right;
+            margin-top: 0;
+        }
+    </style>
+
+
+
+
+<div class="sidebar h-100 d-flex flex-column justify-content-between bg-light">
+
+    <div class="sideContainer">
+
+        <!-- <img src="./assets/logo/logo_small_only.png" alt="" srcset="" width="30px"> -->
+
+    </div>
+    <div>
+
+        <div class="sideContainer">
+            <i class="fa-solid fa-chart-line fa-xl"></i>
+        </div>
+        <div class="sideContainer" data-bs-toggle="tooltip" data-bs-placement="right" title="Gestion des machines virtuelles">
+            <i class="fa-solid fa-server fa-xl"></i>
+        </div>
+        <div class="sideContainer">
+            <i class="fa-solid fa-diagram-next fa-xl"></i>
+        </div>
+        <div class="sideContainer">
+            <i class="fa-solid fa-user-graduate fa-xl"></i>
+        </div>
+        <div class="sideContainer">
+            <i class="fa-solid fa-school-flag fa-xl"></i>
+        </div>
+        <div class="sideContainer" data-bs-toggle="tooltip" data-bs-placement="right" title="Monitoring anti-incendie">
+            <i class="fa-solid fa-fire-extinguisher fa-xl"></i>
+        </div>
+
+    </div>
+    <div>
+
+        <div class="sideContainer">
+            <i class="fa-solid fa-gear"></i>
+        </div>
+
+    </div>
+
+    <!-- Overview -->
+    <!-- VM -->
+    <!-- projets -->
+    <!-- Eleves -->
+    <!-- Classes -->
+    <!-- Moniteur anti fu dans -->
+    <!-- Parametres -->
+</div>
+
+<div>
+
+</div>
+
+<div>
+
+    <nav class="navbar navbar-dark bg-primary">
+        <!-- Navbar content -->
+    </nav>
+
+</div>
