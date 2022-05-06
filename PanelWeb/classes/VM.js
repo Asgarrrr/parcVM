@@ -45,6 +45,15 @@ class VM {
       })
     }
 
+    deletevm(idvm){
+      return new Promise( ( resolve, reject ) => {
+        this.bdd.query( "DELETE FROM Vm WHERE IdVm = '"+idvm+"'", function ( err, result ) {
+          if ( err ) reject( err )
+          resolve( result );
+        })
+      })
+    }
+
 
 }
 
