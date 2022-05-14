@@ -15,19 +15,18 @@ module.exports = async function( req, res, next ) {
 
             if ( sessionID ) {
 
-                const user = await new User( req.app.get( "BDD" ).getBDD( ) ).FindSession( sessionID );
-
+                const user = await ( new User( req.app.get( "BDD" ) ) ).FindSession( sessionID );
                 if ( user.length ) {
                     req.session.user = user[ 0 ];
+                    req.session.user.sessionID = sessionID;
                     return next( );
                 }
 
             }
 
-            return res.redirect( "/login" );
-
         }
 
+        return res.redirect( "/login" );
 
     } catch ( error ) {
 
