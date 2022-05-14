@@ -130,8 +130,6 @@
 
         }, 1000 );
 
-        setInterval( ( ) => console.log( this.queue ), 1000 );
-
      }
 
      /**
