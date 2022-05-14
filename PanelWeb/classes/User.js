@@ -1,6 +1,4 @@
-﻿const mysql = require('mysql');
-
-class User {
+﻿class User {
 
     constructor( bdd ){
 
@@ -8,103 +6,68 @@ class User {
 
     }
 
-    GetAllUser() {
+    async GetAllUser() {
 
-      return new Promise( ( resolve, reject ) => {
-        this.bdd.query( "SELECT * FROM users", function ( err, result ) {
-          if ( err ) reject( err )
-          resolve( result );
-        })
-      })
-    
-    }
-
-
-    CreateUser(Nom, Prenom, Email, MDP, admin) {
-
-      return new Promise( ( resolve, reject ) => {
-        this.bdd.query( "INSERT INTO `users` VALUES ( NULL, '"+Nom+"', '"+Prenom+"', '"+Email+"', SHA2('"+MDP+"',512), "+(admin= 0)+")", function ( err, result ) {
-          if ( err ) reject( err )
-          resolve( result );
-        })
-      })
-    
-    }
-
-    DeleteUser(id) {
-
-      return new Promise( ( resolve, reject ) => {
-        this.bdd.query( "DELETE FROM users WHERE IdUser = '"+id+"'", function ( err, result ) {
-          if ( err ) reject( err )
-          resolve( result );
-        })
-      })
-    
-    }
-
-    GetUserbyId(id) {
-
-      return new Promise( ( resolve, reject ) => {
-        this.bdd.query( "SELECT * FROM users WHERE IdUser = '"+id+"' ", function ( err, result ) {
-          if ( err ) reject( err )
-          resolve( result );
-        })
-      })
-    
-    }
-
-    EditUser(id, Nom, Prenom, Email, MDP) {
-
-      return new Promise( ( resolve, reject ) => {
-        this.bdd.query( "UPDATE users SET Nom = '"+Nom+"', Prenom = '"+Prenom+"', Email = '"+Email+"', MDP = '"+MDP+"' WHERE IdUser = '"+id+"'", function ( err, result ) {
-          if ( err ) reject( err )
-          resolve( result );
-        })
-      })
-    
-    }
-
-    FindSession(Token) {
-
-      return new Promise( ( resolve, reject ) => {
-        this.bdd.query( "SELECT users.IdUser, users.Nom, users.Email, users.Prenom, users.admin FROM users, Sessions WHERE Sessions.Token = '"+Token+"' AND Sessions.UserID = users.IdUser;", function ( err, result ) {
-          if ( err ) reject( err )
-          resolve( result );
-        })
-      })
+        const [ rows, fields ] = await this.bdd.execute( "SELECT * FROM users" );
+        return rows;
 
     }
 
 
-    CreateSession(iduser, token) {
+    async CreateUser( Nom, Prenom, Email, MDP, admin = 0 ) {
 
-      return new Promise( ( resolve, reject ) => {
-        this.bdd.query( "INSERT INTO `Sessions` VALUES ( NULL, '"+iduser+"', '"+token+"')", function ( err, result ) {
-          if ( err ) reject( err )
-          resolve( result );
-        })
-      })
-    
+        const [ rows, fields ] = await this.bdd.execute( "INSERT INTO `users` VALUES ( NULL, ?, ?, ?, ?, ? )", [ Nom, Prenom, Email, MDP, admin ] );
+        return rows;
+
     }
 
-    DeleteSession(token) {
-      return new Promise( ( resolve, reject ) => {
-        this.bdd.query( "DELETE FROM Sessions WHERE Token = '"+token+"'", function ( err, result ) {
-          if ( err ) reject( err )
-          resolve( result );
-        })
-      })
+    async DeleteUser( id ) {
+
+        const [ rows, fields ] = await this.bdd.execute( "DELETE FROM users WHERE IdUser = ?", [ id ] );
+        return rows;
+
     }
 
-    ConnectUser(email, mdp){
-      
-      return new Promise( ( resolve, reject ) => {
+    async GetUserbyId( id ) {
 
-        this.bdd.query( "SELECT Email, IdUser, Nom, Prenom, admin FROM `users` WHERE Email = '"+email+"' AND  SHA2('"+mdp+"',512) LIMIT 1;", function ( err, result ) {
-          if ( err ) reject( err )
-          resolve( result )
-        })
-      });
+        const [ rows, fields ] = await this.bdd.execute( "SELECT * FROM users WHERE IdUser = ?", [ id ] );
+        return rows;
+
+    }
+
+    async EditUser( id, Nom, Prenom, Email, MDP, admin ) {
+
+        const [ rows, fields ] = await this.bdd.execute( "UPDATE `users` SET Nom = ?, Prenom = ?, Email = ?, MDP = SHA2( ?, 512 ), admin = ? WHERE IdUser = ?", [ Nom, Prenom, Email, MDP, admin, id ] );
+        return rows;
+
+    }
+
+    async FindSession( Token ) {
+
+        const [ rows, fields ] = await this.bdd.execute( "SELECT users.IdUser, users.Nom, users.Email, users.Prenom, users.admin FROM users, Sessions WHERE Sessions.Token = ? AND Sessions.UserID = users.IdUser;", [ Token ] );
+        return rows;
+
+    }
+
+
+    async CreateSession( iduser, token ) {
+
+        const [ rows, fields ] = await this.bdd.execute( "INSERT INTO `Sessions` VALUES ( NULL, '"+iduser+"', '"+token+"')" );
+        return rows;
+
+    }
+
+    async DeleteSession( token ) {
+
+        const [ rows, fields ] = await this.bdd.execute( "DELETE FROM Sessions WHERE Token = ?", [ token ] );
+        return rows;
+
+    }
+
+    async ConnectUser( email, mdp ){
+
+        const [ rows, fields ] = await this.bdd.execute( "SELECT Email, IdUser, Nom, Prenom, admin FROM `users` WHERE Email = ? AND SHA2( ?, 512 ) LIMIT 1;", [ email, mdp ] );
+        return rows;
 
     }
 
@@ -112,6 +75,3 @@ class User {
 }
 
 module.exports = User
-
-
-//SELECT MDP FROM `users` WHERE MD5("test");
