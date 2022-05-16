@@ -1,3 +1,86 @@
+<header>
+    <button type="button" class="btn btn-primary float-end" style="width:150px" onclick="createProject()">Créer un projet</button>
+    <h1>Projects</h1>
+</header>
 
-<span>Projects</span>
-<h2>Overview</h2>
+<div id="projectContainer" class="d-flex flex-wrap">
+
+</div>
+
+<div class="modal fade" id="editProjectModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalProjectName">Modifier le projet</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body mt-1">
+                <ul class="nav nav-tabs mb-3" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="home-tab" data-bs-toggle="tab"
+                            data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane"
+                            aria-selected="true">Général</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="profile-tab" data-bs-toggle="tab"
+                            data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane"
+                            aria-selected="false">Membres</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="contact-tab" data-bs-toggle="tab"
+                            data-bs-target="#contact-tab-pane" type="button" role="tab" aria-controls="contact-tab-pane"
+                            aria-selected="false">Machines</button>
+                    </li>
+                </ul>
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" tabindex="0">
+
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="editProjectModalName">
+                            <label for="editProjectModalName">Nom</label>
+                        </div>
+
+                        <div class="form-floating">
+                            <textarea class="form-control" placeholder="Décrivez en quelques mots le projet" id="editProjectModalDesc" style="height: 100px"></textarea>
+                            <label for="editProjectModalDesc">Description</label>
+                        </div>
+
+                        <!-- Remove project -->
+                        <div class="d-grid gap-2 mt-2 mb-2">
+                            <button type="button" class="btn btn-danger" id="editProjectModalDelete" data-bs-dismiss="modal" onclick="removeProject( )">Supprimer le projet</button>
+                        </div>
+
+                    </div>
+                    <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="editProjectModalSearchUser" onkeyup="editProjectModalSearchUser( this.value )">
+                            <label for="editProjectModalSearchUser">Rechercher</label>
+                        </div>
+
+                        <div id="editProjectModalSelectUser">
+
+                        </div>
+
+                    </div>
+                    <div class="tab-pane fade" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">
+
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="editProjectModalSearchVM" onkeyup="editProjectModalSearchVM( this.value )">
+                            <label for="editProjectModalSearchVM">Rechercher</label>
+                        </div>
+
+                        <div id="editProjectModalSelectVM" class="overflow-auto">
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="editProjectModalSave()">Sauvegarder</button>
+            </div>
+        </div>
+    </div>
+</div>
