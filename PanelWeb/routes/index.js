@@ -3,7 +3,7 @@ const { Router } = require( "express" );
 const router = Router( );
 const auth   = require( "../middlewares/auth" );
 
-const User = require( "../classes/User" );
+const User = require( "../classes/user" );
 
 // —— Route index
 router.get( "/", auth, ( req, res, next ) => {
