@@ -244,9 +244,19 @@
 
                 <div class="container">
 
-                    <div class="card mb-5" id="actions">
-                        <div class="card-body">
-                            <button type="button" class="btn btn-danger" disabled>Delete</button>
+                    <div class="card mb-5">
+                        <div class="card-body d-flex justify-content-between" >
+
+                            <div id="actions">
+                                <button type="button" class="btn btn-primary" id="startButton" disabled>Start</button>
+                                <button type="button" class="btn btn-primary" id="stopButton"  disabled>Stop</button>
+                                <button type="button" class="btn btn-danger" id="deleteButton" disabled>Delete</button>
+                            </div>
+
+                            <button type="button" class="btn btn-primary" id="createButton" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                Create
+                            </button>
+
                         </div>
                     </div>
 
@@ -258,82 +268,61 @@
                                 <th>Name</th>
                                 <th>Status</th>
                                 <th>IP</th>
-                                <th>Start date</th>
-                                <th>Salary</th>
                             </tr>
                         </thead>
                     </table>
 
-
-
                 </div>
 
             </div>
 
         </div>
 
+        <!-- VM Create Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Create machine</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="createVMFrom">
+
+                            <div class="form-floating mb-3">
+                                <input type="number" class="form-control" id="createVMQuantity" placeholder="Quantité"
+                                    value="10" min="1" max="999" required>
+                                <label for="name">Quantité</label>
+                                <div class="form-text d-none" id="4GoDansSaMere">Avec ses 4Go de ram, le
+                                    cluster va-ex-plo-ser ...</div>
+                            </div>
+
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="createVMName"
+                                    placeholder="Nom des machines virtuelles" required value="$X">
+                                <label for="floatingInput">Nom</label>
+                                <div class="form-text">Utiliser $X pour créer un nombre autoincrémenté, vous
+                                    pouvez aussi utiliser $X-Y pour créer un nombre incrémenté commençant
+                                    par Y. Les espace sont remplacés par des -.</div>
+                            </div>
+
+                            <div class="form-floating mb-3">
+                                <select class="form-select" id="createVMNameTemplate">
+                                    <option selected>Aucun</option>
+                                </select>
+                                <label for="floatingSelect">Template</label>
+                            </div>
 
 
-
-
-
-<!--
-        <div class="sidebar shadow-sm h-100 d-flex flex-column justify-content-between">
-
-            <div>
-
-                <div class="mb-5">
-
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" id="createVMRequest">Save changes</button>
+                    </div>
                 </div>
-
-                <div class="sideContainer">
-                    <i class="fa-solid fa-chart-line fa-xl"></i>
-                </div>
-                <div class="sideContainer" data-bs-toggle="tooltip" data-bs-placement="right" title="Gestion des machines virtuelles">
-                    <i class="fa-solid fa-server fa-xl"></i>
-                </div>
-                <div class="sideContainer">
-                    <i class="fa-solid fa-diagram-next fa-xl"></i>
-                </div>
-                <div class="sideContainer">
-                    <i class="fa-solid fa-user-graduate fa-xl"></i>
-                </div>
-                <div class="sideContainer">
-                    <i class="fa-solid fa-school-flag fa-xl"></i>
-                </div>
-                <div class="sideContainer" data-bs-toggle="tooltip" data-bs-placement="right" title="Monitoring anti-incendie">
-                    <i class="fa-solid fa-fire-extinguisher fa-xl"></i>
-                </div>
-
             </div>
-            <div>
-
-                <div class="sideContainer">
-                    <i class="fa-solid fa-gear"></i>
-                </div>
-
-            </div>
-
         </div>
-
-        <div class="container mt-5">
-
-            <table id="table_id" class="table table-hover" style="width:100%">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Status</th>
-                        <th>IP</th>
-                        <th>Start date</th>
-                        <th>Salary</th>
-                    </tr>
-                </thead>
-            </table>
-
-        </div> -->
-
 
     </body>
 
