@@ -134,12 +134,12 @@
 
      /**
       * @brief   Load last cluster events
-      * @return  Promise
+      * @return  { Array } List of events
       */
      async getClusterEvents( ) {
 
-         const { data: { data } } = await this.axios.get( "cluster/tasks" );
-         return data;
+        const { data: { data } } = await this.axios.get( "cluster/tasks" );
+        return data;
 
      }
 
@@ -167,7 +167,7 @@
       * @return  { Array  }                     List of VMs
       * @todo    Query parameters ( Search criteria )
       */
-     async getVMs( filterID = [ ], allowTemplate = false ) {
+     async getVMs( VMID = [ ], allowTemplate = false ) {
 
         let { data: { data: resources } } = await this.axios.get( "cluster/resources" );
 
@@ -183,8 +183,8 @@
             resources = resources.filter( ( VM ) => !VM.template );
 
         // —— Filter by ID
-        if ( filterID.length )
-            resources = resources.filter( ( VM ) => filterID.includes( VM.vmid ) );
+        if ( VMID.length )
+            resources = resources.filter( ( VM ) => VMID.includes( VM.vmid ) );
 
         // —— Get network information ( IP, MAC, etc. )
         await Promise.all( resources.map( ( VM ) => {
@@ -198,24 +198,24 @@
 
      }
 
-     async startVM( { ID } ) {
+     async startVM( ID ) {
 
         console.log( `Start VM ${ ID }` );
-         const VM = await this.getVMs( ID );
+        const VM = await this.getVMs( ID );
 
-         if ( !VM.length || VM[ 0 ].status === "running" )
+        if ( !VM.length || VM[ 0 ].status === "running" )
             throw new Error( `VM ${ ID } is already started` );
 
-         const { data: { data } } = await this.axios.post( `nodes/${ VM[ 0 ].node }/qemu/${ VM[ 0 ].vmid }/status/start` );
+        const { data: { data } } = await this.axios.post( `nodes/${ VM[ 0 ].node }/qemu/${ VM[ 0 ].vmid }/status/start` );
 
-         if ( !data )
+        if ( !data )
             throw new Error( `VM ${ ID } is already started` );
 
-         return data;
+        return data;
 
      }
 
-     async stopVM( { ID } ) {
+     async stopVM( ID ) {
 
         console.log( `Stopping VM ${ ID }` );
         const VM = await this.getVMs( ID );
@@ -264,7 +264,7 @@
 
     }
 
-    async deleteVM( { ID } ) {
+    async deleteVM( ID ) {
 
         if ( !ID )
             throw new Error( `No VM ID provided` );
@@ -329,7 +329,7 @@
      }
 
 
-     pushTask( task, args, index ) {
+    pushTask( task, args, index ) {
 
         try {
 
@@ -346,7 +346,7 @@
 
      }
 
-     getQueueTasks( ) {
+    getQueueTasks( ) {
 
         return [
             this.queue.inProgress,
