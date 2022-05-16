@@ -1,4 +1,4 @@
-﻿class User {
+﻿module.exports = class User {
 
     constructor( bdd ){
 
@@ -73,5 +73,3 @@
 
 
 }
-
-module.exports = User

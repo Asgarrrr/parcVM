@@ -8,7 +8,7 @@ module.exports = class Project {
 
     async GetAllProject() {
 
-        const [ rows, fields ] = await this.bdd.execute( `
+        const [ rows ] = await this.bdd.execute( `
             SELECT *
             FROM Projet p
             LEFT JOIN UserProject u ON u.IDProject = p.IdProjet
