@@ -2,10 +2,11 @@
 require( "dotenv" ).config();
 
 // —— Class
-const Proxmox   = require( "./classes/pmx.js" )
-    , BDD       = require( "./classes/bdd.js"  )
-    , VM        = require( "./classes/VM.js"   )
-    , User      = require( "./classes/user.js" );
+const Proxmox   = require( "./classes/pmx.js"     )
+    , BDD       = require( "./classes/bdd.js"     )
+    , VM        = require( "./classes/VM.js"      )
+    , User      = require( "./classes/user.js"    )
+    , Project   = require( "./classes/project.js" );
 
 // —— Dependencies
 const createError   = require( "http-errors"     )
@@ -15,8 +16,9 @@ const createError   = require( "http-errors"     )
     , path          = require( "path"            )
     , http          = require( "http"            );
 
-    // —— Express routes
-const indexRouter = require( "./routes/index" );
+// —— Express routes
+const indexRouter = require( "./routes/index" )
+    , APIRouter   = require( "./routes/API"   );
 
 ( async ( ) => {
 
@@ -26,7 +28,10 @@ const indexRouter = require( "./routes/index" );
         , server = http.createServer( app )
         , io     = require( "socket.io" )(server);
 
-    const DB    = await new BDD( process.env.DBHOST, process.env.DBLOGIN, process.env.DBPASS, process.env.DBTABLENAME );
+    const DB    = await ( new BDD( process.env.DBHOST, process.env.DBLOGIN, process.env.DBPASS, process.env.DBTABLENAME ) ).connect( );
+
+    const ProjectManager = new Project( DB );
+    const UserManager    = new User( DB );
 
     // —— Session
     const sessionMiddleware = session({
@@ -62,6 +67,7 @@ const indexRouter = require( "./routes/index" );
 
     // —— Routes
     app.use( "/", indexRouter );
+    app.use( "/API", APIRouter );
 
     // —— Catch 404 and forward to error handler
     app.use( ( req, res, next ) => next( createError( 404 ) ) );
@@ -88,16 +94,25 @@ const indexRouter = require( "./routes/index" );
 
     } );
 
-    const PMX   = new Proxmox( process.env.PROXMOXTOKEN, process.env.PROXMOXHOST, process.env.PROXMOXPORT );
+    const PMX = new Proxmox( DB, process.env.PROXMOXTOKEN, process.env.PROXMOXHOST, process.env.PROXMOXPORT );
 
 
     app.set( "PMX", PMX );
     app.set( "BDD", DB  );
 
-    let VMS = await PMX.getVMs( );
+    let VMS     = await PMX.getVMs( );
+    let queue   = await PMX.getQueueTasks( );
     setInterval( async ( ) => {
-        VMS = await PMX.getVMs( );
-    }, 1000 );
+        VMS     = await PMX.getVMs( );
+        queue   = await PMX.getQueueTasks( );
+    }, 5000 );
+
+    // setInterval( async ( ) => {
+
+    //     console.log( VMS.filter( ( VM ) => VM.vmid === 118 ) );
+
+    // }, 100 );
+
 
 
     io.on( "connection", ( socket ) => {
@@ -106,7 +121,9 @@ const indexRouter = require( "./routes/index" );
 
         socket.on( "update", async ( data ) => {
 
-            socket.emit( "update", VMS );
+            socket.emit( "update", {
+                VMS, queue
+            } );
 
         } );
 
@@ -114,14 +131,93 @@ const indexRouter = require( "./routes/index" );
 
             const session = socket.request.session;
 
-            console.log( session );
+            let baseID = await PMX.getNextVMID( );
 
-            let baseID = await PMX.getNextVMID( )
+            for ( const { name, template } of data ) {
 
-            for ( const args of data )
-                PMX.pushTask( PMX.createVM, { ID: baseID++, name: args.name } );
+                if ( template === "Aucun" )
+                    PMX.pushTask( PMX.createVM, { ID: baseID++, name } );
+                else
+                    PMX.pushTask( PMX.cloneVM, { templateID: template, ID: baseID++, name } );
+
+            }
 
         } );
+
+        socket.on( "deleteVMRequest", async ( data ) => {
+
+            PMX.pushTask( PMX.deleteVM, { ID: data } );
+
+        } );
+
+        socket.on( "startVMRequest", async ( data ) => {
+
+            console.log( "Demande de démarrage de la VM " + data );
+            PMX.pushTask( PMX.startVM, { ID: data } );
+
+        } );
+
+        socket.on( "stopVMRequest", async ( data ) => {
+
+            console.log( "Demande d'arrêt de la VM " + data );
+            PMX.pushTask( PMX.stopVM, { ID: data } );
+
+        } );
+
+        socket.on( "loadProjets", async ( data ) => {
+
+            console.log( "Demande de chargement des projets" );
+
+            socket.emit( "loadProjets", await ProjectManager.GetAllProject( ) );
+
+        } );
+
+        socket.on( "getProjectDetail", async ( data ) => {
+
+            console.log( "Demande de détail du projet " + data );
+
+            socket.emit( "getProjectDetail", {
+                project : await ProjectManager.GetProject( data ),
+                VM      : VMS.map( ( VM ) => ({ id: VM.vmid, name: VM.name })),
+                users   : await UserManager.GetAllUser( )
+            } );
+
+        } );
+
+        socket.on( "editProject", async ( data ) => {
+
+            console.log( "Demande d'édition du projet " + data );
+
+            await ProjectManager.EditProject( data );
+
+        } );
+
+        socket.on( "createProject", async ( data ) => {
+
+            try {
+
+                await ProjectManager.CreateProject( data );
+                socket.emit( "createProject", data );
+
+            } catch ( error ) {
+                socket.emit( "createProject", "fail" );
+            }
+
+        } );
+
+        socket.on( "deleteProject", async ( data ) => {
+
+            try {
+
+                await ProjectManager.DeleteProject( data );
+                socket.emit( "deleteProject", data );
+
+            } catch ( error ) {
+                socket.emit( "deleteProject", "fail" );
+            }
+
+        } );
+
 
     });
 
