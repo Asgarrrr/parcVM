@@ -101,7 +101,7 @@ router.get( "/logout", auth, async ( req, res, next ) => {
 
     try {
 
-        const user = await new User( req.app.get( "BDD" ).getBDD( ) );
+        const user = await new User( req.app.get( "BDD" ) );
         await user.DeleteSession( req.session.user.sessionID );
         req.session.destroy( );
         res.redirect( "./login" );
