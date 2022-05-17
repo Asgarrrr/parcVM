@@ -8,7 +8,7 @@
     console.log( "https://github.com/Asgarrrr", "https://github.com/LucasGLaPro" );
 
     // Create a new websocket connection
-    this.socket = io( "192.168.64.103", {
+    this.socket = io( "192.168.65.36", {
         transports: [ "websocket" ],
     } );
 
