@@ -1,6 +1,5 @@
 #pragma once
 
-#include <QObject>
 #include <cstdlib>
 #include <windows.h>
 #include <iostream>
@@ -18,11 +17,8 @@ enum
 	K8055AdapterDllNotFoundException
 };
 
-
-class K8055Adapter : public QObject
+class K8055Adapter
 {
-	Q_OBJECT
-
 private:
 	int foundDLL;
 	HINSTANCE hDLL;
@@ -30,12 +26,12 @@ private:
 	int CardAddress;
 	int h;
 
+	K8055Adapter();
+	~K8055Adapter();
 	static K8055Adapter * instance;
 	int init();
 
 public:
-	K8055Adapter(QObject *parent);
-	~K8055Adapter();
 
 	static K8055Adapter * getInstance();
 	static void freeInstance();

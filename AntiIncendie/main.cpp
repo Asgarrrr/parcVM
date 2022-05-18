@@ -1,19 +1,23 @@
-
-#include <QtCore/QCoreApplication>
 #include "K8055Adapter.h"
-#include "parcvm.h"
-#include "Database.h"
-#include "Timer.h"
-#include <qdebug.h>
-#include <qthread.h>
 
-int main(int argc, char *argv[])
+int main(int argc, char ** argv)
 {
-    QCoreApplication a(argc, argv);
+	K8055Adapter * carteES = K8055Adapter::getInstance();
 
-	Database * db = new Database;
+	int value = carteES->OpenDevice(0);
+	std::cout << "Result open : " << value << std::endl;
+	
+	// Opérations sur la carte (lectures / écritures)
+	int numericValue = carteES->ReadAnalogChannel(1);
 
-	Timer timer(&a, db);
+	std::cout << numericValue << std::endl;
+	float percentValue = (float)numericValue / 255.0;
+	float temperature = percentValue * 90 - 30;
 
-    return a.exec();
+	std::cout << "Temperature : " << temperature << std::endl;
+
+	carteES->CloseDevice();
+	K8055Adapter::freeInstance();
+
+	return 0;
 }
