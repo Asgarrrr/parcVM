@@ -2,8 +2,26 @@
 
 K8055Adapter * K8055Adapter::instance = nullptr;
 
-K8055Adapter::K8055Adapter(QObject *parent)
-	: QObject(parent)
+K8055Adapter * K8055Adapter::getInstance()
+{
+	if (instance == nullptr)
+	{
+		instance = new K8055Adapter();
+	}
+
+	return instance;
+}
+
+void K8055Adapter::freeInstance()
+{
+	if (instance != nullptr)
+	{
+		delete instance;
+		instance = nullptr;
+	}
+}
+
+K8055Adapter::K8055Adapter()
 {
 	foundDLL = 0;
 	h = init();
@@ -22,29 +40,9 @@ K8055Adapter::~K8055Adapter()
 	FreeLibrary(hDLL);
 }
 
-
-K8055Adapter * K8055Adapter::getInstance()
-{
-	if (instance == nullptr)
-	{
-		instance = new K8055Adapter(Q_NULLPTR);
-	}
-
-	return instance;
-}
-
-void K8055Adapter::freeInstance()
-{
-	if (instance != nullptr)
-	{
-		delete instance;
-		instance = nullptr;
-	}
-}
-
 int K8055Adapter::init()
 {
-	hDLL = LoadLibrary(L"k8055d");
+	hDLL = LoadLibrary("k8055d");
 	if (hDLL != NULL)
 	{
 		OpenDevice = (t_func4)GetProcAddress(hDLL, "OpenDevice");
@@ -149,12 +147,12 @@ int K8055Adapter::init()
 			FreeLibrary(hDLL);
 			return -2;
 		}
-		/*Version_ = (t_func0)GetProcAddress(hDLL, "Version");
+		Version_ = (t_func0)GetProcAddress(hDLL, "Version");
 		if (!Version_)
 		{						// handle the error
 			FreeLibrary(hDLL);
 			return -2;
-		}*/
+		}
 		return 0;				// ok
 	}
 	return -1;					// error load DLL
