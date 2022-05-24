@@ -12,7 +12,7 @@
 
  module.exports = class Proxmox {
 
-     constructor( DB, apiToken, host, port = 8006 ) {
+    constructor( DB, socket, apiToken, host, port = 8006 ) {
 
         // —— Check if everything is ok
 
@@ -28,6 +28,9 @@
         if ( !port )
             throw new Error( "No port provided, default value is 8006" );
 
+        // —— Keep the websocket
+        this.socket = socket;
+
         this.DB = DB;
 
         this.axios = axios.create({
@@ -42,13 +45,14 @@
 
         this.axios.interceptors.response.use(
             ( response  ) => response,
-            ( error     ) => {
-                chalk.red( error );
-                return { data: {  } };
-            }
+            ( error     ) => ({
+                data: {
+                    error: error.message,
+                },
+            })
         );
 
-        this.axios.get( ).catch( ( e ) => {
+        this.axios.get( ).catch( ( error ) => {
             throw new error( `Unable to connect to ${ this.host }:${ this.port }, ${ error.message }` );
         } );
 
@@ -80,8 +84,8 @@
 
                     if ( taskDetails && taskDetails.endtime ) {
 
-                    this.queue.inProgress.splice( this.queue.inProgress.indexOf( task ), 1 );
-                    console.log( `${ task } is finished` );
+                        this.queue.inProgress.splice( this.queue.inProgress.indexOf( task ), 1 );
+                        console.log( task, `is finished` );
 
                     }
 
@@ -97,8 +101,12 @@
 
                     if ( taskInProgress.run.name === "createVM" )
                         new VMDB( this.DB ).inservm( taskInProgress.args.ID )
-                    else if ( taskInProgress.run.name === "deleteVM" )
-                        new VMDB( this.DB ).delvm( taskInProgress.args.ID )
+                    else if ( taskInProgress.run.name === "deleteVM" ) {
+
+                        new VMDB( this.DB ).deletevm( taskInProgress.args.ID )
+                        this.socket.emit( "deleteVM", taskInProgress.args.ID );
+
+                    }
 
                     taskInProgress.upid = data
 
@@ -130,44 +138,43 @@
 
         }, 1000 );
 
-     }
+    }
 
-     /**
-      * @brief   Load last cluster events
-      * @return  { Array } List of events
-      */
-     async getClusterEvents( ) {
+    /**
+     * @brief   Load last cluster events
+     * @return  { Array } List of events
+     */
+    async getClusterEvents( ) {
 
         const { data: { data } } = await this.axios.get( "cluster/tasks" );
         return data;
 
-     }
+    }
 
-     /**
-      * @brief   Get the list of all or specific nodes
-      * @param   { Array } [ nodes ] List of nodes to get
-      * @return  { Array }           List of nodes
-      * @throws  { Error }           If the request failed
-      */
-     async getNodes( IDS ) {
+    /**
+     * @brief   Get the list of all or specific nodes
+     * @param   { Array } [ nodes ] List of nodes to get
+     * @return  { Array }           List of nodes
+     * @throws  { Error }           If the request failed
+     */
+    async getNodes( IDS ) {
 
-         const { data: { data } } = await this.axios.get( "nodes" );
+        const { data: { data } } = await this.axios.get( "nodes" );
 
-         if ( IDS )
-             return data.filter( ( node ) => IDS.includes( node.node ) );
+        if ( IDS )
+            return data.filter( ( node ) => IDS.includes( node.node ) );
 
-         return data;
+        return data;
 
-     }
+    }
 
-     /**
-      * @brief   Get the list of all or specific VMs
-      * @param   { Array  } [ VMs ]             List of VMs to get
-      * @param   { String } [ allowTemplate ]   Allow templates to be returned
-      * @return  { Array  }                     List of VMs
-      * @todo    Query parameters ( Search criteria )
-      */
-     async getVMs( VMID = [ ], allowTemplate = false ) {
+    /**
+     * @brief   Get the list of all or specific VMs
+     * @param   { Number } [ VMs ]             List of VMs to get
+     * @param   { String } [ allowTemplate ]   Allow templates to be returned
+     * @return  { Array  }                     List of VMs
+     */
+    async getVMs( VMID, allowTemplate = false ) {
 
         let { data: { data: resources } } = await this.axios.get( "cluster/resources" );
 
@@ -183,55 +190,82 @@
             resources = resources.filter( ( VM ) => !VM.template );
 
         // —— Filter by ID
-        if ( VMID.length )
-            resources = resources.filter( ( VM ) => VMID.includes( VM.vmid ) );
+        if ( VMID )
+            resources = resources.filter( ( VM ) => VM.vmid === VMID );
 
         // —— Get network information ( IP, MAC, etc. )
         await Promise.all( resources.map( ( VM ) => {
             this.axios.get( `nodes/${ VM.node }/qemu/${ VM.vmid }/agent/network-get-interfaces` ).then( ( data ) => {
                 VM.network = data?.data?.data?.network
-            } );
+                console.log( VM.network )
+            } ).catch( ( e ) => {
+                console.error( e )
+            } )
         } ) );
 
         // —— Not really needed, but it's nice to order properties alphabetically
         return resources.flat().map( ( VMs ) => Object.keys( VMs ).sort( ).reduce( ( res, key ) => ( res[ key ] = VMs[ key ], res ), { } ) );
 
-     }
+    }
 
-     async startVM( ID ) {
+    /**
+     * @brief   Start a specific VM
+     * @param  { Number } ID    ID of the VM to start
+     * @return { String }       Processed ID
+     * @throws { Error }        If the request failed
+     */
+    async startVM( { ID } ) {
 
-        console.log( `Start VM ${ ID }` );
+        // —— Get the VM details
         const VM = await this.getVMs( ID );
 
+        // —— Check if the VM is already running
         if ( !VM.length || VM[ 0 ].status === "running" )
             throw new Error( `VM ${ ID } is already started` );
 
-        const { data: { data } } = await this.axios.post( `nodes/${ VM[ 0 ].node }/qemu/${ VM[ 0 ].vmid }/status/start` );
+        // —— Start the VM
+        const { data: { data: taskID } } = await this.axios.post( `nodes/${ VM[ 0 ].node }/qemu/${ VM[ 0 ].vmid }/status/start` );
 
-        if ( !data )
-            throw new Error( `VM ${ ID } is already started` );
+        if ( !taskID )
+            throw new Error( `VM ${ ID } could not be started` );
 
-        return data;
+        return taskID;
 
-     }
+    }
 
-     async stopVM( ID ) {
+    /**
+     * @brief   Stop a specific VM
+     * @param  { Number } ID    ID of the VM to stop
+     * @return { String }       Processed ID
+     * @throws { Error }        If the request failed
+     */
+    async stopVM( { ID } ) {
 
-        console.log( `Stopping VM ${ ID }` );
+        // —— Get the VM details
         const VM = await this.getVMs( ID );
 
+        // —— Check if the VM is already stopped
         if ( !VM.length || VM[ 0 ].status === "stopped" )
             throw new Error( `VM ${ ID } is already stopped` );
 
-        const { data: { data } } = await this.axios.post( `nodes/${ VM[ 0 ].node }/qemu/${ VM[ 0 ].vmid }/status/stop` );
+        // —— Stop the VM
+        const { data: { data: taskID } } = await this.axios.post( `nodes/${ VM[ 0 ].node }/qemu/${ VM[ 0 ].vmid }/status/stop` );
 
-        if ( !data )
-        throw new Error( `VM ${ ID } could not be stopped` );
+        if ( !taskID )
+            throw new Error( `VM ${ ID } could not be stopped` );
 
-        return data;
+        return taskID;
 
-     }
+    }
 
+    /**
+     * @brief   Create a new VM
+     * @param   { Number } ID       ID of the VM to create
+     * @param   { String } name     Name of the VM to create
+     * @param   { String } template Template to use
+     * @return  { String }          Processed ID
+     * @throws  { Error }           If the request failed
+     */
     async createVM( { ID, name, template } ) {
 
         const nodes = await this.getNodes( );
@@ -264,25 +298,33 @@
 
     }
 
-    async deleteVM( ID ) {
+    /**
+     * @brief   Delete a specific VM
+     * @param   { Number } ID       ID of the VM to create
+     * @throws  { Error }           If the request failed
+     * @return  { String }          Processed ID
+     */
+    async deleteVM( { ID } ) {
 
         if ( !ID )
-            throw new Error( `No VM ID provided` );
+            throw new Error( "No VM ID provided" );
 
         if ( typeof ID === "string" )
             ID = parseInt( ID );
 
+        // —— Check if the VM exists
         const VM = await this.getVMs( ID );
 
         if ( !VM.length )
             throw new Error( `VM ${ ID } not found` );
 
-        const { data: { data } } = await this.axios.delete( `nodes/${ VM[ 0 ].node }/qemu/${ ID }?purge=0&destroy-unreferenced-disks=0` )
+        // —— Delete the VM
+        const { data: { data: taskID } } = await this.axios.delete( `nodes/${ VM[ 0 ].node }/qemu/${ ID }?purge=0&destroy-unreferenced-disks=0` )
 
-        if ( !data )
+        if ( !taskID )
             throw new Error( `Failed to delete VM ${ ID }` );
 
-        return data;
+        return taskID;
 
     }
 
@@ -353,6 +395,110 @@
             this.queue.waiting,
         ]
 
-     }
+    }
+
+    async getSnapshots( ID ) {
+
+        const VM = await this.getVMs( ID );
+
+        if ( !VM.length )
+            throw new Error( `VM ${ ID } not found` );
+
+        const { data: { data } } = await this.axios.get( `nodes/${ VM[ 0 ].node }/qemu/${ VM[ 0 ].vmid }/snapshot` );
+
+        if ( !data )
+            throw new Error( `Failed to get snapshots for VM ${ ID }` );
+
+        return data;
+
+    }
+
+    /**
+     * @brief   Rollback a specific VM to a snapshot
+     * @param   { Number } ID       ID of the VM to rollback
+     * @param   { String } snapshot Snapshot to rollback to
+     * @throws  { Error }           If the request failed
+     * @return  { String }          Processed ID
+     */
+    async useSnapshot( ID, snapshot = "init" ) {
+
+        // —— Get the VM details
+        const VM = this.getVMs( ID );
+
+        // —— Check if the VM exists
+        if ( !VM.length )
+            throw new Error( `VM ${ ID } not found` );
+
+        // —— Check if the snapshot exists
+        const snapshots = await this.getSnapshots( ID );
+
+        if ( !snapshots.length )
+            throw new Error( `Snapshot ${ snapshot } not found` );
+
+        // —— Check if the snapshot exists
+        if ( !snapshots.find( ( s ) => s.name === snapshot ) )
+            throw new Error( `Snapshot ${ snapshot } not found` );
+
+        // —— Use the snapshot
+        const { data: { data:taskID } } = await this.axios.post( `nodes/${ VM[ 0 ].node }/qemu/${ VM[ 0 ].vmid }/snapshot/${ snapshot }/rollback` );
+
+        if ( !taskID )
+            throw new Error( `Failed to use snapshot ${ snapshot } for VM ${ ID }` );
+
+        return taskID;
+
+    }
+
+    async createSnapshot( ID, snapname ) {
+
+        // —— Get the VM details
+        const VM = await this.getVMs( ID );
+
+        console.log( VM[ 0 ].vmid );
+
+        // —— Check if the VM exists
+        if ( !VM.length )
+            throw new Error( `VM ${ ID } not found` );
+
+        // —— Create the snapshot
+        const { data: { data:taskID } } = await this.axios.post( `nodes/${ VM[ 0 ].node }/qemu/${ VM[ 0 ].vmid }/snapshot`, {
+            snapname,
+        } );
+
+        if ( !taskID )
+            throw new Error( `Failed to create snapshot ${ snapname } for VM ${ ID }` );
+
+        return taskID;
+
+    }
+
+    async deleteSnapshot( ID, snapshot ) {
+
+        // —— Get the VM details
+        const VM = await this.getVMs( ID );
+
+        // —— Check if the VM exists
+        if ( !VM.length )
+            throw new Error( `VM ${ ID } not found` );
+
+        // —— Check if the snapshot exists
+        const snapshots = await this.getSnapshots( ID );
+
+        if ( !snapshots.length )
+            throw new Error( `Snapshot ${ snapshot } not found` );
+
+        // —— Check if the snapshot exists
+        if ( !snapshots.find( ( s ) => s.name === snapshot ) )
+            throw new Error( `Snapshot ${ snapshot } not found` );
+
+        // —— Delete the snapshot
+        const { data: { data:taskID } } = await this.axios.delete( `nodes/${ VM[ 0 ].node }/qemu/${ VM[ 0 ].vmid }/snapshot/${ snapshot }` );
+
+        if ( !taskID )
+            throw new Error( `Failed to delete snapshot ${ snapshot } for VM ${ ID }` );
+
+        return taskID;
+
+    }
 
  }
