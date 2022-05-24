@@ -8,7 +8,7 @@
     console.log( "https://github.com/Asgarrrr", "https://github.com/LucasGLaPro" );
 
     // Create a new websocket connection
-    this.socket = io( "192.168.65.36", {
+    this.socket = io( "192.168.64.103", {
         transports: [ "websocket" ],
     } );
 
@@ -33,11 +33,14 @@
     });
 
     function moveActiveTab() {
+
         let topPosition = activeIndex * 58 + 2.5;
-        if (activeIndex > 3) {
+
+        if ( activeIndex > 3 )
             topPosition += shortcuts.clientHeight;
-        }
+
         active_tab.style.top = `${topPosition}px`;
+
     }
 
     function changeLink() {
@@ -56,8 +59,8 @@
         spans[tooltipIndex].classList.add("show");
         tooltip.style.top = `${(100 / (spans.length * 2)) * (tooltipIndex * 2 + 1)}%`;
     }
-    tooltip_elements.forEach((elem) => {
-        elem.addEventListener("mouseover", showTooltip);
+    tooltip_elements.forEach( ( elem ) => {
+        elem.addEventListener( "mouseover", showTooltip );
     });
 
     try {
@@ -95,6 +98,43 @@
         const response = await fetch( "./vm" ).then( response => response.text() );
         redrawArea.innerHTML = response;
 
+        this.VMtable = new DataTable( "#table_id", {
+            columns: [
+                { data: "ID"        },
+                { data: "name"      },
+                { data: "status"    },
+                { data: "IP"        },
+                { data: "RAM"       },
+                { data: "CPU"       },
+                { data: "HDD"       },
+            ],
+            language: {
+                emptyTable: "Aucune machine disponible",
+                info: "Affichage de _START_ à _END_ sur _TOTAL_ machines",
+                infoEmpty: "Affichage de 0 à 0 sur 0 machines",
+                infoFiltered: "(filtré de _MAX_ machines au total)",
+                infoPostFix: "",
+                lengthMenu: "Afficher _MENU_ machines",
+                loadingRecords: "Chargement...",
+                processing: "Traitement...",
+                search: "Rechercher:",
+                zeroRecords: "Aucune machine correspondante trouvée",
+                paginate: {
+                    first: "Premier",
+                    last: "Dernier",
+                    next: "Suivant",
+                    previous: "Précédent"
+                },
+                aria: {
+                    sortAscending: ": activer pour trier la colonne par ordre croissant",
+                    sortDescending: ": activer pour trier la colonne par ordre décroissant"
+                }
+            }
+        });
+
+        this.socket.emit( "loadVM" );
+        refreshRequest = setInterval( ( ) => this.socket.emit( "loadVM" ), 1000 );
+
     } );
 
     document.getElementById( "projet" ).addEventListener( "click", async () => {
@@ -112,7 +152,6 @@
         this.socket.emit( "loadProjets" );
 
     } );
-
 
     let socketConnected = false;
 
@@ -336,7 +375,80 @@
 
         }
 
-    })
+    } );
+
+    this.socket.on( "loadVM", ( data ) => {
+
+        try {
+
+            for( const VM of data.VMS ) {
+
+                const matchdata = this.VMtable.rows( function ( idx, rowdata, node ) {
+                    return rowdata.ID === VM.vmid;
+                }).data();
+                console.log( matchdata );
+
+                if ( !matchdata.length ) {
+
+                    this.VMtable.row.add( {
+                        ID      : VM.vmid,
+                        name    : VM.name,
+                        status  : VM.status,
+                        IP      : "111.111.111.111",
+                        CPU     : ~~( VM.cpu / 1000 ),
+                        RAM     : ~~( VM.mem / VM.maxmem ) * 100,
+                        HDD     : ~~( VM.disk / VM.maxdisk ) * 100,
+
+                    });
+
+                } else {
+
+                    // Change ip to random
+                    this.VMtable.row( matchdata[ 0 ] ).data( {
+                        ID      : VM.vmid,
+                        name    : VM.name,
+                        status  : VM.status,
+                        IP      : `${Math.floor( Math.random( ) * 255 )}.${Math.floor( Math.random( ) * 255 )}.${Math.floor( Math.random( ) * 255 )}.${Math.floor( Math.random( ) * 255 )}`,
+                        CPU     : ~~( VM.cpu / 1000 ),
+                        RAM     : ~~( VM.mem / VM.maxmem ) * 100,
+                        HDD     : ~~( VM.disk / VM.maxdisk ) * 100,
+                    } ).draw( false );
+
+                }
+
+            }
+
+            this.VMtable.draw( );
+            // if ( !data.VMS.length )
+            //     return;
+
+            // this.VMtable.rows( ).every( function ( ) {
+            //     var data = this.data( );
+            //     console.log( ( data.VMS.find( VM => VM.vmid == data.id ) ))
+
+            // } );
+
+            // for( const VM of data?.VMS ) {
+
+            //     this.VMtable.row.add( {
+            //         ID      : VM.vmid,
+            //         name    : VM.name,
+            //         status  : VM.status,
+            //         IP      : "111.111.111.111",
+            //         CPU     : ~~( VM.cpu / 1000 ),
+            //         RAM     : ~~( VM.mem / VM.maxmem ) * 100,
+            //         HDD     : ~~( VM.disk / VM.maxdisk ) * 100,
+            // });
+
+            // }
+
+            // this.VMtable.draw( );
+
+        } catch ( error ) {
+            console.log( error );
+        }
+
+    } );
 
 } )( );
 
