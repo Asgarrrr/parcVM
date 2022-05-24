@@ -26,7 +26,7 @@ const indexRouter = require( "./routes/index" )
 
     const app    = express( )
         , server = http.createServer( app )
-        , io     = require( "socket.io" )(server);
+        , io     = require( "socket.io" )( server );
 
     const DB    = await ( new BDD( process.env.DBHOST, process.env.DBLOGIN, process.env.DBPASS, process.env.DBTABLENAME ) ).connect( );
 
@@ -94,7 +94,7 @@ const indexRouter = require( "./routes/index" )
 
     } );
 
-    const PMX = new Proxmox( DB, process.env.PROXMOXTOKEN, process.env.PROXMOXHOST, process.env.PROXMOXPORT );
+    const PMX = new Proxmox( DB, io, process.env.PROXMOXTOKEN, process.env.PROXMOXHOST, process.env.PROXMOXPORT );
 
 
     app.set( "PMX", PMX );
@@ -119,9 +119,9 @@ const indexRouter = require( "./routes/index" )
 
         const session = socket.request.session;
 
-        socket.on( "update", async ( data ) => {
+        socket.on( "loadVM", async ( data ) => {
 
-            socket.emit( "update", {
+            socket.emit( "loadVM", {
                 VMS, queue
             } );
 
@@ -164,6 +164,15 @@ const indexRouter = require( "./routes/index" )
 
         } );
 
+        socket.on( "deleteVMRequest", async ( data ) => {
+
+            console.log( "Demande de suppression de la VM " + data );
+            PMX.pushTask( PMX.deleteVM, { ID: data } );
+
+        } );
+
+
+
         socket.on( "loadProjets", async ( data ) => {
 
             console.log( "Demande de chargement des projets" );
@@ -186,9 +195,15 @@ const indexRouter = require( "./routes/index" )
 
         socket.on( "editProject", async ( data ) => {
 
-            console.log( "Demande d'édition du projet " + data );
+            try {
 
-            await ProjectManager.EditProject( data );
+                // —— Update project in database
+                await ProjectManager.EditProject( data );
+                socket.emit( "editProject", data );
+
+            } catch ( error ) {
+                socket.emit( "editProject", "fail" );
+            }
 
         } );
 
@@ -196,6 +211,7 @@ const indexRouter = require( "./routes/index" )
 
             try {
 
+                // —— Create project in database
                 await ProjectManager.CreateProject( data );
                 socket.emit( "createProject", data );
 
@@ -209,6 +225,7 @@ const indexRouter = require( "./routes/index" )
 
             try {
 
+                // —— Delete project in database
                 await ProjectManager.DeleteProject( data );
                 socket.emit( "deleteProject", data );
 
