@@ -1,57 +1,39 @@
-﻿const mysql = require('mysql');
+﻿class VM {
 
-class VM {
+    constructor(bdd) {
 
-    constructor( bdd ){
-
-      this.bdd = bdd;
+        this.bdd = bdd;
 
     }
 
+    async selectvm( idvm ) {
 
+        if ( idvm.length ) {
 
-    selectvm(idvm) {
+            const [ rows ] = await this.bdd.execute( "SELECT * FROM Vm WHERE IdVm = ?", [ idvm ] );
+            return rows;
 
-      if ( idvm.length ) {
+        } else {
 
-        return new Promise( ( resolve, reject ) => {
-          this.bdd.query( "SELECT * FROM Vm WHERE IdVm = '"+idvm+"'", function ( err, result ) {
-            if ( err ) reject( err )
-            resolve( result );
-          })
-        })
+            const [ rows ] = await this.bdd.execute( "SELECT * FROM Vm" );
+            return rows;
 
-      } else {
+        }
 
-        return new Promise( ( resolve, reject ) => {
-          this.bdd.query( "SELECT * FROM Vm", function ( err, result ) {
-            if ( err ) reject( err )
-            resolve( result );
-          })
-        })
-
-      }
-
-      
-    
     }
 
-    inservm(idvm){
-      return new Promise( ( resolve, reject ) => {
-        this.bdd.query( "INSERT INTO `Vm` VALUES ('"+idvm+"')", function ( err, result ) {
-          if ( err ) reject( err )
-          resolve( result );
-        })
-      })
+    async inservm( idvm ) {
+
+        const [ rows ] = await this.bdd.execute( "INSERT INTO Vm ( IdVm ) VALUES ( ? )", [ idvm ] );
+        return rows
+
     }
 
-    deletevm(idvm){
-      return new Promise( ( resolve, reject ) => {
-        this.bdd.query( "DELETE FROM Vm WHERE IdVm = '"+idvm+"'", function ( err, result ) {
-          if ( err ) reject( err )
-          resolve( result );
-        })
-      })
+    async deletevm( idvm ) {
+
+        const [ rows ] = await this.bdd.execute( "DELETE FROM Vm WHERE IdVm = ?", [ idvm ] );
+        return rows;
+
     }
 
 
