@@ -1,5 +1,5 @@
-const cookieParser = require( "cookie-parser"  )
-const User = require( "../classes/user" );
+const cookieParser  = require( "cookie-parser"   )
+const User          = require( "../classes/user" );
 
 module.exports = async function( req, res, next ) {
 
