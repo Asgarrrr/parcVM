@@ -13,6 +13,9 @@
     } );
 
     const VMtable = new DataTable( "#table_id", {
+        select: {
+            style: 'multi'
+        },
         columns: [
             { data: "ID"        },
             { data: "name"      },
