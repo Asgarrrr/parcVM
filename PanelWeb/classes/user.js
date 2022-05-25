@@ -1,4 +1,5 @@
-﻿module.exports = class User {
+﻿var nodemailer = require('nodemailer');
+module.exports = class User {
 
     constructor( bdd ){
 
@@ -17,6 +18,30 @@
     async CreateUser( Nom, Prenom, Email, MDP, admin = 0 ) {
 
         const [ rows ] = await this.bdd.execute( "INSERT INTO `users` VALUES ( NULL, ?, ?, ?, ?, ? )", [ Nom, Prenom, Email, MDP, admin ] );
+
+        var transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+            user: 'coriolistestrecrutement@gmail.com',
+            pass: 'nop'
+            }
+        });
+        
+        var mailOptions = {
+            from: 'coriolistestrecrutement@gmail.com',
+            to: Email,
+            subject: 'Mot de passe Abyss',
+            text: "Bonjour, votre mot de passe est: '" + MDP + "' vous pouvez le modifier dans l'interface."
+        };
+        
+        transporter.sendMail(mailOptions, function(error, info){
+            if (error) {
+            console.log(error);
+            } else {
+            console.log('Email sent: ' + info.response);
+            }
+        });
+
         return rows;
 
     }
