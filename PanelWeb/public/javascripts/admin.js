@@ -386,66 +386,45 @@
                 const matchdata = this.VMtable.rows( function ( idx, rowdata, node ) {
                     return rowdata.ID === VM.vmid;
                 }).data();
-                console.log( matchdata );
 
-                if ( !matchdata.length ) {
+                // Check if the VM is already in the table
+                if( matchdata.length === 0 ) {
 
+                    // Add the VM to the table
                     this.VMtable.row.add( {
                         ID      : VM.vmid,
                         name    : VM.name,
-                        status  : VM.status,
-                        IP      : "111.111.111.111",
-                        CPU     : ~~( VM.cpu / 1000 ),
-                        RAM     : ~~( VM.mem / VM.maxmem ) * 100,
-                        HDD     : ~~( VM.disk / VM.maxdisk ) * 100,
+                        status  : `<span class="badge text-bg-${ VM.status === "running" ? "success" : "danger" }">${ VM.status }</span>`,
+                        IP      : "VM.IP",
+                        CPU     : Math.round( VM.cpu * 100 ) / 100 + " %",
+                        RAM     : Math.round( ( VM.mem / VM.maxmem ) * 100 ) + " %",
+                        HDD     : Math.round( ( VM.disk / VM.maxdisk ) * 100 || 0 ) + "%",
 
-                    });
+                    } ).draw( false );
 
                 } else {
 
-                    // Change ip to random
-                    this.VMtable.row( matchdata[ 0 ] ).data( {
+                    // Update the VM in the table
+                    this.VMtable.row( function ( idx, rowdata, node ) {
+                        return rowdata.ID === VM.vmid;
+                    }).data( {
                         ID      : VM.vmid,
                         name    : VM.name,
-                        status  : VM.status,
-                        IP      : `${Math.floor( Math.random( ) * 255 )}.${Math.floor( Math.random( ) * 255 )}.${Math.floor( Math.random( ) * 255 )}.${Math.floor( Math.random( ) * 255 )}`,
-                        CPU     : ~~( VM.cpu / 1000 ),
-                        RAM     : ~~( VM.mem / VM.maxmem ) * 100,
-                        HDD     : ~~( VM.disk / VM.maxdisk ) * 100,
+                        status  : `<span class="badge text-bg-${ VM.status === "running" ? "success" : "danger" }">${ VM.status }</span>`,
+                        IP      : "VM.IP",
+                        CPU     : Math.round( VM.cpu * 100 ) / 100 + "%",
+                        RAM     : Math.round( ( VM.mem / VM.maxmem ) * 100 ) + "%",
+                        HDD     : Math.round( ( VM.disk / VM.maxdisk ) * 100 || 0 ) + "%",
                     } ).draw( false );
 
                 }
 
             }
 
-            this.VMtable.draw( );
-            // if ( !data.VMS.length )
-            //     return;
-
-            // this.VMtable.rows( ).every( function ( ) {
-            //     var data = this.data( );
-            //     console.log( ( data.VMS.find( VM => VM.vmid == data.id ) ))
-
-            // } );
-
-            // for( const VM of data?.VMS ) {
-
-            //     this.VMtable.row.add( {
-            //         ID      : VM.vmid,
-            //         name    : VM.name,
-            //         status  : VM.status,
-            //         IP      : "111.111.111.111",
-            //         CPU     : ~~( VM.cpu / 1000 ),
-            //         RAM     : ~~( VM.mem / VM.maxmem ) * 100,
-            //         HDD     : ~~( VM.disk / VM.maxdisk ) * 100,
-            // });
-
-            // }
-
-            // this.VMtable.draw( );
-
         } catch ( error ) {
-            console.log( error );
+
+            console.error( error );
+
         }
 
     } );
