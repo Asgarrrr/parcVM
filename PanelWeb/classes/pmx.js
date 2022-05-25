@@ -197,7 +197,6 @@
         await Promise.all( resources.map( ( VM ) => {
             this.axios.get( `nodes/${ VM.node }/qemu/${ VM.vmid }/agent/network-get-interfaces` ).then( ( data ) => {
                 VM.network = data?.data?.data?.network
-                console.log( VM.network )
             } ).catch( ( e ) => {
                 console.error( e )
             } )
