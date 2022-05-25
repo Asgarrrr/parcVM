@@ -1,5 +1,5 @@
-﻿const mysql = require( "mysql2/promise" );
-
+﻿
+const mysql = require( "mysql2/promise" );
 
 class bdd {
 
@@ -15,19 +15,30 @@ class bdd {
 
     async connect( ) {
 
-        this.bdd = await mysql.createConnection({
-            host     : this.host,
-            user     : this.user,
-            password : this.password,
-            database : this.database,
-            port     : this.port
-        });
+        try {
 
-        return this.bdd;
+            this.bdd = await mysql.createConnection({
+                host     : this.host,
+                user     : this.user,
+                password : this.password,
+                database : this.database,
+                port     : this.port
+            });
+
+            console.log( "Connexion à la base de données réussie 🌠" );
+
+            return this.bdd;
+
+
+        } catch ( error ) {
+
+            throw new Error( "Impossible de se connecter à la base de données" );
+
+        }
 
     }
 
-    getBDD ( ) {
+    getBDD( ) {
 
         return this.bdd;
 
