@@ -99,9 +99,12 @@
 
                 taskInProgress.run.call( this, taskInProgress.args ).then( ( data ) => {
 
-                    if ( taskInProgress.run.name === "createVM" )
+                    if ( taskInProgress.run.name === "createVM" ) {
+
                         new VMDB( this.DB ).inservm( taskInProgress.args.ID )
-                    else if ( taskInProgress.run.name === "deleteVM" ) {
+                        this.socket.emit( "createVM", taskInProgress.args.ID );
+
+                    } else if ( taskInProgress.run.name === "deleteVM" ) {
 
                         new VMDB( this.DB ).deletevm( taskInProgress.args.ID )
                         this.socket.emit( "deleteVM", taskInProgress.args.ID );
@@ -194,12 +197,19 @@
             resources = resources.filter( ( VM ) => VM.vmid === VMID );
 
         // —— Get network information ( IP, MAC, etc. )
-        await Promise.all( resources.map( ( VM ) => {
-            this.axios.get( `nodes/${ VM.node }/qemu/${ VM.vmid }/agent/network-get-interfaces` ).then( ( data ) => {
-                VM.network = data?.data?.data?.network
-            } ).catch( ( e ) => {
-                console.error( e )
-            } )
+        await Promise.all( resources.map( async ( VM ) => {
+
+            try {
+
+                const { data: { data: { result } } } = await this.axios.get( `nodes/${ VM.node }/qemu/${ VM.vmid }/agent/network-get-interfaces` );
+                VM.network = result;
+
+            } catch ( e ) {
+
+                VM.network = null;
+
+            }
+
         } ) );
 
         // —— Not really needed, but it's nice to order properties alphabetically
