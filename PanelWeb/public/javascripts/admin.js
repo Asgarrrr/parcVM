@@ -99,6 +99,8 @@
         redrawArea.innerHTML = response;
 
         this.VMtable = new DataTable( "#table_id", {
+            buttons: [ 'colvis' ],
+            stateSave: true,
             columns: [
                 { data: "ID"        },
                 { data: "name"      },
@@ -130,7 +132,20 @@
                     sortDescending: ": activer pour trier la colonne par ordre décroissant"
                 }
             }
+        })
+
+        $( "#table_id tbody" ).selectable({
+            filter: "tr",
+            tolerance: "fit",
+
+            selecting: function( event, ui ) {
+                ui.selecting.classList.add( "selected" );
+            }
+
         });
+
+        this.VMtable.buttons().container()
+            .appendTo( '#vmTableButtonContent' );
 
         this.socket.emit( "loadVM" );
         refreshRequest = setInterval( ( ) => this.socket.emit( "loadVM" ), 1000 );
@@ -390,12 +405,34 @@
                 // Check if the VM is already in the table
                 if( matchdata.length === 0 ) {
 
+                    let IP = null;
+
+                    if ( VM.network ) {
+
+                        if ( VM.network.find( ( interface ) => interface.name == "ens18" ) ) {
+
+                            const interface = VM.network.find( ( interface ) => interface.name == "ens18" );
+
+                            if ( interface ) {
+
+                                IP = interface["ip-addresses"].find( ( type ) => type["ip-address-type"] == "ipv4" );
+
+                                if ( IP )
+                                    IP = IP["ip-address"];
+
+                            }
+
+                        }
+
+                    }
+
+
                     // Add the VM to the table
                     this.VMtable.row.add( {
                         ID      : VM.vmid,
                         name    : VM.name,
                         status  : `<span class="badge text-bg-${ VM.status === "running" ? "success" : "danger" }">${ VM.status }</span>`,
-                        IP      : "VM.IP",
+                        IP      : IP || "-",
                         CPU     : Math.round( VM.cpu * 100 ) / 100 + " %",
                         RAM     : Math.round( ( VM.mem / VM.maxmem ) * 100 ) + " %",
                         HDD     : Math.round( ( VM.disk / VM.maxdisk ) * 100 || 0 ) + "%",
@@ -404,6 +441,28 @@
 
                 } else {
 
+
+                    let IP = null;
+
+                    if ( VM.network ) {
+
+                        if ( VM.network.find( ( interface ) => interface.name == "ens18" ) ) {
+
+                            const interface = VM.network.find( ( interface ) => interface.name == "ens18" );
+
+                            if ( interface ) {
+
+                                IP = interface["ip-addresses"].find( ( type ) => type["ip-address-type"] == "ipv4" );
+
+                                if ( IP )
+                                    IP = IP["ip-address"];
+
+                            }
+
+                        }
+
+                    }
+
                     // Update the VM in the table
                     this.VMtable.row( function ( idx, rowdata, node ) {
                         return rowdata.ID === VM.vmid;
@@ -411,7 +470,7 @@
                         ID      : VM.vmid,
                         name    : VM.name,
                         status  : `<span class="badge text-bg-${ VM.status === "running" ? "success" : "danger" }">${ VM.status }</span>`,
-                        IP      : "VM.IP",
+                        IP      : IP || "-",
                         CPU     : Math.round( VM.cpu * 100 ) / 100 + "%",
                         RAM     : Math.round( ( VM.mem / VM.maxmem ) * 100 ) + "%",
                         HDD     : Math.round( ( VM.disk / VM.maxdisk ) * 100 || 0 ) + "%",
