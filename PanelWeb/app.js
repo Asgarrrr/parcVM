@@ -105,14 +105,7 @@ const indexRouter = require( "./routes/index" )
     setInterval( async ( ) => {
         VMS     = await PMX.getVMs( );
         queue   = await PMX.getQueueTasks( );
-    }, 5000 );
-
-    // setInterval( async ( ) => {
-
-    //     console.log( VMS.filter( ( VM ) => VM.vmid === 118 ) );
-
-    // }, 100 );
-
+    }, 2000 );
 
 
     io.on( "connection", ( socket ) => {
@@ -171,8 +164,6 @@ const indexRouter = require( "./routes/index" )
 
         } );
 
-
-
         socket.on( "loadProjets", async ( data ) => {
 
             console.log( "Demande de chargement des projets" );
@@ -182,8 +173,6 @@ const indexRouter = require( "./routes/index" )
         } );
 
         socket.on( "getProjectDetail", async ( data ) => {
-
-            console.log( "Demande de détail du projet " + data );
 
             socket.emit( "getProjectDetail", {
                 project : await ProjectManager.GetProject( data ),
@@ -232,6 +221,14 @@ const indexRouter = require( "./routes/index" )
             } catch ( error ) {
                 socket.emit( "deleteProject", "fail" );
             }
+
+        } );
+
+        socket.on( "loadUsers", async ( data ) => {
+
+
+            socket.emit( "loadedUsers", await UserManager.GetAllUserDetails( ) );
+
 
         } );
 

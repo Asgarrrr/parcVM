@@ -24,6 +24,7 @@ body {
 
 #redrawArea {
     min-height: 100vh;
+    overflow: hidden;
 }
 
 a {
@@ -360,4 +361,14 @@ body.shrink .tooltip {
 
 #editProjectModalSelectVM, #editProjectModalSelectUser {
     height: 300px;
+}
+
+.ui-selectable-helper {
+    border: 1px solid rgb(54, 53, 53);
+    position: absolute;
+}
+
+.table-primary {
+    background-color: #d0d0f8 !important;
+    color: rgb(0, 0, 0);
 }

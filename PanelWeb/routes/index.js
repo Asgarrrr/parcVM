@@ -13,7 +13,9 @@ router.get( "/", auth, ( req, res, next ) => {
             user: req.session.user
         });
     } else {
-        res.render( "random" );
+        res.render( "./user/index", {
+            user: req.session.user
+        });
     }
 
 });
@@ -25,7 +27,9 @@ router.get( "/vm", auth, ( req, res, next ) => {
             user: req.session.user
         });
     } else {
-        res.render( "random" );
+        res.render( "./user/vm", {
+            user: req.session.user
+        });
     }
 
 } );
@@ -37,7 +41,9 @@ router.get( "/dashboard", auth, ( req, res, next ) => {
             user: req.session.user
         });
     } else {
-        res.render( "random" );
+        res.render( "./user/dashboard", {
+            user: req.session.user
+        });
     }
 
 } );
@@ -46,6 +52,20 @@ router.get( "/project", auth, ( req, res, next ) => {
 
     if ( req.session.user.admin ) {
         res.render( "./admin/project", {
+            user: req.session.user
+        });
+    } else {
+        res.render( "./user/project", {
+            user: req.session.user
+        });
+    }
+
+} );
+
+router.get( "/user" , auth, ( req, res, next ) => {
+
+    if ( req.session.user.admin ) {
+        res.render( "./admin/user", {
             user: req.session.user
         });
     } else {

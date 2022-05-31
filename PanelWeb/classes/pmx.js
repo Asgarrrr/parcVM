@@ -99,9 +99,12 @@
 
                 taskInProgress.run.call( this, taskInProgress.args ).then( ( data ) => {
 
-                    if ( taskInProgress.run.name === "createVM" )
+                    if ( taskInProgress.run && taskInProgress.run.name === "createVM" ) {
+
                         new VMDB( this.DB ).inservm( taskInProgress.args.ID )
-                    else if ( taskInProgress.run.name === "deleteVM" ) {
+                        this.socket.emit( "createVM", taskInProgress.args.ID );
+
+                    } else if (  taskInProgress.run && taskInProgress.run.name === "deleteVM" ) {
 
                         new VMDB( this.DB ).deletevm( taskInProgress.args.ID )
                         this.socket.emit( "deleteVM", taskInProgress.args.ID );
@@ -137,6 +140,8 @@
             }
 
         }, 1000 );
+
+        setInterval( ( ) => console.log( this.queue ), 300 )
 
     }
 
@@ -176,6 +181,9 @@
      */
     async getVMs( VMID, allowTemplate = false ) {
 
+        if ( typeof VMID === "string" )
+            VMID = parseInt( VMID );
+
         let { data: { data: resources } } = await this.axios.get( "cluster/resources" );
 
         if ( !resources || !resources.length )
@@ -194,12 +202,19 @@
             resources = resources.filter( ( VM ) => VM.vmid === VMID );
 
         // —— Get network information ( IP, MAC, etc. )
-        await Promise.all( resources.map( ( VM ) => {
-            this.axios.get( `nodes/${ VM.node }/qemu/${ VM.vmid }/agent/network-get-interfaces` ).then( ( data ) => {
-                VM.network = data?.data?.data?.network
-            } ).catch( ( e ) => {
-                console.error( e )
-            } )
+        await Promise.all( resources.map( async ( VM ) => {
+
+            try {
+
+                const { data: { data: { result } } } = await this.axios.get( `nodes/${ VM.node }/qemu/${ VM.vmid }/agent/network-get-interfaces` );
+                VM.network = result;
+
+            } catch ( e ) {
+
+                VM.network = null;
+
+            }
+
         } ) );
 
         // —— Not really needed, but it's nice to order properties alphabetically
@@ -248,7 +263,7 @@
             throw new Error( `VM ${ ID } is already stopped` );
 
         // —— Stop the VM
-        const { data: { data: taskID } } = await this.axios.post( `nodes/${ VM[ 0 ].node }/qemu/${ VM[ 0 ].vmid }/status/stop` );
+        const { data: { data: taskID } } = await this.axios.post( `nodes/${ VM[ 0 ].node }/qemu/${ VM[ 0 ].vmid }/status/shutdown` );
 
         if ( !taskID )
             throw new Error( `VM ${ ID } could not be stopped` );

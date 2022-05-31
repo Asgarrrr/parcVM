@@ -6,9 +6,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Document</title>
 
-        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.0/css/jquery.dataTables.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
-        <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css">
         <link rel="stylesheet" href="./stylesheets/admin.css">
         <link rel="stylesheet" href="https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css">
 
@@ -42,7 +41,7 @@
                                 <i class='bx bx-server'></i>
                                 <i class='bx bxs-server'></i>
                             </div>
-                            <span class="link hide">Machines</span>
+                            <span class="link hide">My VMs</span>
                         </a>
                     </li>
                     <li class="tooltip-element" data-tooltip="2" id="projet">
@@ -51,7 +50,7 @@
                                 <i class='bx bx-folder'></i>
                                 <i class='bx bxs-folder'></i>
                             </div>
-                            <span class="link hide">Projets</span>
+                            <span class="link hide">My projects</span>
                         </a>
                     </li>
                     <li class="tooltip-element" data-tooltip="3">
@@ -60,24 +59,14 @@
                                 <i class='bx bx-box'></i>
                                 <i class='bx bxs-box'></i>
                             </div>
-                            <span class="link hide">Classes</span>
-                        </a>
-                    </li>
-                    <li class="tooltip-element" data-tooltip="4" id="utilisateur">
-                        <a href="#" data-active="4">
-                            <div class="icon">
-                                <i class='bx bx-user'></i>
-                                <i class='bx bxs-user'></i>
-                            </div>
-                            <span class="link hide">Utilisateurs</span>
+                            <span class="link hide">My snapshots</span>
                         </a>
                     </li>
                     <div class="tooltip">
                         <span class="show">Dashboard</span>
-                        <span>Machines</span>
+                        <span>VMs</span>
                         <span>Projects</span>
-                        <span>Classes</span>
-                        <span>Utilisateurs</span>
+                        <span>Snapshots</span>
                     </div>
                 </ul>
                 <h4 class="hide">Shortcuts</h4>
@@ -124,7 +113,7 @@
                     <div class="admin-profile hide">
                         <div class="admin-info">
                             <h3><%= `${ user.Nom } ${ user.Prenom }` %></h3>
-                            <h5>Admin</h5>
+                            <h5>Student</h5>
                         </div>
                     </div>
                     <a href="logout" class="log-out">
