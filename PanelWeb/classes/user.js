@@ -17,13 +17,13 @@ module.exports = class User {
 
     async CreateUser( Nom, Prenom, Email, MDP, admin = 0 ) {
 
-        const [ rows ] = await this.bdd.execute( "INSERT INTO `users` VALUES ( NULL, ?, ?, ?, ?, ? )", [ Nom, Prenom, Email, MDP, admin ] );
+        const [ rows ] = await this.bdd.execute( "INSERT INTO `users` VALUES ( NULL, ?, ?, ?, SHA2( ?, 512 ), ? )", [ Nom, Prenom, Email, MDP, admin ] );
 
         var transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
             user: 'coriolistestrecrutement@gmail.com',
-            pass: 'nop'
+            pass: 'C0r10l1s'
             }
         });
 
