@@ -36,7 +36,7 @@
 
         let topPosition = activeIndex * 58 + 2.5;
 
-        if ( activeIndex > 3 )
+        if ( activeIndex > 4 )
             topPosition += shortcuts.clientHeight;
 
         active_tab.style.top = `${topPosition}px`;
@@ -99,7 +99,6 @@
         redrawArea.innerHTML = response;
 
         this.VMtable = new DataTable( "#table_id", {
-            buttons: [ 'colvis' ],
             stateSave: true,
             columns: [
                 { data: "ID"        },
@@ -136,10 +135,27 @@
 
         $( "#table_id tbody" ).selectable({
             filter: "tr",
-            tolerance: "fit",
+
+            start: function( event, ui ) {
+
+
+            },
 
             selecting: function( event, ui ) {
-                ui.selecting.classList.add( "selected" );
+
+                $( ui.selecting ).addClass( "ui-selecting" );
+
+
+            },
+
+            stop: function( event, ui ) {
+
+                const selected = $( "#table_id tbody tr.ui-selected" );
+                const init     = selected[ 0 ].classList.contains( "table-primary" );
+
+                $( ".ui-selected", this ).each( function( ) {
+                    $( this ).toggleClass( "table-primary", !init );
+                } );
             }
 
         });
@@ -165,6 +181,22 @@
         redrawArea.innerHTML = response;
 
         this.socket.emit( "loadProjets" );
+
+    } );
+
+    document.getElementById( "utilisateur" ).addEventListener( "click", async ( ) => {
+
+        if ( activeArea == 5 )
+            return;
+
+        activeArea = 5;
+
+        redrawArea.innerHTML = `<div class="h-100 d-flex justify-content-center align-items-center"><div class="spinner-grow text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>`;
+
+        const response = await fetch( "./user" ).then( ( response ) => response.text() );
+        redrawArea.innerHTML = response;
+
+        this.socket.emit( "loadUsers" );
 
     } );
 
@@ -393,12 +425,11 @@
     } );
 
     this.socket.on( "loadVM", ( data ) => {
-
         try {
 
             for( const VM of data.VMS ) {
 
-                const matchdata = this.VMtable.rows( function ( idx, rowdata, node ) {
+                const matchdata = this.VMtable.rows( ( idx, rowdata, node ) => {
                     return rowdata.ID === VM.vmid;
                 }).data();
 
@@ -415,6 +446,9 @@
 
                             if ( interface ) {
 
+                                if ( !interface["ip-addresses"] )
+                                    return;
+
                                 IP = interface["ip-addresses"].find( ( type ) => type["ip-address-type"] == "ipv4" );
 
                                 if ( IP )
@@ -426,18 +460,17 @@
 
                     }
 
-
                     // Add the VM to the table
                     this.VMtable.row.add( {
-                        ID      : VM.vmid,
-                        name    : VM.name,
-                        status  : `<span class="badge text-bg-${ VM.status === "running" ? "success" : "danger" }">${ VM.status }</span>`,
+                        ID      : VM.vmid || "-",
+                        name    : VM.name || "-",
+                        status  : `<span class="badge text-bg-${ VM.status === "running" ? "success" : "danger" }">${ VM.status || "-" }</span>`,
                         IP      : IP || "-",
-                        CPU     : Math.round( VM.cpu * 100 ) / 100 + " %",
-                        RAM     : Math.round( ( VM.mem / VM.maxmem ) * 100 ) + " %",
-                        HDD     : Math.round( ( VM.disk / VM.maxdisk ) * 100 || 0 ) + "%",
+                        CPU     : VM.cpu ? Math.round( VM.cpu * 100 ) / 100 + " %" : "-",
+                        RAM     : VM.mem ? Math.round( ( VM.mem / VM.maxmem ) * 100 ) + " %" : "-",
+                        HDD     : VM.disk ? Math.round( ( VM.disk / VM.maxdisk ) * 100 || 0 ) + "%" : "-",
 
-                    } ).draw( false );
+                    } ).draw( );
 
                 } else {
 
@@ -452,10 +485,10 @@
 
                             if ( interface ) {
 
-                                IP = interface["ip-addresses"].find( ( type ) => type["ip-address-type"] == "ipv4" );
+                                IP = interface[ "ip-addresses" ].find( ( type ) => type["ip-address-type"] == "ipv4" );
 
                                 if ( IP )
-                                    IP = IP["ip-address"];
+                                    IP = IP[ "ip-address" ];
 
                             }
 
@@ -467,18 +500,46 @@
                     this.VMtable.row( function ( idx, rowdata, node ) {
                         return rowdata.ID === VM.vmid;
                     }).data( {
-                        ID      : VM.vmid,
-                        name    : VM.name,
-                        status  : `<span class="badge text-bg-${ VM.status === "running" ? "success" : "danger" }">${ VM.status }</span>`,
+                        ID      : VM.vmid || "-",
+                        name    : VM.name || "-",
+                        status  : `<span class="badge text-bg-${ VM.status === "running" ? "success" : "danger" }">${ VM.status || "-" }</span>`,
                         IP      : IP || "-",
-                        CPU     : Math.round( VM.cpu * 100 ) / 100 + "%",
-                        RAM     : Math.round( ( VM.mem / VM.maxmem ) * 100 ) + "%",
-                        HDD     : Math.round( ( VM.disk / VM.maxdisk ) * 100 || 0 ) + "%",
-                    } ).draw( false );
+                        CPU     : VM.cpu ? Math.round( VM.cpu * 100 ) / 100 + "%" : "-",
+                        RAM     : VM.mem ? Math.round( ( VM.mem / VM.maxmem ) * 100 ) + "%" : "-",
+                        HDD     : VM.disk ? Math.round( ( VM.disk / VM.maxdisk ) * 100 || 0 ) + "%" : "-",
+                    } ).draw( );
 
                 }
 
             }
+
+            data?.queue[ 0 ] && data.queue[ 0 ].forEach( ( task ) => {
+
+                if ( task.args )
+                task.id = task.args.ID;
+
+                // Update the VM in the table
+                const row = this.VMtable.row( function ( idx, rowdata, node ) {
+                    return rowdata.ID == task.id;
+                });
+
+                if( row.data( ) ) {
+
+                    const VM = row.data( );
+
+                    row.data( {
+                        ID      : VM.ID || "-",
+                        name    : VM.name || "-",
+                        status  : `<span class="badge bg-secondary"><div class="spinner-grow spinner-grow-sm" role="status"><span class="visually-hidden">Loading</span></div></span>`,
+                        IP      : VM.ip || "-",
+                        CPU     : VM.cpu ? Math.round( VM.cpu * 100 ) / 100 + "%" : "-",
+                        RAM     : VM.mem ? Math.round( ( VM.mem / VM.maxmem ) * 100 ) + "%" : "-",
+                        HDD     : VM.disk ? Math.round( ( VM.disk / VM.maxdisk ) * 100 || 0 ) + "%" : "-",
+                    } ).draw( );
+
+                }
+
+            } );
 
         } catch ( error ) {
 
@@ -486,6 +547,41 @@
 
         }
 
+    } );
+
+    this.socket.on( "loadedUsers", ( data ) => {
+
+        const userList = document.getElementById( "userList" );
+
+        for( [ key, value ] of Object.entries( data ) ) {
+
+            const tr = document.createElement( "tr" );
+            const id = document.createElement( "td" );
+            const subname = document.createElement( "td" );
+            const name = document.createElement( "td" );
+            const email = document.createElement( "td" );
+            const project = document.createElement( "td" );
+
+            id.innerText = value.IdUser;
+            subname.innerText = value.UPrenom;
+            name.innerText = value.UNom;
+            email.innerText = value.Email;
+            project.innerText = value.Projets;
+
+            tr.appendChild( id );
+            tr.appendChild( subname );
+            tr.appendChild( name );
+            tr.appendChild( email );
+            tr.appendChild( project );
+
+            userList.appendChild( tr );
+
+        }
+
+    } );
+
+    this.socket.on( "deleteVM", ( data ) => {
+        console.log( data );
     } );
 
 } )( );
@@ -615,5 +711,26 @@ function removeProject( ) {
     const id = document.getElementById( "editProjectModal" ).dataset.id;
 
     this.socket.emit( "deleteProject", id );
+
+}
+
+function startVM( ) {
+
+    for ( const row of document.querySelectorAll( ".table-primary" ) )
+        this.socket.emit( "startVMRequest", row.childNodes[ 0 ].innerText );
+
+}
+
+function stopVM( ) {
+
+    for ( const row of document.querySelectorAll( ".table-primary" ) )
+        this.socket.emit( "stopVMRequest", row.childNodes[ 0 ].innerText );
+
+}
+
+function deleteVM( ) {
+
+    for ( const row of document.querySelectorAll( ".table-primary" ) )
+        this.socket.emit( "deleteVMRequest", row.childNodes[ 0 ].innerText );
 
 }

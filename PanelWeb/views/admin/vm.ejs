@@ -1,10 +1,18 @@
 <h1>Machines</h1>
 
 <div class="container">
-    <div id="vmTableButtonContent">
 
+    <div id="vmTableButtonContent" class="mt-1 mb-3 card">
+        <div class="card-body">
+            <button type="button" class="btn btn-secondary" onclick="startVM()">Start</button>
+            <button type="button" class="btn btn-secondary" onclick="stopVM()">Stop</button>
+            <button type="button" class="btn btn-secondary" onclick="">Restart</button>
+            <button type="button" class="btn btn-secondary" onclick="deleteVM()">Remove</button>
+            <button type="button" class="btn btn-secondary" onclick="">Reset</button>
+        </div>
     </div>
-    <table id="table_id" class="display">
+
+    <table id="table_id"  class="table" style="width:100%">
         <thead>
             <tr>
                 <th>ID</th>
@@ -19,4 +27,5 @@
         <tbody>
         </tbody>
     </table>
+
 </div>
