@@ -466,7 +466,7 @@
                         name    : VM.name || "-",
                         status  : `<span class="badge text-bg-${ VM.status === "running" ? "success" : "danger" }">${ VM.status || "-" }</span>`,
                         IP      : IP || "-",
-                        CPU     : VM.cpu ? Math.round( VM.cpu * 100 ) / 100 + " %" : "-",
+                        CPU     : VM.cpu ? Math.round( VM.cpu * 100 ) + " %" : "-",
                         RAM     : VM.mem ? Math.round( ( VM.mem / VM.maxmem ) * 100 ) + " %" : "-",
                         HDD     : VM.disk ? Math.round( ( VM.disk / VM.maxdisk ) * 100 || 0 ) + "%" : "-",
 
