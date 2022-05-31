@@ -99,12 +99,12 @@
 
                 taskInProgress.run.call( this, taskInProgress.args ).then( ( data ) => {
 
-                    if ( taskInProgress.run.name === "createVM" ) {
+                    if ( taskInProgress.run?.name === "createVM" ) {
 
                         new VMDB( this.DB ).inservm( taskInProgress.args.ID )
                         this.socket.emit( "createVM", taskInProgress.args.ID );
 
-                    } else if ( taskInProgress.run.name === "deleteVM" ) {
+                    } else if ( taskInProgress.run?.name === "deleteVM" ) {
 
                         new VMDB( this.DB ).deletevm( taskInProgress.args.ID )
                         this.socket.emit( "deleteVM", taskInProgress.args.ID );
@@ -140,6 +140,8 @@
             }
 
         }, 1000 );
+
+        setInterval( ( ) => console.log( this.queue ), 300 )
 
     }
 
@@ -178,6 +180,9 @@
      * @return  { Array  }                     List of VMs
      */
     async getVMs( VMID, allowTemplate = false ) {
+
+        if ( typeof VMID === "string" )
+            VMID = parseInt( VMID );
 
         let { data: { data: resources } } = await this.axios.get( "cluster/resources" );
 
@@ -258,7 +263,7 @@
             throw new Error( `VM ${ ID } is already stopped` );
 
         // —— Stop the VM
-        const { data: { data: taskID } } = await this.axios.post( `nodes/${ VM[ 0 ].node }/qemu/${ VM[ 0 ].vmid }/status/stop` );
+        const { data: { data: taskID } } = await this.axios.post( `nodes/${ VM[ 0 ].node }/qemu/${ VM[ 0 ].vmid }/status/shutdown` );
 
         if ( !taskID )
             throw new Error( `VM ${ ID } could not be stopped` );
