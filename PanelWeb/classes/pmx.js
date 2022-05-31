@@ -99,12 +99,12 @@
 
                 taskInProgress.run.call( this, taskInProgress.args ).then( ( data ) => {
 
-                    if ( taskInProgress.run?.name === "createVM" ) {
+                    if ( taskInProgress.run && taskInProgress.run.name === "createVM" ) {
 
                         new VMDB( this.DB ).inservm( taskInProgress.args.ID )
                         this.socket.emit( "createVM", taskInProgress.args.ID );
 
-                    } else if ( taskInProgress.run?.name === "deleteVM" ) {
+                    } else if (  taskInProgress.run && taskInProgress.run?.name === "deleteVM" ) {
 
                         new VMDB( this.DB ).deletevm( taskInProgress.args.ID )
                         this.socket.emit( "deleteVM", taskInProgress.args.ID );
