@@ -13,7 +13,9 @@ router.get( "/", auth, ( req, res, next ) => {
             user: req.session.user
         });
     } else {
-        res.render( "./user/index" );
+        res.render( "./user/index", {
+            user: req.session.user
+        });
     }
 
 });
@@ -25,7 +27,9 @@ router.get( "/vm", auth, ( req, res, next ) => {
             user: req.session.user
         });
     } else {
-        res.render( "./user/vm" );
+        res.render( "./user/vm", {
+            user: req.session.user
+        });
     }
 
 } );
@@ -37,7 +41,9 @@ router.get( "/dashboard", auth, ( req, res, next ) => {
             user: req.session.user
         });
     } else {
-        res.render( "./user/dashboard" );
+        res.render( "./user/dashboard", {
+            user: req.session.user
+        });
     }
 
 } );
@@ -49,7 +55,9 @@ router.get( "/project", auth, ( req, res, next ) => {
             user: req.session.user
         });
     } else {
-        res.render( "./user/project" );
+        res.render( "./user/project", {
+            user: req.session.user
+        });
     }
 
 } );
