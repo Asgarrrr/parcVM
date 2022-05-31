@@ -13,7 +13,7 @@ router.get( "/", auth, ( req, res, next ) => {
             user: req.session.user
         });
     } else {
-        res.render( "random" );
+        res.render( "./user/index" );
     }
 
 });
@@ -25,7 +25,7 @@ router.get( "/vm", auth, ( req, res, next ) => {
             user: req.session.user
         });
     } else {
-        res.render( "random" );
+        res.render( "./user/vm" );
     }
 
 } );
