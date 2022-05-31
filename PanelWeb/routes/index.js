@@ -37,7 +37,7 @@ router.get( "/dashboard", auth, ( req, res, next ) => {
             user: req.session.user
         });
     } else {
-        res.render( "random" );
+        res.render( "./user/dashboard" );
     }
 
 } );
@@ -49,7 +49,7 @@ router.get( "/project", auth, ( req, res, next ) => {
             user: req.session.user
         });
     } else {
-        res.render( "random" );
+        res.render( "./user/project" );
     }
 
 } );
