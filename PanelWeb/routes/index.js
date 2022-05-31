@@ -54,6 +54,18 @@ router.get( "/project", auth, ( req, res, next ) => {
 
 } );
 
+router.get( "/user" , auth, ( req, res, next ) => {
+
+    if ( req.session.user.admin ) {
+        res.render( "./admin/user", {
+            user: req.session.user
+        });
+    } else {
+        res.render( "random" );
+    }
+
+} );
+
 // —— login index
 router.get( "/login", async ( req, res, next ) => {
 
