@@ -91,7 +91,7 @@ module.exports = class User {
 
     async ConnectUser( email, mdp ){
 
-        const [ rows ] = await this.bdd.execute( "SELECT Email, IdUser, Nom, Prenom, admin FROM `users` WHERE Email = ? AND SHA2( ?, 512 ) LIMIT 1;", [ email, mdp ] );
+        const [ rows ] = await this.bdd.execute( "SELECT Email, IdUser, Nom, Prenom, admin FROM `users` WHERE Email = ? AND MDP = SHA2( ?, 512 ) LIMIT 1;", [ email, mdp ] );
         return rows;
 
     }
