@@ -24,9 +24,14 @@ const indexRouter = require( "./routes/index" )
 
     console.log( " Abyss - Server wake up 🚀 " );
 
-    const app    = express( )
+    const app    = express()
         , server = http.createServer( app )
-        , io     = require( "socket.io" )( server );
+        , io     = require( "socket.io" )( server, {
+            cors: {
+                origin: "*",
+                credentials: true
+            }
+        } );
 
     const DB    = await ( new BDD( process.env.DBHOST, process.env.DBLOGIN, process.env.DBPASS, process.env.DBTABLENAME ) ).connect( );
 
@@ -38,16 +43,13 @@ const indexRouter = require( "./routes/index" )
         secret              : process.env.SESSION_SECRET,
         name                : process.env.SESSION_NAME,
         resave              : true,
-        saveUninitialized   : true,
-        cookie              : {
-            maxAge : 3600000 * 24
-        },
-        secure              : true
+		saveUninitialized   : true
     });
 
-    app.use( sessionMiddleware );
 
-    io.use( ( socket, next ) => sessionMiddleware( socket.request, {}, next ) );
+    io.use( ( socket, next ) => sessionMiddleware(socket.request, socket.request.res || {}, next ) );
+
+    app.use( sessionMiddleware );
 
     // —— View engine setup
     app.set( "views", path.join( __dirname, "views" ) );
@@ -110,8 +112,6 @@ const indexRouter = require( "./routes/index" )
 
     io.on( "connection", ( socket ) => {
 
-        const session = socket.request.session;
-
         socket.on( "loadVM", async ( data ) => {
 
             socket.emit( "loadVM", {
@@ -121,8 +121,6 @@ const indexRouter = require( "./routes/index" )
         } );
 
         socket.on( "createVMRequest", async ( data ) => {
-
-            const session = socket.request.session;
 
             let baseID = await PMX.getNextVMID( );
 
@@ -145,14 +143,14 @@ const indexRouter = require( "./routes/index" )
 
         socket.on( "startVMRequest", async ( data ) => {
 
-            console.log( "Demande de démarrage de la VM " + data );
+            console.log( "Demande de démarrage de la VM " );
             PMX.pushTask( PMX.startVM, { ID: data } );
 
         } );
 
         socket.on( "stopVMRequest", async ( data ) => {
 
-            console.log( "Demande d'arrêt de la VM " + data );
+            console.log( "Demande d'arrêt de la VM " );
             PMX.pushTask( PMX.stopVM, { ID: data } );
 
         } );
@@ -166,7 +164,7 @@ const indexRouter = require( "./routes/index" )
 
         socket.on( "loadProjets", async ( data ) => {
 
-            console.log( "Demande de chargement des projets" );
+            console.log( socket.request.session );
 
             socket.emit( "loadProjets", await ProjectManager.GetAllProject( ) );
 
@@ -225,7 +223,6 @@ const indexRouter = require( "./routes/index" )
         } );
 
         socket.on( "loadUsers", async ( data ) => {
-
 
             socket.emit( "loadedUsers", await UserManager.GetAllUserDetails( ) );
 

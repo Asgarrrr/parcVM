@@ -66,8 +66,6 @@ module.exports = class Project {
         if( rows.length == 0 )
             return null;
 
-        console.log( rows )
-
         // Group users and vms
         const project = {
 
@@ -94,6 +92,8 @@ module.exports = class Project {
                 project.vms.push( row.IDVM );
 
         }
+
+        console.log( project );
 
         return project;
 
