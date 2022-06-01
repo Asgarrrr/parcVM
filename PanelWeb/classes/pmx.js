@@ -85,7 +85,6 @@
                     if ( taskDetails && taskDetails.endtime ) {
 
                         this.queue.inProgress.splice( this.queue.inProgress.indexOf( task ), 1 );
-                        console.log( task, `is finished` );
 
                     }
 
@@ -119,7 +118,7 @@
                 }).catch( ( e ) => {
 
                     console.error( chalk.red( e.message ) );
-                    this.queue.inProgress.splice( this.queue.inProgress.indexOf( taskInProgress), 1 );
+                    this.queue.inProgress.splice( this.queue.inProgress.indexOf( taskInProgress ), 1 );
 
                 }).finally( ( ) => {
 
@@ -141,7 +140,7 @@
 
         }, 1000 );
 
-        setInterval( ( ) => console.log( this.queue ), 300 )
+        // setInterval( ( ) => console.log( this.queue ), 300 )
 
     }
 
