@@ -49,7 +49,9 @@ module.exports = class User {
     async DeleteUser( id ) {
 
         const [ rows ] = await this.bdd.execute( "DELETE FROM users WHERE IdUser = ?", [ id ] );
+        const [ rows2 ] = await this.bdd.execute( "DELETE FROM UserProject WHERE IdUser = ?", [ id ] );
         return rows;
+        return rows2;
 
     }
 
