@@ -8,9 +8,7 @@
     console.log( "https://github.com/Asgarrrr", "https://github.com/LucasGLaPro" );
 
     // Create a new websocket connection
-    this.socket = io( "192.168.64.103", {
-        transports: [ "websocket" ],
-    } );
+    this.socket = io( "192.168.64.103" );
 
     const shrink_btn = document.querySelector(".shrink-btn");
     const sidebar_links = document.querySelectorAll(".sidebar-links a");
@@ -65,7 +63,9 @@
 
     try {
 
-        redrawArea.innerHTML = await fetch( "./dashboard" ).then( res => res.text( ) );
+        redrawArea.innerHTML = await fetch( "./dashboard", {
+            credentials: "same-origin",
+        } ).then( res => res.text( ) );
 
     } catch (error) {
 
@@ -80,7 +80,9 @@
 
         redrawArea.innerHTML = `<div class="h-100 d-flex justify-content-center align-items-center"><div class="spinner-grow text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>`;
 
-        const response = await fetch( "./dashboard" ).then( response => response.text() );
+        const response = await fetch( "./dashboard", {
+            credentials: "same-origin",
+        } ).then( response => response.text() );
         redrawArea.innerHTML = response;
 
 
@@ -95,8 +97,12 @@
 
         redrawArea.innerHTML = `<div class="h-100 d-flex justify-content-center align-items-center"><div class="spinner-grow text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>`;
 
-        const response = await fetch( "./vm" ).then( response => response.text() );
+        const response = await fetch( "./vm", {
+            credentials: "same-origin",
+        } ).then( response => response.text() );
         redrawArea.innerHTML = response;
+
+        this.VMOperations = { };
 
         this.VMtable = new DataTable( "#table_id", {
             stateSave: true,
@@ -177,7 +183,10 @@
 
         redrawArea.innerHTML = `<div class="h-100 d-flex justify-content-center align-items-center"><div class="spinner-grow text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>`;
 
-        const response = await fetch( "./project" ).then( response => response.text() );
+        const response = await fetch( "./project", {
+            method: "GET",
+            credentials: "include",
+        } ).then( response => response.text() );
         redrawArea.innerHTML = response;
 
         this.socket.emit( "loadProjets" );
@@ -193,7 +202,9 @@
 
         redrawArea.innerHTML = `<div class="h-100 d-flex justify-content-center align-items-center"><div class="spinner-grow text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>`;
 
-        const response = await fetch( "./user" ).then( ( response ) => response.text() );
+        const response = await fetch( "./user", {
+            credentials: "same-origin",
+        } ).then( ( response ) => response.text() );
         redrawArea.innerHTML = response;
 
         this.socket.emit( "loadUsers" );
@@ -425,6 +436,7 @@
     } );
 
     this.socket.on( "loadVM", ( data ) => {
+
         try {
 
             for( const VM of data.VMS ) {
@@ -469,7 +481,6 @@
                         CPU     : VM.cpu ? Math.round( VM.cpu * 100 ) + " %" : "-",
                         RAM     : VM.mem ? Math.round( ( VM.mem / VM.maxmem ) * 100 ) + " %" : "-",
                         HDD     : VM.disk ? Math.round( ( VM.disk / VM.maxdisk ) * 100 || 0 ) + "%" : "-",
-
                     } ).draw( );
 
                 } else {
@@ -496,13 +507,18 @@
 
                     }
 
+                    if ( this.VMOperations[ String( VM.vmid ) ] )
+                        if ( this.VMOperations[ String( VM.vmid ) ] == VM.status )
+                            delete this.VMOperations[ String( VM.vmid ) ];
+
+
                     // Update the VM in the table
                     this.VMtable.row( function ( idx, rowdata, node ) {
                         return rowdata.ID === VM.vmid;
                     }).data( {
                         ID      : VM.vmid || "-",
                         name    : VM.name || "-",
-                        status  : `<span class="badge text-bg-${ VM.status === "running" ? "success" : "danger" }">${ VM.status || "-" }</span>`,
+                        status  : this.VMOperations[ String( VM.vmid ) ] ? `<span class="badge bg-secondary"><div class="spinner-grow spinner-grow-sm" role="status"><span class="visually-hidden">Loading</span></div></span>` : `<span class="badge text-bg-${ VM.status === "running" ? "success" : "danger" }">${ VM.status || "-" }</span>`,
                         IP      : IP || "-",
                         CPU     : VM.cpu ? Math.round( VM.cpu * 100 ) / 100 + "%" : "-",
                         RAM     : VM.mem ? Math.round( ( VM.mem / VM.maxmem ) * 100 ) + "%" : "-",
@@ -525,17 +541,26 @@
 
                 if( row.data( ) ) {
 
-                    const VM = row.data( );
+                    // if ( this.VMOperations[ String( task.id ) ] ) {
 
-                    row.data( {
-                        ID      : VM.ID || "-",
-                        name    : VM.name || "-",
-                        status  : `<span class="badge bg-secondary"><div class="spinner-grow spinner-grow-sm" role="status"><span class="visually-hidden">Loading</span></div></span>`,
-                        IP      : VM.ip || "-",
-                        CPU     : VM.cpu ? Math.round( VM.cpu * 100 ) / 100 + "%" : "-",
-                        RAM     : VM.mem ? Math.round( ( VM.mem / VM.maxmem ) * 100 ) + "%" : "-",
-                        HDD     : VM.disk ? Math.round( ( VM.disk / VM.maxdisk ) * 100 || 0 ) + "%" : "-",
-                    } ).draw( );
+                    //     if ( this.VMOperations[ String( task.id ) ] !== task.type )
+                    //         this.VMOperations[ String( task.id ) ] = task.type;
+
+                    // } else this.VMOperations[ String( task.id ) ] = task.type;
+
+                    // console.log( this.VMOperations );
+
+                    // const VM = row.data( );
+
+                    // row.data( {
+                    //     ID      : VM.ID || "-",
+                    //     name    : VM.name || "-",
+                    //     status  : `<span class="badge bg-secondary"><div class="spinner-grow spinner-grow-sm" role="status"><span class="visually-hidden">Loading</span></div></span>`,
+                    //     IP      : VM.ip || "-",
+                    //     CPU     : VM.cpu ? Math.round( VM.cpu * 100 ) / 100 + "%" : "-",
+                    //     RAM     : VM.mem ? Math.round( ( VM.mem / VM.maxmem ) * 100 ) + "%" : "-",
+                    //     HDD     : VM.disk ? Math.round( ( VM.disk / VM.maxdisk ) * 100 || 0 ) + "%" : "-",
+                    // } ).draw( );
 
                 }
 
@@ -583,6 +608,7 @@
     this.socket.on( "deleteVM", ( data ) => {
         console.log( data );
     } );
+
 
 } )( );
 
@@ -716,21 +742,35 @@ function removeProject( ) {
 
 function startVM( ) {
 
-    for ( const row of document.querySelectorAll( ".table-primary" ) )
+    for ( const row of document.querySelectorAll( ".table-primary" ) ) {
+
+        if ( [ "Loading", "running" ].includes( row.childNodes[ 2 ].innerText ) )
+            continue;
+
         this.socket.emit( "startVMRequest", row.childNodes[ 0 ].innerText );
+        this.VMOperations[ row.childNodes[ 0 ].innerText ] = "runnnig";
+    }
 
 }
 
 function stopVM( ) {
 
-    for ( const row of document.querySelectorAll( ".table-primary" ) )
+    for ( const row of document.querySelectorAll( ".table-primary" ) ) {
+
+        if ( [ "Loading", "stopped" ].includes( row.childNodes[ 2 ].innerText ) )
+            continue;
+
         this.socket.emit( "stopVMRequest", row.childNodes[ 0 ].innerText );
+        this.VMOperations[ row.childNodes[ 0 ].innerText ] = "stopped";
+    }
 
 }
 
 function deleteVM( ) {
 
-    for ( const row of document.querySelectorAll( ".table-primary" ) )
+    for ( const row of document.querySelectorAll( ".table-primary" ) ) {
         this.socket.emit( "deleteVMRequest", row.childNodes[ 0 ].innerText );
+        this.VMOperations[ row.childNodes[ 0 ].innerText ] = "delete";
+    }
 
 }
