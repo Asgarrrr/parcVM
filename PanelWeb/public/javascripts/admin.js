@@ -47,7 +47,7 @@
         activeIndex = this.dataset.active;
         moveActiveTab();
     }
-    sidebar_links.forEach((link) => link.addEventListener("click", changeLink));
+    sidebar_links.forEach( ( link ) => link.addEventListener("click", changeLink));
 
     function showTooltip() {
         let tooltip = this.parentNode.lastElementChild;
@@ -67,8 +67,8 @@
             credentials: "same-origin",
         } ).then( res => res.text( ) );
 
-    } catch (error) {
-
+    } catch ( error ) {
+        console.log( error );
     }
 
     document.getElementById( "dashboard" ).addEventListener( "click", async ( ) => {
@@ -77,6 +77,8 @@
             return;
 
         activeArea = 0;
+        if ( refreshRequest )
+            clearInterval( refreshRequest );
 
         redrawArea.innerHTML = `<div class="h-100 d-flex justify-content-center align-items-center"><div class="spinner-grow text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>`;
 
@@ -94,6 +96,8 @@
             return;
 
         activeArea = 1;
+        if ( refreshRequest )
+            clearInterval( refreshRequest );
 
         redrawArea.innerHTML = `<div class="h-100 d-flex justify-content-center align-items-center"><div class="spinner-grow text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>`;
 
@@ -102,7 +106,8 @@
         } ).then( response => response.text() );
         redrawArea.innerHTML = response;
 
-        this.VMOperations = { };
+        this.VM             = [ ];
+        this.VMOperations   = { };
 
         this.VMtable = new DataTable( "#table_id", {
             stateSave: true,
@@ -113,7 +118,7 @@
                 { data: "IP"        },
                 { data: "RAM"       },
                 { data: "CPU"       },
-                { data: "HDD"       },
+                { data: "Actions"       },
             ],
             language: {
                 emptyTable: "Aucune machine disponible",
@@ -170,7 +175,7 @@
             .appendTo( '#vmTableButtonContent' );
 
         this.socket.emit( "loadVM" );
-        refreshRequest = setInterval( ( ) => this.socket.emit( "loadVM" ), 1000 );
+        refreshRequest = setInterval( ( ) => this.socket.emit( "loadVM" ), 2000 );
 
     } );
 
@@ -180,6 +185,9 @@
             return;
 
         activeArea = 2;
+
+        if ( refreshRequest )
+            clearInterval( refreshRequest );
 
         redrawArea.innerHTML = `<div class="h-100 d-flex justify-content-center align-items-center"><div class="spinner-grow text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>`;
 
@@ -199,6 +207,8 @@
             return;
 
         activeArea = 5;
+        if ( refreshRequest )
+            clearInterval( refreshRequest );
 
         redrawArea.innerHTML = `<div class="h-100 d-flex justify-content-center align-items-center"><div class="spinner-grow text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>`;
 
@@ -321,7 +331,7 @@
             input.id = user.IdUser;
             input.value = user.IdUser;
 
-            if ( data.project && data.project.users.find( u => u.IdUser == user.id ) )
+            if ( data.project && data.project.users.find( u => u.id == user.IdUser ) )
                 input.checked = true;
 
             const label = document.createElement( "label" );
@@ -441,6 +451,23 @@
 
             for( const VM of data.VMS ) {
 
+                if ( VM.vmid === 104 )
+                    continue;
+
+                if ( VM.template ) {
+
+                    const select = document.getElementById( "createVMNameTemplate" );
+
+                    // Get all options contents
+                    const options = [ ...select.options ].map( ( option ) => option.text );
+
+                    if ( !options.includes( VM.name ) )
+                        select.add( new Option( VM.name, VM.vmid ) );
+
+                    continue;
+
+                }
+
                 const matchdata = this.VMtable.rows( ( idx, rowdata, node ) => {
                     return rowdata.ID === VM.vmid;
                 }).data();
@@ -448,6 +475,7 @@
                 // Check if the VM is already in the table
                 if( matchdata.length === 0 ) {
 
+                    this.VM.push( VM.vmid );
                     let IP = null;
 
                     if ( VM.network ) {
@@ -477,16 +505,15 @@
                         ID      : VM.vmid || "-",
                         name    : VM.name || "-",
                         status  : `<span class="badge text-bg-${ VM.status === "running" ? "success" : "danger" }">${ VM.status || "-" }</span>`,
-                        IP      : IP || "-",
-                        CPU     : VM.cpu ? Math.round( VM.cpu * 100 ) + " %" : "-",
+                        IP      : VM.status === "running" ? IP || "-" : "-",
+                        CPU     : VM.cpu ? ( VM.cpu  * 100 ).toFixed( 2 ) + "%": "-",
                         RAM     : VM.mem ? Math.round( ( VM.mem / VM.maxmem ) * 100 ) + " %" : "-",
-                        HDD     : VM.disk ? Math.round( ( VM.disk / VM.maxdisk ) * 100 || 0 ) + "%" : "-",
-                    } ).draw( );
+                        Actions : "<button class='btn btn-primary btn-sm' style='--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;' onclick='editVMModal(this)' data-id='" + VM.vmid + "'>Modifier</button>"
+                    } ).draw( false );
 
                 } else {
 
-
-                    let IP = null;
+                    let IP = matchdata[0].IP;
 
                     if ( VM.network ) {
 
@@ -511,7 +538,6 @@
                         if ( this.VMOperations[ String( VM.vmid ) ] == VM.status )
                             delete this.VMOperations[ String( VM.vmid ) ];
 
-
                     // Update the VM in the table
                     this.VMtable.row( function ( idx, rowdata, node ) {
                         return rowdata.ID === VM.vmid;
@@ -519,52 +545,29 @@
                         ID      : VM.vmid || "-",
                         name    : VM.name || "-",
                         status  : this.VMOperations[ String( VM.vmid ) ] ? `<span class="badge bg-secondary"><div class="spinner-grow spinner-grow-sm" role="status"><span class="visually-hidden">Loading</span></div></span>` : `<span class="badge text-bg-${ VM.status === "running" ? "success" : "danger" }">${ VM.status || "-" }</span>`,
-                        IP      : IP || "-",
-                        CPU     : VM.cpu ? Math.round( VM.cpu * 100 ) / 100 + "%" : "-",
+                        IP      : VM.status === "running" ? `<span data-bs-toggle="tooltip" data-bs-placement="top" title="Tooltip on top"> ${ IP }</span>` || "-" : "-",
+                        CPU     : VM.cpu ? ( VM.cpu  * 100 ).toFixed( 2 ) + "%": "-",
                         RAM     : VM.mem ? Math.round( ( VM.mem / VM.maxmem ) * 100 ) + "%" : "-",
-                        HDD     : VM.disk ? Math.round( ( VM.disk / VM.maxdisk ) * 100 || 0 ) + "%" : "-",
-                    } ).draw( );
+                        Actions : "<button class='btn btn-primary btn-sm' style='--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;' onclick='editVMModal(this)' data-id='" + VM.vmid + "'>Modifier</button>"
+                    } ).draw( false );
 
                 }
 
             }
 
-            data?.queue[ 0 ] && data.queue[ 0 ].forEach( ( task ) => {
+            for( const oldVM of this.VM ) {
 
-                if ( task.args )
-                task.id = task.args.ID;
+                if ( !data.VMS.find( ( VM ) => VM.vmid === oldVM ) ) {
 
-                // Update the VM in the table
-                const row = this.VMtable.row( function ( idx, rowdata, node ) {
-                    return rowdata.ID == task.id;
-                });
+                    this.VMtable.row( function ( idx, rowdata, node ) {
+                        return rowdata.ID === oldVM;
+                    }).remove().draw( false );
 
-                if( row.data( ) ) {
-
-                    // if ( this.VMOperations[ String( task.id ) ] ) {
-
-                    //     if ( this.VMOperations[ String( task.id ) ] !== task.type )
-                    //         this.VMOperations[ String( task.id ) ] = task.type;
-
-                    // } else this.VMOperations[ String( task.id ) ] = task.type;
-
-                    // console.log( this.VMOperations );
-
-                    // const VM = row.data( );
-
-                    // row.data( {
-                    //     ID      : VM.ID || "-",
-                    //     name    : VM.name || "-",
-                    //     status  : `<span class="badge bg-secondary"><div class="spinner-grow spinner-grow-sm" role="status"><span class="visually-hidden">Loading</span></div></span>`,
-                    //     IP      : VM.ip || "-",
-                    //     CPU     : VM.cpu ? Math.round( VM.cpu * 100 ) / 100 + "%" : "-",
-                    //     RAM     : VM.mem ? Math.round( ( VM.mem / VM.maxmem ) * 100 ) + "%" : "-",
-                    //     HDD     : VM.disk ? Math.round( ( VM.disk / VM.maxdisk ) * 100 || 0 ) + "%" : "-",
-                    // } ).draw( );
+                    this.VM = this.VM.filter( ( VM ) => VM !== oldVM );
 
                 }
 
-            } );
+            }
 
         } catch ( error ) {
 
@@ -604,11 +607,6 @@
         }
 
     } );
-
-    this.socket.on( "deleteVM", ( data ) => {
-        console.log( data );
-    } );
-
 
 } )( );
 
@@ -748,7 +746,7 @@ function startVM( ) {
             continue;
 
         this.socket.emit( "startVMRequest", row.childNodes[ 0 ].innerText );
-        this.VMOperations[ row.childNodes[ 0 ].innerText ] = "runnnig";
+        this.VMOperations[ row.childNodes[ 0 ].innerText ] = "running";
     }
 
 }
@@ -774,3 +772,68 @@ function deleteVM( ) {
     }
 
 }
+
+function createVMActions( ) {
+
+    const createVMQuantity      = document.getElementById( "createVMQuantity" );
+    const createVMNameTemplate  = document.getElementById( "createVMNameTemplate" );
+    const createVMName          = document.getElementById( "createVMName" );
+
+    if ( !createVMQuantity.value || createVMQuantity.value < 1 ) {
+        createVMQuantity.classList.add( "is-invalid" );
+        return;
+    }
+
+    const newVMs = [ ];
+
+    // Loop over the quantity
+    for ( let i = 0; i < parseInt( createVMQuantity.value ); i++ ) {
+
+        const specs = { };
+        specs.name = createVMNameTemplate.value;
+
+        // Check if name contains loop constants
+        if ( createVMName.value.match( /\$X/gm ) ) {
+
+            if ( createVMName.value.match( /\$X-\d+/gm ) ) {
+
+                specs.name = createVMName.value.replace( /\$X-\d+/gm, i + parseInt( createVMName.value.match( /\$X-\d+/gm )[ 0 ].replace( /\$X-/, "" ) ) );
+
+            } else {
+
+                specs.name = createVMName.value.replace( /\$X/gm, i + 1 );
+
+            }
+
+            specs.template = createVMNameTemplate.value;
+            newVMs.push( specs );
+
+        }
+
+    }
+
+    this.socket.emit( "createVMRequest", newVMs );
+
+}
+
+function editVMModal( trigger ) {
+
+    const modalDom  = document.getElementById( "editVMModal" )
+        , modal     = new bootstrap.Modal( modalDom ).show( )
+        , VMID      = trigger.dataset.id;
+
+    document.getElementById( "VMEditHeader" ).innerText = "Editer la VM " + VMID;
+    document.getElementById( "VMEditLoader" ).style.display = "block";
+    document.getElementById( "VMEditData" ).style.display   = "none";
+
+    this.socket.emit( "loadVMDetail", trigger.dataset.id );
+
+}
+
+this.socket.on( "loadVMDetail", async ( data ) => {
+
+    document.getElementById( "VMEditLoader" ).style.display = "none";
+    document.getElementById( "VMEditData" ).style.display   = "block";
+
+
+});
