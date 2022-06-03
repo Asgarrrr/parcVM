@@ -9,10 +9,14 @@
             <button type="button" class="btn btn-secondary" onclick="">Restart</button>
             <button type="button" class="btn btn-secondary" onclick="deleteVM()">Remove</button>
             <button type="button" class="btn btn-secondary" onclick="">Reset</button>
+
+            <button type="button" class="btn btn-primary float-end" data-bs-toggle="modal" data-bs-target="#createVMModal">
+                Créer une machine
+            </button>
         </div>
     </div>
 
-    <table id="table_id"  class="table" style="width:100%">
+    <table id="table_id" class="table table-hover" style="width:100%">
         <thead>
             <tr>
                 <th>ID</th>
@@ -21,11 +25,105 @@
                 <th>IP</th>
                 <th>RAM</th>
                 <th>CPU</th>
-                <th>HDD</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
         </tbody>
     </table>
+
+    <div class="modal fade" id="createVMModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Create machine</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="createVMFrom">
+
+                        <div class="form-floating mb-3">
+                            <input type="number" class="form-control" id="createVMQuantity" placeholder="Quantité" value="10" min="1" max="999" required>
+                            <label for="name">Quantité</label>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="createVMName"
+                                placeholder="Nom des machines virtuelles" required value="$X">
+                            <label for="floatingInput">Nom</label>
+                            <div class="form-text">Utiliser $X pour créer un nombre autoincrémenté, vous
+                                pouvez aussi utiliser $X-Y pour créer un nombre incrémenté commençant
+                                par Y. Les espace sont remplacés par des -.</div>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <select class="form-select" id="createVMNameTemplate">
+                                <option selected>Aucun</option>
+                            </select>
+                            <label for="floatingSelect">Template</label>
+                        </div>
+
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="createVMRequest" onclick="createVMActions()">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="editVMModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="VMEditHeader"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <center>
+                        <div class="spinner-border text-primary" role="status" id="VMEditLoader">
+                            <span class="visually-hidden">
+                                Loading...
+                            </span>
+                        </div>
+                    </center>
+
+                    <nav id="VMEditData">
+                        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                            <button class="nav-link active" id="nav-overview-tab" data-bs-toggle="tab"
+                                data-bs-target="#nav-overview" type="button" role="tab" aria-controls="nav-overview"
+                                aria-selected="true">Overview</button>
+                            <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab"
+                                data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile"
+                                aria-selected="false">Profile</button>
+                            <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab"
+                                data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact"
+                                aria-selected="false">Contact</button>
+                            <button class="nav-link" id="nav-disabled-tab" data-bs-toggle="tab"
+                                data-bs-target="#nav-disabled" type="button" role="tab" aria-controls="nav-disabled"
+                                aria-selected="false" disabled>Disabled</button>
+                        </div>
+                    </nav>
+                    <div class="tab-content" id="nav-tabContent">
+                        <div class="tab-pane fade show active" id="nav-overview" role="tabpanel"
+                            aria-labelledby="nav-overview-tab" tabindex="0">...</div>
+                        <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab"
+                            tabindex="0">...</div>
+                        <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab"
+                            tabindex="0">...</div>
+                        <div class="tab-pane fade" id="nav-disabled" role="tabpanel" aria-labelledby="nav-disabled-tab"
+                            tabindex="0">...</div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="createVMRequest" onclick="createVMActions()">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </div>
