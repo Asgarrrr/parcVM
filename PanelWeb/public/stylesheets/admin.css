@@ -35,7 +35,7 @@ ul {
     list-style: none;
 }
 
-nav {
+.navside {
     position: sticky;
     top: 0;
     left: 0;
@@ -49,7 +49,7 @@ nav {
     transition: width 0.5s ease-in-out;
 }
 
-nav::before {
+.navside::before {
     content: "";
     position: absolute;
     width: 2rem;
