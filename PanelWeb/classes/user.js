@@ -9,7 +9,7 @@ module.exports = class User {
 
     async GetAllUser() {
 
-        const [ rows ] = await this.bdd.execute( "SELECT * FROM users" );
+        const [ rows ] = await this.bdd.execute( "SELECT Nom, Prenom, IdUser FROM users" );
         return rows;
 
     }
@@ -50,8 +50,8 @@ module.exports = class User {
 
         const [ rows ] = await this.bdd.execute( "DELETE FROM users WHERE IdUser = ?", [ id ] );
         const [ rows2 ] = await this.bdd.execute( "DELETE FROM UserProject WHERE IdUser = ?", [ id ] );
-        return rows;
-        return rows2;
+
+        return [ rows, rows2 ];
 
     }
 
