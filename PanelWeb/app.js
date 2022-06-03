@@ -102,12 +102,12 @@ const indexRouter = require( "./routes/index" )
     app.set( "PMX", PMX );
     app.set( "BDD", DB  );
 
-    let VMS     = await PMX.getVMs( );
+    let VMS     = await PMX.getVMs(  );
     let queue   = await PMX.getQueueTasks( );
     setInterval( async ( ) => {
         VMS     = await PMX.getVMs( );
         queue   = await PMX.getQueueTasks( );
-    }, 2000 );
+    }, 5000 );
 
 
     io.on( "connection", ( socket ) => {
@@ -126,18 +126,15 @@ const indexRouter = require( "./routes/index" )
 
             for ( const { name, template } of data ) {
 
+                do baseID++
+                while( VMS.find( ( vm ) => vm.vmid === baseID ) )
+
                 if ( template === "Aucun" )
-                    PMX.pushTask( PMX.createVM, { ID: baseID++, name } );
+                    PMX.pushTask( PMX.createVM, { ID: baseID, name } );
                 else
-                    PMX.pushTask( PMX.cloneVM, { templateID: template, ID: baseID++, name } );
+                    PMX.pushTask( PMX.cloneVM, { templateID: template, ID: baseID, name } );
 
             }
-
-        } );
-
-        socket.on( "deleteVMRequest", async ( data ) => {
-
-            PMX.pushTask( PMX.deleteVM, { ID: data } );
 
         } );
 
@@ -226,6 +223,28 @@ const indexRouter = require( "./routes/index" )
 
             socket.emit( "loadedUsers", await UserManager.GetAllUserDetails( ) );
 
+
+        } );
+
+        socket.on( "deletedVM", async ( data ) => {
+
+            console.log( "VM deleted", data );
+
+        });
+
+        socket.on( "loadVMDetail", async ( vmid ) => {
+
+           try {
+
+                socket.emit( "loadVMDetail", {
+                    snapshot: await PMX.getSnapshots( vmid ),
+                } );
+
+           } catch ( error ) {
+                socket.emit( "loadVMDetail", {
+                    snapshot: [ "error" ],
+                } );
+           }
 
         } );
 
