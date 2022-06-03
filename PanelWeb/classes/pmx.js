@@ -42,7 +42,6 @@
             },
         });
 
-
         this.axios.interceptors.response.use(
             ( response  ) => response,
             ( error     ) => ({
@@ -61,8 +60,7 @@
             waiting   : [ ],
         }
 
-        this.getVMs( );
-        this.getNextVMID( );
+        this.cacheIP = { };
 
         // —— Set up the queue
         setInterval( ( ) => {
@@ -92,41 +90,44 @@
 
             } );
 
-        for ( let taskInProgress of this.queue.inProgress ) {
+            for ( let taskInProgress of this.queue.inProgress ) {
 
-            if ( taskInProgress.run ) {
+                if ( taskInProgress.run ) {
 
-                taskInProgress.run.call( this, taskInProgress.args ).then( ( data ) => {
+                    taskInProgress.run.call( this, taskInProgress.args ).then( ( data ) => {
 
-                    if ( taskInProgress.run && taskInProgress.run.name === "createVM" ) {
+                        if ( taskInProgress.taskName && taskInProgress.taskName === "createVM" ) {
 
-                        new VMDB( this.DB ).inservm( taskInProgress.args.ID )
-                        this.socket.emit( "createVM", taskInProgress.args.ID );
+                            console.log( "VM created" );
+                            new VMDB( this.DB ).inservm( taskInProgress.args.ID );
+                            this.socket.emit( "createVM", taskInProgress.args.ID );
 
-                    } else if (  taskInProgress.run && taskInProgress.run.name === "deleteVM" ) {
+                        } else if (  taskInProgress.taskName && taskInProgress.taskName === "deleteVM" ) {
 
-                        new VMDB( this.DB ).deletevm( taskInProgress.args.ID )
-                        this.socket.emit( "deleteVM", taskInProgress.args.ID );
+                            console.log( "VM deleted" );
+                            new VMDB( this.DB ).deletevm( taskInProgress.args.ID )
+                            this.socket.emit( "deletedVM", taskInProgress.args.ID );
 
-                    }
+                        }
 
-                    taskInProgress.upid = data
+                        taskInProgress.upid = data
+
+                        delete taskInProgress.args;
+
+                    }).catch( ( e ) => {
+
+                        console.error( "error", chalk.red( e.message ) );
+                        this.queue.inProgress.splice( this.queue.inProgress.indexOf( taskInProgress ), 1 )
+
+                    }).finally( ( ) => {
+                        console.log( this.queue.inProgress.length );
+                    });
 
                     delete taskInProgress.run;
-                    delete taskInProgress.args;
 
-                }).catch( ( e ) => {
-
-                    console.error( chalk.red( e.message ) );
-                    this.queue.inProgress.splice( this.queue.inProgress.indexOf( taskInProgress ), 1 );
-
-                }).finally( ( ) => {
-
-                });
+                }
 
             }
-
-        }
 
             if ( this.queue.waiting.length && this.queue.inProgress.length < 5 ) {
 
@@ -139,8 +140,6 @@
             }
 
         }, 1000 );
-
-        // setInterval( ( ) => console.log( this.queue ), 300 )
 
     }
 
@@ -178,7 +177,7 @@
      * @param   { String } [ allowTemplate ]   Allow templates to be returned
      * @return  { Array  }                     List of VMs
      */
-    async getVMs( VMID, allowTemplate = false ) {
+    async getVMs( VMID, allowTemplate = true ) {
 
         if ( typeof VMID === "string" )
             VMID = parseInt( VMID );
@@ -205,8 +204,25 @@
 
             try {
 
-                const { data: { data: { result } } } = await this.axios.get( `nodes/${ VM.node }/qemu/${ VM.vmid }/agent/network-get-interfaces` );
-                VM.network = result;
+                if ( VM.status === "running" ) {
+
+                    if ( !this.cacheIP[ VM.vmid ] || this.cacheIP[ VM.vmid ] && this.cacheIP[ VM.vmid ].timeout < Date.now() ) {
+
+                        const { data: { data: { result } } } = await this.axios.get( `nodes/${ VM.node }/qemu/${ VM.vmid }/agent/network-get-interfaces` );
+
+                        this.cacheIP[ VM.vmid ] = {
+                            timeout: Date.now() + ( 1000 * 60 ),
+                            IP     : result
+                        }
+
+                    } else {
+
+                        VM.network = this.cacheIP[ VM.vmid ].IP;
+
+                    }
+
+                } else VM.network = null;
+
 
             } catch ( e ) {
 
@@ -388,10 +404,21 @@
 
         try {
 
+            const encapsulatedTask = { run: task, args }
+
+            switch( task.name ) {
+                case "createVM":
+                    encapsulatedTask.taskName = "createVM";
+                    break;
+                case "deleteVM":
+                    encapsulatedTask.taskName = "deleteVM";
+                    break;
+            }
+
             if ( this.queue.inProgress && this.queue.inProgress.length >= 5 )
-                this.queue.waiting.push( { run: task, args } );
+                this.queue.waiting.push( encapsulatedTask );
             else
-                this.queue.inProgress.push( { run: task, args } );
+                this.queue.inProgress.push( encapsulatedTask );
 
         } catch ( error ) {
 
@@ -418,6 +445,8 @@
             throw new Error( `VM ${ ID } not found` );
 
         const { data: { data } } = await this.axios.get( `nodes/${ VM[ 0 ].node }/qemu/${ VM[ 0 ].vmid }/snapshot` );
+
+        console.log( data );
 
         if ( !data )
             throw new Error( `Failed to get snapshots for VM ${ ID }` );
@@ -466,8 +495,6 @@
 
         // —— Get the VM details
         const VM = await this.getVMs( ID );
-
-        console.log( VM[ 0 ].vmid );
 
         // —— Check if the VM exists
         if ( !VM.length )
