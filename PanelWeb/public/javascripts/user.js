@@ -470,6 +470,7 @@ this.socket.on( "getProjectDetail", ( data ) => {
         input.type = "checkbox";
         input.id = user.IdUser;
         input.value = user.IdUser;
+        input.disabled = true;
 
         if ( data.project && data.project.users.find( u => u.id == user.IdUser ) )
             input.checked = true;
@@ -491,6 +492,7 @@ this.socket.on( "getProjectDetail", ( data ) => {
         input.classList.add( "form-check-input" );
         input.type = "checkbox";
         input.value = VM.id;
+        input.disabled = true;
 
 
         if ( data.project && data.project.vms.find( u => u == VM.id ) )
