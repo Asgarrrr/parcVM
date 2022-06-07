@@ -93,8 +93,6 @@ module.exports = class Project {
 
         }
 
-        console.log( project );
-
         return project;
 
     }
