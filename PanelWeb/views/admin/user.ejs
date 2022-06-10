@@ -1,50 +1,139 @@
-<h1>Utilisateurs</h1>
-
 <div class="container">
 
-    <div class="card">
-        <div class="card-body row g-3">
-
-            <div class="col">
-                <input type="text" class="form-control" placeholder="Rechercher">
-            </div>
-            <div class="col-auto">
-                <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-                    <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
-                    <label class="btn btn-outline-primary" for="btnradio1">Radio 1</label>
-
-                    <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
-                    <label class="btn btn-outline-primary" for="btnradio2">Radio 2</label>
-
-                    <input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off">
-                    <label class="btn btn-outline-primary" for="btnradio3">Radio 3</label>
-                </div>
-            </div>
-
-        </div>
-    </div>
+    <button type="button" class="btn btn-primary float-end" data-bs-toggle="modal" data-bs-target="#createUserModal" data-bs-user="newUser" >
+        Ajouter un utilisateur
+    </button>
+    <h1>Utilisateurs</h1>
 
     <div class="card mt-3">
         <div class="card-body">
 
-            <table class="table">
+            <table id="table_user" class="table table-hover" style="width:100%">
                 <thead>
-                  <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">Nom</th>
-                    <th scope="col">Prenom</th>
-                    <th scope="col">Mail</th>
-                    <th scope="col">Projets</th>
-                  </tr>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nom</th>
+                        <th>Prénom</th>
+                        <th>Mail</th>
+                        <th>VMs</th>
+                        <th>Projets</th>
+                        <th>Classes</th>
+                        <th>Actions</th>
+                    </tr>
                 </thead>
-                <tbody id="userList">
-
+                <tbody>
                 </tbody>
             </table>
 
         </div>
     </div>
 
+    <div class="modal fade" id="createUserModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createUserModalTitle">Créer un utilisateur</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <center>
+                        <div class="spinner-border text-primary" role="status" id="userLoader">
+                            <span class="visually-hidden">
+                                Loading...
+                            </span>
+                        </div>
+                    </center>
+
+                    <div id="userData">
+
+                        <nav>
+                            <div class="nav nav-tabs" id="nav-tab-userCreation" role="tablist">
+                                <button class="nav-link active" id="nav-userData-tab" data-bs-toggle="tab" data-bs-target="#nav-userData" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Informations</button>
+                                <button class="nav-link" id="nav-userMachines-tab" data-bs-toggle="tab" data-bs-target="#nav-userMachines" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Machines</button>
+                                <button class="nav-link" id="nav-userProject-tab" data-bs-toggle="tab" data-bs-target="#nav-userProject" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Projets</button>
+                                <button class="nav-link" id="nav-userClass-tab" data-bs-toggle="tab" data-bs-target="#nav-userClass" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Classes</button>
+                            </div>
+                        </nav>
+
+                        <div class="tab-content mt-3" id="nav-tabContentuserCreation">
+
+                            <div class="tab-pane fade show active" id="nav-userData" role="tabpanel">
+                                <form id="createUserFrom">
+                                    <div class="row g-2">
+                                        <div class="col-md">
+                                            <div class="form-floating mb-3">
+                                                <input type="text" class="form-control" id="createUserName" placeholder="Nom"
+                                                    required value="">
+                                                <label for="createUserName">Nom</label>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md">
+                                            <div class="form-floating mb-3">
+                                                <input type="text" class="form-control" id="createUserFirstName"
+                                                    placeholder="Prénom" required value="">
+                                                <label for="createUserFirstName">Prénom</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-floating mb-3">
+                                        <input type="email" class="form-control" id="createUserEmail" placeholder="Mail" required
+                                            value="">
+                                        <label for="createUserEmail">Mail</label>
+                                    </div>
+
+                                </form>
+                            </div>
+                            <div class="tab-pane fade" id="nav-userMachines" role="tabpanel">
+
+                                <div class="form-floating mb-3">
+                                    <input type="text" class="form-control" id="usertModalSearchMachine" onkeyup="usertModalSearchMachine( this.value )">
+                                    <label for="usertModalSearchMachine">Rechercher</label>
+                                </div>
+
+                                <div id="usertModalSearchMachineList" class="overflow-auto">
+
+                                </div>
+
+                            </div>
+                            <div class="tab-pane fade" id="nav-userProject" role="tabpanel">
+
+                                <div class="form-floating mb-3">
+                                    <input type="text" class="form-control" id="usertModalSearchProject" onkeyup="usertModalSearchProject( this.value )">
+                                    <label for="usertModalSearchProject">Rechercher</label>
+                                </div>
+
+                                <div id="usertModalSearchProjectList" class="overflow-auto">
+
+                                </div>
+
+                            </div>
+                            <div class="tab-pane fade" id="nav-userClass" role="tabpanel">
+
+                                <div class="form-floating mb-3">
+                                    <input type="text" class="form-control" id="usertModalSearchClass" onkeyup="usertModalSearchClass( this.value )">
+                                    <label for="usertModalSearchClass">Rechercher</label>
+                                </div>
+
+                                <div id="usertModalSearchClassList" class="overflow-auto">
+
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-primary" id="createUserRequest" onclick="createUserRequest()">Ajouter !</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
 </div>
