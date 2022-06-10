@@ -1,3 +1,54 @@
+<div class="container">
 
-<span>Dashboards</span>
-<h2>Overview</h2>
+    <span>Dashboards</span>
+    <h2>Overview</h2>
+
+    <h2 class="mt-5">Nodes</h2>
+    <hr>
+
+    <div class="row mt-4">
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Memory</h5>
+                    <div style="width: 200px" class="mx-auto text-center">
+                        <canvas id="nodesMemUsage"></canvas>
+                        <div class="position-absolute top-50 start-50 translate-middle mt-4">
+                            <p id="memoryUsed">--</p>
+                            <p id="totalMem"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">CPU</h5>
+                    <div style="width: 200px" class="mx-auto text-center">
+                        <canvas id="nodesCPUUsage"></canvas>
+                        <div class="position-absolute top-50 start-50 translate-middle mt-4">
+                            <p id="CPUUsed">--</p>
+                            <p id="totalCPU"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Storage</h5>
+                    <div style="width: 200px" class="mx-auto text-center">
+                        <canvas id="nodesStorageUsage"></canvas>
+                        <div class="position-absolute top-50 start-50 translate-middle mt-4">
+                            <p id="StorageUsed">--</p>
+                            <p id="totalStorage"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
