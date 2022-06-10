@@ -62,6 +62,20 @@ router.get( "/project", auth, ( req, res, next ) => {
 
 } );
 
+router.get( "/classes", auth, ( req, res, next ) => {
+
+    if ( req.session.user.admin ) {
+        res.render( "./admin/classes", {
+            user: req.session.user
+        });
+    } else {
+        res.render( "./user/classes", {
+            user: req.session.user
+        });
+    }
+
+} );
+
 router.get( "/user" , auth, ( req, res, next ) => {
 
     if ( req.session.user.admin ) {
@@ -70,6 +84,18 @@ router.get( "/user" , auth, ( req, res, next ) => {
         });
     } else {
         res.render( "random" );
+    }
+
+} );
+
+router.get( "/tasks" , auth, ( req, res, next ) => {
+
+    if ( req.session.user.admin ) {
+        res.render( "./admin/tasks", {
+            user    : req.session.user,
+        });
+    } else {
+        res.sendStatus( 403 );
     }
 
 } );
