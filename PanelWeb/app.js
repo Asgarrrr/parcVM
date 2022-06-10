@@ -6,7 +6,8 @@ const Proxmox   = require( "./classes/pmx.js"     )
     , BDD       = require( "./classes/bdd.js"     )
     , VM        = require( "./classes/VM.js"      )
     , User      = require( "./classes/user.js"    )
-    , Project   = require( "./classes/project.js" );
+    , Project   = require( "./classes/project.js" )
+    , Class     = require( "./classes/class.js"   );
 
 // —— Dependencies
 const createError   = require( "http-errors"     )
@@ -37,6 +38,7 @@ const indexRouter = require( "./routes/index" )
 
     const ProjectManager = new Project( DB );
     const UserManager    = new User( DB );
+    const ClassManager   = new Class( DB );
 
     // —— Session
     const sessionMiddleware = session({
@@ -108,7 +110,6 @@ const indexRouter = require( "./routes/index" )
         VMS     = await PMX.getVMs( );
         queue   = await PMX.getQueueTasks( );
     }, 5000 );
-
 
     io.on( "connection", ( socket ) => {
 
@@ -230,7 +231,7 @@ const indexRouter = require( "./routes/index" )
 
             console.log( "VM deleted", data );
 
-        });
+        } );
 
         socket.on( "loadVMDetail", async ( vmid ) => {
 
@@ -238,9 +239,11 @@ const indexRouter = require( "./routes/index" )
 
                 socket.emit( "loadVMDetail", {
                     snapshot: await PMX.getSnapshots( vmid ),
+                    VM      : VMS.find( ( VM ) => VM.vmid == vmid )
                 } );
 
            } catch ( error ) {
+                console.log( error );
                 socket.emit( "loadVMDetail", {
                     snapshot: [ "error" ],
                 } );
@@ -248,6 +251,179 @@ const indexRouter = require( "./routes/index" )
 
         } );
 
+        socket.on( "useVMSnapshot", async ( { VMID, snapshot } ) => {
+
+            try {
+                PMX.pushTask( PMX.useSnapshot, { ID: VMID, snapshot } );
+                console.log( "Snapshot used", VMID, snapshot );
+            } catch ( error ) {
+                console.log( error );
+            }
+
+        });
+
+        socket.on( "deleteVMSnapshot", async ( { VMID, snapshot } ) => {
+
+            try {
+                PMX.pushTask( PMX.deleteSnapshot, { ID: VMID, snapshot } );
+                console.log( "Snapshot used", VMID, snapshot );
+            } catch ( error ) {
+                console.log( error );
+            }
+
+        });
+
+        socket.on( "createVMSnapshot", async ( { VMID, snapname, description } ) => {
+
+            try {
+                PMX.pushTask( PMX.createSnapshot, { VMID, snapname, description } );
+            } catch ( error ) {
+                console.log( error );
+            }
+
+        });
+
+        socket.on( "projetStartAllVM", async ( projectID ) => {
+
+            const project = await ProjectManager.GetProject( projectID );
+
+            if ( !project || !project.vms ) {
+                socket.emit( "projetStartAllVM", "fail" );
+                return;
+            }
+
+            // Remove all duplicates from VM list and start all VM
+            for ( const VM of [ ...new Set( project.vms ) ] )
+                PMX.pushTask( PMX.startVM, { ID: VM } );
+
+        });
+
+        socket.on( "projetStopAllVM", async ( projectID ) => {
+
+            const project = await ProjectManager.GetProject( projectID );
+
+            if ( !project || !project.vms ) {
+                socket.emit( "projetStopAllVM", "fail" );
+                return;
+            }
+
+            // Remove all duplicates from VM list and start all VM
+            for ( const VM of [ ...new Set( project.vms ) ] )
+                PMX.pushTask( PMX.stopVM, { ID: VM } );
+
+        });
+
+        socket.on( "loadUserDetails", async ( userID ) => {
+
+            socket.emit( "loadUserDetails", {
+                user    : userID === "newUser" ? "newUser" : await UserManager.GetUserbyId( userID ),
+                VMS     : VMS.map( ( VM ) => ({ id: VM.vmid, name: VM.name })),
+                projects: await ProjectManager.GetAllProject( ),
+                classes: await ClassManager.GetAllClass( )
+            } );
+
+        });
+
+        socket.on( "createUser", async( { name, firstName, mail, VM, Project, Class } ) => {
+
+            try {
+
+                const row = await UserManager.CreateUser(
+                    name,
+                    firstName,
+                    mail,
+                    Math.random( ).toString( 36 ).slice( -8 ),
+                    0,
+                    Project,
+                    Class,
+                    VM
+                );
+
+                socket.emit( "createUser", { idUser: row.insertId, name, firstName, mail, VM, Project, Class } );
+
+            } catch ( error ) {
+
+                console.log( error );
+
+            }
+
+
+        });
+
+        socket.on( "updateUser", async( { ID, name, firstName, mail, VM, Project, Class } ) => {
+
+            try {
+
+                await UserManager.EditUser( ID, name, firstName, mail, null, Project, Class, VM );
+
+                socket.emit( "updateUser", { ID, name, firstName, mail, VM, Project, Class } );
+
+            } catch ( error ) {
+
+                console.log( error );
+
+            }
+
+        });
+
+        socket.on( "deleteUser", async( { ID } ) => {
+
+            try {
+
+                await UserManager.DeleteUser( ID );
+                socket.emit( "deleteUser", { s: true, ID } );
+
+            } catch ( error ) {
+
+                console.log( error );
+
+            }
+
+        });
+
+        socket.on( "loadClass", async ( ) => {
+
+            try {
+
+                socket.emit( "loadClass", await ClassManager.GetAllClass( ) );
+
+            } catch (error) {
+
+                console.log( error );
+                socket.emit( "loadClass", "fail" );
+
+            }
+
+        });
+
+        socket.on( "startvncproxy", async ( { VMID } ) => {
+
+            console.log( "Start VNC proxy", VMID );
+            await PMX.vncproxy( VMID );
+
+        });
+
+        socket.on( "loadtasks", ( ) => {
+
+            socket.emit( "loadtasks", PMX.getQueueTasks( ) );
+
+        });
+
+        socket.on( "loadRessources", async ( ) => {
+
+            try {
+
+                socket.emit( "loadRessources", await PMX.loadResources( ) );
+
+            } catch ( error ) {
+
+                console.log( error );
+                socket.emit( "loadRessources", "fail" );
+
+
+            }
+
+        });
 
     });
 
