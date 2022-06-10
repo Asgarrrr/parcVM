@@ -1,0 +1,32 @@
+<header>
+    <button type="button" class="btn btn-primary float-end" data-bs-toggle="modal" data-bs-target="#editClassModal" data-classid="newClass">Créer une classe</button>
+
+    <h1>Classes</h1>
+</header>
+
+<div class="accordion" id="classContainer">
+
+</div>
+
+<div class="modal fade" id="editClassModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalClassName">Créer une classe</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body mt-1">
+                <form>
+                    <div class="mb-3">
+                        <label for="className" class="form-label">Nom</label>
+                        <input type="text" class="form-control" id="className">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <button type="button" class="btn btn-primary" onclick="editClassModalSave()">Sauvegarder</button>
+            </div>
+        </div>
+    </div>
+</div>
