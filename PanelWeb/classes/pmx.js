@@ -25,16 +25,25 @@
         if ( !host )
             throw new Error( "No host provided" );
 
-        if ( !port )
-            throw new Error( "No port provided, default value is 8006" );
+        this.port = port;
 
         // —— Keep the websocket
         this.socket = socket;
 
         this.DB = DB;
 
+        this.hosts = { }
+        // —— Parse host string, split space, key start from start to :, and host from : to end
+        for ( const h of host.split( " " ) ) {
+            const [ node, pmxhost ] = h.split( ":" );
+            this.hosts[ node ] = pmxhost;
+        }
+
+        if ( !Object.entries( this.hosts ).length )
+            throw new Error( "No host provided" );
+
         this.axios = axios.create({
-            baseURL     : `https://${ host }:${ port }/api2/json/`,
+            baseURL     : `https://${ Object.values( this.hosts )[ 0 ] }:${ port }/api2/json/`,
             timeout     : 10000,
             httpsAgent  : new https.Agent({ rejectUnauthorized: false }),
             headers     : {
@@ -67,7 +76,15 @@
 
             this.getClusterEvents( ).then( ( data = [] ) => {
 
-                data.filter( ( task ) => !task.endtime ).forEach( ( task ) => {
+                data.filter( ( task ) => {
+
+                    if ( task.type === "vncshell" )
+                        return false;
+
+                    if ( !task.endtime )
+                        return true;
+
+                }).forEach( ( task ) => {
 
                     if ( this.queue.inProgress.find( ( operation ) => operation.upid === task.upid ) )
                         return;
@@ -82,6 +99,36 @@
 
                     if ( taskDetails && taskDetails.endtime ) {
 
+                        switch( taskDetails.type ) {
+
+                            case "qmcreate":
+                                try {
+                                    new VMDB( this.DB ).inservm( taskDetails.id );
+                                    this.socket.emit( "createVM", taskDetails.id );
+
+                                    // —— Create initial snapshot
+                                    this.pushTask( this.createSnapshot, {
+                                        VMID        : taskDetails.id,
+                                        snapname    : "Initial",
+                                        description : "Snapshot initiale"
+                                    } );
+                                } catch ( error ) {
+                                    console.log( error );
+                                }
+                            break;
+
+                            case "qmdestroy":
+                                try {
+                                    new VMDB( this.DB ).deletevm( taskDetails.id )
+                                    this.socket.emit( "deletedVM", taskDetails.id );
+                                } catch ( error ) {
+                                    console.error( error );
+                                }
+
+                            break;
+
+                        }
+
                         this.queue.inProgress.splice( this.queue.inProgress.indexOf( task ), 1 );
 
                     }
@@ -95,20 +142,6 @@
                 if ( taskInProgress.run ) {
 
                     taskInProgress.run.call( this, taskInProgress.args ).then( ( data ) => {
-
-                        if ( taskInProgress.taskName && taskInProgress.taskName === "createVM" ) {
-
-                            console.log( "VM created" );
-                            new VMDB( this.DB ).inservm( taskInProgress.args.ID );
-                            this.socket.emit( "createVM", taskInProgress.args.ID );
-
-                        } else if (  taskInProgress.taskName && taskInProgress.taskName === "deleteVM" ) {
-
-                            console.log( "VM deleted" );
-                            new VMDB( this.DB ).deletevm( taskInProgress.args.ID )
-                            this.socket.emit( "deletedVM", taskInProgress.args.ID );
-
-                        }
 
                         taskInProgress.upid = data
 
@@ -203,6 +236,9 @@
         await Promise.all( resources.map( async ( VM ) => {
 
             try {
+
+                if( this.hosts[ VM.node ] )
+                    VM.nodeIP = `${ this.hosts[ VM.node ] }:${ this.port }`;
 
                 if ( VM.status === "running" ) {
 
@@ -404,7 +440,7 @@
 
         try {
 
-            const encapsulatedTask = { run: task, args }
+            const encapsulatedTask = { run: task, args, tasktype: task.name };
 
             switch( task.name ) {
                 case "createVM":
@@ -462,10 +498,10 @@
      * @throws  { Error }           If the request failed
      * @return  { String }          Processed ID
      */
-    async useSnapshot( ID, snapshot = "init" ) {
+    async useSnapshot( { ID, snapshot = "init" } ) {
 
         // —— Get the VM details
-        const VM = this.getVMs( ID );
+        const VM = await this.getVMs( ID );
 
         // —— Check if the VM exists
         if ( !VM.length )
@@ -491,28 +527,29 @@
 
     }
 
-    async createSnapshot( ID, snapname ) {
+    async createSnapshot( { VMID, snapname, description } ) {
 
         // —— Get the VM details
-        const VM = await this.getVMs( ID );
+        const VM = await this.getVMs( VMID );
 
         // —— Check if the VM exists
         if ( !VM.length )
-            throw new Error( `VM ${ ID } not found` );
+            throw new Error( `VM ${ VMID } not found` );
 
         // —— Create the snapshot
         const { data: { data:taskID } } = await this.axios.post( `nodes/${ VM[ 0 ].node }/qemu/${ VM[ 0 ].vmid }/snapshot`, {
             snapname,
+            description,
         } );
 
         if ( !taskID )
-            throw new Error( `Failed to create snapshot ${ snapname } for VM ${ ID }` );
+            throw new Error( `Failed to create snapshot ${ snapname } for VM ${ VMID }` );
 
         return taskID;
 
     }
 
-    async deleteSnapshot( ID, snapshot ) {
+    async deleteSnapshot( { ID, snapshot } ) {
 
         // —— Get the VM details
         const VM = await this.getVMs( ID );
@@ -540,5 +577,61 @@
         return taskID;
 
     }
+
+    async vncproxy( VMID ) {
+
+        // —— Get the VM details
+        const VM = await this.getVMs( VMID );
+
+        // —— Check if the VM exists
+        if ( !VM.length )
+            throw new Error( `VM ${ VMID } not found` );
+
+        // —— Get the VNC port
+        const { data: { data } } = await this.axios.post( `nodes/${ VM[ 0 ].node }/qemu/${ VM[ 0 ].vmid }/vncproxy`, {
+            "generate-password": false,
+        } );
+
+        if ( !data )
+            throw new Error( `Failed to get VNC  ${ VMID }` );
+
+            console.log( data )
+
+        console.log(
+            await this.axios({
+                method: "get",
+                url: `nodes/${ VM[ 0 ].node }/qemu/${ VM[ 0 ].vmid }/vncwebsocket`,
+                headers: {
+                    port: data.port,
+                    vncticket: data.ticket
+                },
+            })
+        );
+
+
+
+
+        return data;
+
+
+
+    };
+
+    async loadResources( ) {
+
+        const [
+            { data: { data: resources } },
+            { data: { data: status } },
+        ] = await Promise.all( [
+            this.axios.get( `cluster/resources` ),
+            this.axios.get( `cluster/status` ),
+        ])
+
+        return {
+            resources,
+            status,
+        };
+
+    };
 
  }
