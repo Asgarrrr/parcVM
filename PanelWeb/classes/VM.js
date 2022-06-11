@@ -32,6 +32,8 @@
     async deletevm( idvm ) {
 
         const [ rows ] = await this.bdd.execute( "DELETE FROM Vm WHERE IdVm = ?", [ idvm ] );
+        await this.bdd.execute( "DELETE FROM VMProject WHERE IDVM = ?", [ idvm ] );
+        await this.bdd.execute( "DELETE FROM UserVM WHERE IDVM = ?", [ idvm ] );
         return rows;
 
     }
