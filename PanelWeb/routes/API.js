@@ -6,6 +6,8 @@ const auth = require( "../middlewares/auth" );
 
 const router = express.Router( );
 
+const nodemailer = require( "nodemailer" )
+
 const Temp = require( "../classes/temperature" );
 
 
@@ -15,27 +17,42 @@ router.post( "/temp", async ( req, res, next ) => {
     try {
 
         // —— Save temperature on the database
-        new Temp( req.app.get( "BDD" ) ).insertTemp( req.query.deg );
-        return res.status( 200 ).send( "OK" );
+        if ( req.query.deg ) {
+
+            new Temp( req.app.get( "BDD" ) ).insertTemp( req.query.deg );
+            res.status( 200 );
+
+            if ( parseFloat( req.query.deg ) > parseFloat( process.env.TEMP_MAX ) ) {
+
+                const transporter = nodemailer.createTransport({
+                    host: process.env.MAIL_HOST,
+                    port: process.env.MAIL_PORT,
+                    auth: {
+                        user: process.env.MAIL_USER,
+                        pass: process.env.MAIL_PASS
+                    }
+                });
+
+                transporter.sendMail({
+                    from    : "admin@abyss.com",
+                    to      : process.env.MAIL_TO,
+                    subject : "Dépassement de température",
+                    text    : "La température est dépassée à " + req.query.deg + "°C, (" + ( parseFloat( req.query.deg ) - parseFloat( process.env.TEMP_MAX ) ) + "°C en trop )"
+                }, ( error, info ) => {
+
+                    if ( error )
+                        return console.log( error );
+
+                });
+
+
+            }
+
+        }
 
     } catch ( error ) {
         console.log( error );
         res.sendStatus( 500 );
-
-    }
-
-});
-
-// —— Route index
-router.get( "/getVMs", auth, async ( req, res, next ) => {
-
-    try {
-
-        res.json( await req.app.get( "PMX" ).getVMs( ) );
-
-    } catch ( error ) {
-
-        res.json( [ ] );
 
     }
 
