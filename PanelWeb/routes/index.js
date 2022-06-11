@@ -100,6 +100,18 @@ router.get( "/tasks" , auth, ( req, res, next ) => {
 
 } );
 
+router.get( "/temperatures" , auth, ( req, res, next ) => {
+
+    if ( req.session.user.admin ) {
+        res.render( "./admin/temperatures", {
+            user    : req.session.user,
+        });
+    } else {
+        res.sendStatus( 403 );
+    }
+
+} );
+
 // —— login index
 router.get( "/login", async ( req, res, next ) => {
 
