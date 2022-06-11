@@ -1,16 +1,75 @@
 <div class="container">
 
-    <span>Dashboards</span>
-    <h2>Overview</h2>
+    <h1>Dashboards</h1>
 
-    <h2 class="mt-5">Nodes</h2>
+    <h2 class="mt-5">Aperçu</h2>
+    <hr>
+
+    <div class="d-flex mt-4">
+        <div class="card me-5" style="min-width:288px">
+            <div class="card-body">
+                <h5 class="card-title">Machines</h5>
+                <p class="card-text">
+                    <div class="d-flex justify-content-between">
+                        <span class="font-weight-bold">Démarrées</span>
+                        <span class="font-weight-bold" id="StartedVM">0</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="font-weight-bold">Arrêtées</span>
+                        <span class="font-weight-bold" id="StoppedVM">0</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="font-weight-bold">Templates</span>
+                        <span class="font-weight-bold" id="Templates">0</span>
+                    </div>
+                </p>
+            </div>
+        </div>
+
+        <div class="card me-4" style="min-width:288px">
+            <div class="card-body">
+                <h5 class="card-title">Température</h5>
+                <p class="card-text">
+                    <h3 id="température">14°C</h3>
+                    <small id="température-date">Soit 14°C en dessous du seuil de 50*C</small>
+                </p>
+            </div>
+        </div>
+
+        <div class="card me-5" style="min-width:288px">
+            <div class="card-body">
+                <h5 class="card-title">Cluster</h5>
+                <p class="card-text" id="status"></p>
+            </div>
+        </div>
+
+        <div class="card " style="min-width:288px">
+            <div class="card-body">
+                <h5 class="card-title">File d'éxécution</h5>
+                <p class="card-text">
+                    <div class="d-flex justify-content-between">
+                        <span class="font-weight-bold">En cours</span>
+                        <span class="font-weight-bold" id="queueInProgress"></span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="font-weight-bold">En attente</span>
+                        <span class="font-weight-bold" id="queueWaiting"></span>
+                    </div>
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+
+    <h2 class="mt-5">Ressources</h2>
     <hr>
 
     <div class="row mt-4">
         <div class="col">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">Memory</h5>
+                    <h5 class="card-title">Mémoire</h5>
                     <div style="width: 200px" class="mx-auto text-center">
                         <canvas id="nodesMemUsage"></canvas>
                         <div class="position-absolute top-50 start-50 translate-middle mt-4">
@@ -38,7 +97,7 @@
         <div class="col">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">Storage</h5>
+                    <h5 class="card-title">Stockage</h5>
                     <div style="width: 200px" class="mx-auto text-center">
                         <canvas id="nodesStorageUsage"></canvas>
                         <div class="position-absolute top-50 start-50 translate-middle mt-4">
