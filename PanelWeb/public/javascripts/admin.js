@@ -1,5 +1,7 @@
 ( async( ) => {
 
+    document.querySelector( "body" ).classList.remove( "shrink" )
+
     console.log(
         "%cSalut ! Systéme crée par Lucas Ghyselen & Jérémy Caruelle",
         "background-image: url( 'http://orig11.deviantart.net/dcab/f/2011/158/1/6/nyan_cat_by_valcreon-d3iapfh.gif' ); background-repeat: no-repeat; background-size: cover; padding: 0px 0px 200px 0px; background-position: center center;",
@@ -111,6 +113,10 @@
         } ).then( response => response.text() );
         redrawArea.innerHTML = response;
 
+        this.chartNodesMemUsage = null;
+        this.chartNodesCPUUsage = null;
+        this.chartNodesStorageUsage = null;
+
         this.socket.emit( "loadRessources" );
         refreshRequest = setInterval( ( ) => this.socket.emit( "loadRessources" ), 1000 );
 
@@ -202,7 +208,7 @@
             .appendTo( '#vmTableButtonContent' );
 
         this.socket.emit( "loadVM" );
-        refreshRequest = setInterval( ( ) => this.socket.emit( "loadVM" ), 2000 );
+        refreshRequest = setInterval( ( ) => this.socket.emit( "loadVM" ), 1000 );
 
     } );
 
@@ -249,15 +255,23 @@
 
         this.socket.emit( "loadClass" );
 
-
-        const domModal = document.getElementById( "createUserModal" );
+        const domModal = document.getElementById( "editClassModal" );
 
         domModal.addEventListener( "show.bs.modal", ( event ) => {
+
+            document.getElementById( "className" ).value = ""
+            document.getElementById( "classUserFilter" ).value = ""
+
+            document.getElementById( "classUserList" ).childNodes.forEach( ( el ) => {
+                el.style.display = "block";
+            })
 
         });
 
         domModal.addEventListener( "hide.bs.modal", ( event ) => {
 
+            document.getElementById( "className" ).value = ""
+            document.getElementById( "classUserFilter" ).value = ""
 
         });
 
@@ -339,6 +353,89 @@
 
         this.socket.emit( "loadtasks" );
         refreshRequest = setInterval( ( ) => this.socket.emit( "loadtasks" ), 300 );
+
+    } );
+
+    document.getElementById( "temperatures" ).addEventListener( "click", async ( ) => {
+
+        if ( activeArea == 7 )
+            return;
+
+        activeArea = 7;
+        if ( refreshRequest )
+            clearInterval( refreshRequest );
+
+        redrawArea.innerHTML = `<div class="h-100 d-flex justify-content-center align-items-center"><div class="spinner-grow text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>`;
+
+        const response = await fetch( "./temperatures", {
+            credentials: "same-origin",
+        } ).then( response => response.text() );
+        redrawArea.innerHTML = response;
+
+        this.socket.emit( "loadTemperatures" );
+        refreshRequest = setInterval( ( ) => this.socket.emit( "loadTemperatures" ), 1000 );
+
+        if ( this.tempChart )
+            this.tempChart.destroy();
+
+        this.tempChart = new Chart( document.getElementById( "chartTemp" ).getContext( "2d" ), {
+            type: 'line',
+            data: {
+                datasets: [{
+                    label: 'Température',
+                    data: [],
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        display: false,
+                    }
+                },
+                scales: {
+                    x: {
+                        display: true,
+                        title: {
+                            display: true,
+                            text: "Date & Heure"
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        display: true,
+                        title: {
+                            display: true,
+                            text: "Température"
+                        },
+                        suggestedMin: 20,
+                        suggestedMax: 40
+                    }
+                }
+            }
+        });
+
+        var today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth() + 1;
+        var yyyy = today.getFullYear();
+
+        if ( dd < 10 ) dd = "0" + dd;
+        if ( mm < 10 ) mm = "0" + mm;
+
+        today = `${yyyy}-${mm}-${dd}`;
+
+        const start = document.getElementById( "start" )
+            , end   = document.getElementById( "end" );
+
+        start.setAttribute( "max", today  );
+        start.setAttribute( "value", today  );
+        start.addEventListener( "change", ( ) => this.socket.emit( "loadTemperatures" ) );
+
+        today = `${yyyy}-${mm}-${dd+1}`;
+
+        end.setAttribute( "max", today );
+        end.setAttribute( "value", today );
+        end.addEventListener( "change", ( ) => this.socket.emit( "loadTemperatures" ) );
 
     } );
 
@@ -513,6 +610,7 @@
 
         if ( data === "fail" ) {
 
+            createPopup( "Erreur", "Le projet n'a pas pu être créé" );
 
         } else {
 
@@ -566,9 +664,39 @@
             listGroupMachineText.innerText = data.VM.length;
             listGroup.appendChild( listGroupMachine );
             listGroupMachine.appendChild( listGroupMachineText );
+
+
+            const listGroupActions = document.createElement( "li" );
+            listGroupActions.classList.add( "list-group" );
+
+            const buttonGroup = document.createElement( "div" );
+            buttonGroup.classList.add( "btn-group" );
+
+            const buttonGroupStart = document.createElement( "button" );
+            buttonGroupStart.classList.add( "btn", "btn-light" );
+            buttonGroupStart.innerText = "Démarrer tout";
+            buttonGroupStart.onclick = ( ) => projetStartAllVM( projet.id );
+            buttonGroup.appendChild( buttonGroupStart );
+
+            const buttonGroupStop = document.createElement( "button" );
+            buttonGroupStop.classList.add( "btn", "btn-light" );
+            buttonGroupStop.innerText = "Arrêter tout";
+            buttonGroupStop.onclick = ( ) => projetStopAllVM( projet.id );
+            buttonGroup.appendChild( buttonGroupStop );
+
+            listGroupActions.appendChild( buttonGroup );
+
+            listGroup.appendChild( listGroupActions );
             card.appendChild( cardBody );
             card.appendChild( listGroup );
             projectContainer.appendChild( card );
+
+            card.appendChild( cardBody );
+            card.appendChild( listGroup );
+            projectContainer.appendChild( card );
+
+            createPopup( `Le projet "${ data.name }" a été créé avec succès`, "success" );
+
 
         }
 
@@ -578,10 +706,14 @@
 
         if ( data === "fail" ) {
 
+            createPopup( "Erreur", "Le projet n'a pas pu être supprimé" );
+
         } else {
 
-            const card = document.getElementById( `project-${data}` );
+            const card = document.getElementById( `project-${ data }` );
             card.remove();
+
+            createPopup( `Le projet a été supprimé avec succès`, "success" );
 
         }
 
@@ -657,19 +789,12 @@
 
                     }
 
+
                     // Add the VM to the table
                     this.VMtable.row.add( {
                         ID      : VM.vmid || "-",
                         name    : VM.name || "-",
-                        status  : data.queue[ 0 ].find( ( task ) => task.id == VM.vmid ) ? `<span class="badge bg-secondary"><div class="spinner-grow spinner-grow-sm" role="status"><span class="visually-hidden">Loading</span></div></span>` : `<span class="badge text-bg-${ VM.status === "running" ? "success" : "danger" }">${ VM.status || "-" }</span>${ data.queue[1].find( ( task ) => task.args.ID == VM.vmid ) ? `<span class="badge bg-secondary ms-1">${
-                            {
-                                unknown : "Tache prévue",
-                                startVM : "Démarrage prévu",
-                                stopVM  : "Arrêt prévu",
-                                deleteVM: "Suppression prévue",
-                            }[ data.queue[1].find( ( task ) => task.args.ID == VM.vmid ).tasktype || "unknown" ]
-
-                        }</span>` : "" }`,
+                        status  : checkState( VM, data.queue ),
                         IP      : VM.status === "running" ? IP || "-" : "-",
                         CPU     : VM.cpu ? ( VM.cpu  * 100 ).toFixed( 2 ) + "%": "-",
                         RAM     : VM.mem ? Math.round( ( VM.mem / VM.maxmem ) * 100 ) + " %" : "-",
@@ -699,29 +824,15 @@
 
                     }
 
-                    if ( this.VMOperations[ String( VM.vmid ) ] )
-                        if ( this.VMOperations[ String( VM.vmid ) ] == VM.status )
-                            delete this.VMOperations[ String( VM.vmid ) ];
 
-
-                    console.log( data.queue[ 1 ].find( ( task ) => task.args.ID == VM.vmid ))
                     // Update the VM in the table
                     this.VMtable.row( function ( idx, rowdata, node ) {
                         return rowdata.ID === VM.vmid;
                     }).data( {
                         ID      : VM.vmid || "-",
                         name    : VM.name || "-",
-                        status  : data.queue[ 0 ].find( ( task ) => task.id == VM.vmid ) ? `<span class="badge bg-secondary"><div class="spinner-grow spinner-grow-sm" role="status"><span class="visually-hidden">Loading</span></div></span>` : `<span class="badge text-bg-${ VM.status === "running" ? "success" : "danger" }">${ VM.status || "-" }</span>${ data.queue[1].find( ( task ) => task.args.ID == VM.vmid ) ? `<span class="badge bg-secondary ms-1">${
-
-                            {
-                                unknown : "Tache prévue",
-                                startVM : "Démarrage prévu",
-                                stopVM  : "Arrêt prévu",
-                                deleteVM: "Suppression prévue",
-                            }[ data.queue[1].find( ( task ) => task.args.ID == VM.vmid ).tasktype || "unknown" ]
-
-                        }</span>` : "" }`,
-                        IP      : VM.status === "running" ? `<span data-bs-toggle="tooltip" data-bs-placement="top" title="Tooltip on top"> ${ IP }</span>` || "-" : "-",
+                        status  : checkState( VM, data.queue ),
+                        IP      : VM.status === "running" ? IP || "-" : "-",
                         CPU     : VM.cpu ? ( VM.cpu  * 100 ).toFixed( 2 ) + "%": "-",
                         RAM     : VM.mem ? Math.round( ( VM.mem / VM.maxmem ) * 100 ) + "%" : "-",
                         Actions : "<button class='btn btn-primary btn-sm' style='--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;' onclick='editVMModal(this)' data-id='" + VM.vmid + "'>Modifier</button>"
@@ -750,6 +861,10 @@
             console.error( error );
 
         }
+
+        $( '[data-bs-toggle="tooltip"]' ).tooltip({
+            trigger: "hover"
+        });
 
     } );
 
@@ -812,6 +927,17 @@
     this.socket.on( "loadVMDetail", async ( data ) => {
 
         console.log( data )
+
+        document.getElementById( "vmStatus"     ).innerHTML = data.VM.status;
+        document.getElementById( "vmNode"       ).innerHTML = data.VM.node;
+        document.getElementById( "vmCPUUsage"   ).innerHTML = data.VM.cpu ? ( data.VM.cpu  * 100 ).toFixed( 2 ) + "%" + " de " + data.VM.maxcpu + " coeur" : "-";
+        document.getElementById( "vmRAMUsage"   ).innerHTML = data.VM.mem ? Math.round( ( data.VM.mem / data.VM.maxmem ) * 100 ) + " %"  + " / " + data.VM.maxmem / (1024 * 1024 * 1024)  + " Go" : "-";
+
+        try {
+            document.getElementById( "vmIPs" ).innerHTML = data.VM.network.find( ( interface ) => interface.name == "ens18" ) ? data.VM.network.find( ( interface ) => interface.name == "ens18" )["ip-addresses"].find( ( type ) => type["ip-address-type"] == "ipv4" )["ip-address"] : "-";
+        } catch (error) {
+            document.getElementById( "vmIPs" ).innerHTML = "-";
+        }
 
         document.getElementById( "VMEditLoader" ).style.display = "none";
         document.getElementById( "VMEditData" ).style.display   = "block";
@@ -960,8 +1086,6 @@
 
     this.socket.on( "updateUser", ( data ) => {
 
-        console.log( data.VM )
-
         this.tableUser.row( function ( idx, rowdata, node ) {
             return rowdata.ID === parseInt( data.ID );
         }).data( {
@@ -972,7 +1096,7 @@
             "VMs"       : data.VM.map( ( x ) => x ).join( ", " ),
             "Projets"   : data.Project.map( ( x ) => this.Projets.find( p => p.id == x ).name ).join( ", " ),
             "Classes"   : data.Class.map( ( x ) => this.Classes.find( c => c.id == x ).name ).join( ", " ),
-            "Actions"   :"<div class='btn-group'><button class='btn btn-primary btn-sm' style='--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem' type='button' data-bs-toggle='modal' data-bs-target='#createUserModal' data-bs-user='"+data.idUser+"'>Modifier</button><button class='btn btn-danger btn-sm' style='--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem' type='button' onclick='deleteUser("+data.idUser+")'>Supprimer</button>"
+            "Actions"   :"<div class='btn-group'><button class='btn btn-primary btn-sm' style='--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem' type='button' data-bs-toggle='modal' data-bs-target='#createUserModal' data-bs-user='"+data.ID+"'>Modifier</button><button class='btn btn-danger btn-sm' style='--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem' type='button' onclick='deleteUser("+data.ID+")'>Supprimer</button>"
         } ).draw( true );
 
     });
@@ -985,7 +1109,7 @@
 
         const classContainer = document.getElementById( "classContainer" );
 
-        for( const [ key, value ] of Object.entries( data ) ) {
+        for( const [ key, value ] of Object.entries( data.classes ) ) {
 
             const accordionItem = document.createElement( "div" );
             accordionItem.classList.add( "accordion-item" );
@@ -1002,6 +1126,15 @@
             deleteClass.onclick = () => {
                 this.socket.emit( "deleteClass", key );
                 document.querySelector( ".accordion-item[data-class-id='" + key + "']" ).remove();
+            }
+
+            const startAllVMClass = document.createElement( "button" );
+            startAllVMClass.classList.add( "btn", "btn-primary", "btn-sm", "me-2", "mt-2", "mb-1" );
+            startAllVMClass.type = "button";
+            startAllVMClass.innerText = "Démarrer toutes les VMs des étudiants de la classe";
+            startAllVMClass.onclick = () => {
+                this.socket.emit( "startAllVMClass", key );
+                createPopup( "Démarrage des VMs ajoutées à la file d'attente", "success" );
             }
 
             const accordionItemButton = document.createElement( "button" );
@@ -1033,6 +1166,8 @@
             th2.innerText = "Prénom";
             const th3 = document.createElement( "th" );
             th3.innerText = "Mail";
+            const th4 = document.createElement( "th" );
+            th4.innerText = "Machines";
 
             const tbody = document.createElement( "tbody" );
 
@@ -1041,6 +1176,7 @@
             noUser.classList.add( "text-center" );
 
             accordionItemCollapseDiv.appendChild( deleteClass );
+            accordionItemCollapseDiv.appendChild( startAllVMClass );
 
             for( const user of value.users ) {
 
@@ -1054,12 +1190,17 @@
                 const td3 = document.createElement( "td" );
                 const a = document.createElement( "a" );
                 a.href = "mailto:" + user.email;
-                a.innerText = user.email;
+                a.innerText = user.email
                 td3.appendChild( a );
+
+
+                const td4 = document.createElement( "td" )
+                td4.innerText = user.VM.join( "," );
 
                 tr.appendChild( td1 );
                 tr.appendChild( td2 );
                 tr.appendChild( td3 );
+                tr.appendChild( td4 );
 
                 tbody.appendChild( tr );
 
@@ -1068,6 +1209,7 @@
             tr.appendChild( th1 );
             tr.appendChild( th2 );
             tr.appendChild( th3 );
+            tr.appendChild( th4 );
 
             thead.appendChild( tr );
             table.appendChild( thead );
@@ -1084,17 +1226,85 @@
 
         }
 
+        const userPlace = document.getElementById( "classUserList" )
+
+        for( const [ key, value ] of Object.entries( data.users ) ) {
+
+            const div = document.createElement( "div" );
+            div.classList.add( "form-check" );
+            const input = document.createElement( "input" );
+            input.classList.add( "form-check-input" );
+            input.type = "checkbox";
+            input.id = value.IdUser;
+            input.value = value.IdUser;
+
+            const label = document.createElement( "label" );
+            label.classList.add( "form-check-label" );
+            label.innerText = value.Nom + " " + value.Prenom;
+            div.appendChild( input );
+            div.appendChild( label );
+            userPlace.appendChild( div );
+
+        }
+
     });
 
-    socket.on( "loadtasks", ( data ) => {
+    this.socket.on( "loadtasks", ( data ) => {
+
+    });
+
+    this.socket.on( "loadRessources", ( data ) => {
 
         console.log( data );
 
-    });
-
-    socket.on( "loadRessources", ( data ) => {
-
         try {
+
+            if ( parseFloat( data.temp.max ) > data.temp.current.temp ) {
+                // If the temperature is under the max temperature,
+                document.getElementById( "température-date" ).innerText = `Soit ${ parseFloat( data.temp.max ) - data.temp.current.temp }°C en dessous du seuil de ${ data.temp.max }*C`;
+            } else {
+                // If the temperature is over the max temperature,
+                document.getElementById( "température-date" ).innerText = `Soit ${ data.temp.current.temp - parseFloat( data.temp.max ) }°C en dessus du seuil de ${ data.temp.max }*C`;
+            }
+
+            document.getElementById( "température" ).innerText = `${ data.temp.current.temp }°C`;
+
+            document.getElementById( "StartedVM" ).innerText = (data.resources.filter( ( x ) => !x.template && x.vmid != 104 && x.status == "running" )).length;
+            document.getElementById( "StoppedVM" ).innerText = (data.resources.filter( ( x ) => !x.template && x.vmid != 104 && x.status == "stopped" )).length;
+            document.getElementById( "Templates" ).innerText = (data.resources.filter( ( x ) => x.template )).length;
+
+            document.getElementById( "queueInProgress" ).innerText = data.queue[0].length;
+            document.getElementById( "queueWaiting" ).innerText = data.queue[1].length;
+            document.getElementById( "status" ).innerText = ""
+
+            // Order per ID
+            data.status = data.status.sort( ( a, b ) => a.nodeid - b.nodeid );
+
+            for ( const status of data.status ) {
+
+                const div = document.createElement( "div" );
+                div.classList.add( "d-flex", "justify-content-between" );
+
+                const fspan = document.createElement( "span" );
+                fspan.classList.add( "font-weight-bold" );
+                fspan.innerText = status.type || "";
+
+                const sspan = document.createElement( "span" );
+                fspan.classList.add( "font-weight-bold" );
+                sspan.innerText = status.name || "";
+
+                const tspan = document.createElement( "span" );
+                fspan.classList.add( "font-weight-bold" );
+                tspan.innerText = status.ip || "";
+
+                div.appendChild( fspan );
+                div.appendChild( sspan );
+                div.appendChild( tspan );
+
+                document.getElementById( "status" ).appendChild( div );
+
+            }
+
 
             const nodes = data.resources.filter ( ( x ) => x.type == "node" );
 
@@ -1113,102 +1323,129 @@
             const usedNodeCpuPercentage = ( totalUsedNodeCpu / nodes.length ) * 100;
 
             // Calculate the percentage of used storage
-            const totalNodeStorage       = nodes.reduce( ( a, b ) => a + b.maxstorage, 0 );
-            const totalUsedNodeStorage   = nodes.reduce( ( a, b ) => a + b.storage, 0 );
+            const totalNodeStorage       = nodes.reduce( ( a, b ) => a + b.disk, 0 );
+            const totalUsedNodeStorage   = nodes.reduce( ( a, b ) => a + b.maxdisk, 0 );
+
+            // Calculate the percentage of used storage
+            const usedNodeStoragePercentage = ( ( totalNodeStorage / ( 1024 * 1024 * 128 ) ) / ( totalUsedNodeStorage / ( 1024 * 1024 * 128 ) ) ) * 100;
+
 
             document.getElementById( "memoryUsed" ).innerText = Math.round( usedNodeMemoryPercentage ) + "%";
             document.getElementById( "totalMem" ).innerText = `${ ( totalUsedNodeMemory / 1024 / 1024 / 1024 ).toFixed( 2 ) } Go / ${ ( totalNodeMemory / 1024 / 1024 / 1024 ).toFixed( 2 ) } Go`;
+
+            document.getElementById( "CPUUsed" ).innerText = Math.round( usedNodeCpuPercentage ) + "%";
+            document.getElementById( "totalCPU" ).innerText = `de ${ totalNodeCpu } CPU`;
+
+            document.getElementById( "StorageUsed" ).innerText = Math.round( usedNodeStoragePercentage ) + "%";
+            document.getElementById( "totalStorage" ).innerText = `${( totalNodeStorage / ( 1024 * 1024 * 128 ) ).toFixed( 0 ) } Go / ${ ( totalUsedNodeStorage / ( 1024 * 1024 * 128 ) ).toFixed( 0 ) } Go`;
 
             const nodesMemUsage = document.getElementById( "nodesMemUsage" ).getContext( "2d" );
             const nodesCPUUsage = document.getElementById( "nodesCPUUsage" ).getContext( "2d" );
             const nodesStorageUsage = document.getElementById( "nodesStorageUsage" ).getContext( "2d" );
 
-            const chartNodesMemUsage = new Chart( nodesMemUsage, {
-                type: "doughnut",
-                data: {
-                    labels: [ "Used", "Free" ],
-                    datasets: [{
-                        label: ["# of Votes"],
-                        data: [ ~~( usedNodeMemoryPercentage ), 100 - ~~( usedNodeMemoryPercentage ) ],
-                        backgroundColor: [ "#3651d4", "#eff1f3" ],
-                    }]
-                },
-                options: {
+            if ( !this.chartNodesMemUsage ) {
 
-                    cutout: "90%",
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    legend: {
-                        display: true
+                this.chartNodesMemUsage = new Chart( nodesMemUsage, {
+                    type: "doughnut",
+                    data: {
+                        labels: [ "Utilisé", "Libre" ],
+                        datasets: [{
+                            data: [ ~~( usedNodeMemoryPercentage ), 100 - ~~( usedNodeMemoryPercentage ) ],
+                            backgroundColor: [ "#3651d4", "#eff1f3" ],
+                        }]
                     },
-                    tooltips: {
-                        enabled: false
+                    options: {
+                        cutout: "90%",
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        legend: {
+                            display: true
+                        },
+                        tooltips: {
+                            enabled: false
+                        },
+                        animation: {
+                            animateScale: true,
+                            animateRotate: true
+                        },
                     },
-                    animation: {
-                        animateScale: true,
-                        animateRotate: true
-                    },
-                },
-            });
+                });
 
-            const chartNodesCPUUsage = new Chart( nodesCPUUsage, {
-                type: "doughnut",
-                data: {
-                    labels: [ "Used", "Free" ],
-                    datasets: [{
-                        label: ["# of Votes"],
-                        data: [ ~~( usedNodeCpuPercentage ), 100 - ~~( usedNodeCpuPercentage ) ],
-                        backgroundColor: [ "#3651d4", "#eff1f3" ],
-                    }]
-                },
-                options: {
+            } else {
 
-                    cutout: "90%",
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    legend: {
-                        display: true
-                    },
-                    tooltips: {
-                        enabled: false
-                    },
-                    animation: {
-                        animateScale: true,
-                        animateRotate: true
-                    },
-                },
-            });
+                this.chartNodesMemUsage.data.datasets[0].data = [ ~~( usedNodeMemoryPercentage ), 100 - ~~( usedNodeMemoryPercentage ) ];
+                this.chartNodesMemUsage.update();
 
-            const chartNodesStorageUsage = new Chart( nodesStorageUsage, {
-                type: "doughnut",
-                data: {
-                    labels: [ "Used", "Free" ],
-                    datasets: [{
-                        label: ["# of Votes"],
-                        data: [ ~~( usedNodeStoragePercentage ), 100 - ~~( usedNodeStoragePercentage ) ],
-                        backgroundColor: [ "#3651d4", "#eff1f3" ],
-                    }]
-                },
-                options: {
+            }
 
-                    cutout: "90%",
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    legend: {
-                        display: true
+            if ( !this.chartNodesCPUUsage ) {
+
+                this.chartNodesCPUUsage = new Chart( nodesCPUUsage, {
+                    type: "doughnut",
+                    data: {
+                        labels: [ "Utilisé", "Libre" ],
+                        datasets: [{
+                            data: [ ~~( usedNodeCpuPercentage ), 100 - ~~( usedNodeCpuPercentage ) ],
+                            backgroundColor: [ "#3651d4", "#eff1f3" ],
+                        }]
                     },
-                    tooltips: {
-                        enabled: false
+                    options: {
+
+                        cutout: "90%",
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        tooltips: {
+                            enabled: false
+                        },
+                        animation: {
+                            animateScale: true,
+                            animateRotate: true
+                        },
                     },
-                    animation: {
-                        animateScale: true,
-                        animateRotate: true
+                });
+
+            } else {
+
+                this.chartNodesCPUUsage.data.datasets[0].data = [ ~~( usedNodeCpuPercentage ), 100 - ~~( usedNodeCpuPercentage ) ];
+                this.chartNodesCPUUsage.update();
+
+            }
+
+            if ( !this.chartNodesStorageUsage ) {
+
+                this.chartNodesStorageUsage = new Chart( nodesStorageUsage, {
+                    type: "doughnut",
+                    data: {
+                        labels: [ "Utilisé", "Libre" ],
+                        datasets: [{
+                            data: [ totalNodeStorage, totalUsedNodeStorage ],
+                            backgroundColor: [ "#3651d4", "#eff1f3" ],
+                        }]
                     },
-                },
-            });
+                    options: {
 
+                        cutout: "90%",
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        legend: {
+                            display: true
+                        },
+                        tooltips: {
+                            enabled: false
+                        },
+                        animation: {
+                            animateScale: true,
+                            animateRotate: true
+                        },
+                    },
+                });
 
+            } else {
 
+                this.chartNodesStorageUsage.data.datasets[0].data = [ ( totalNodeStorage / ( 1024 * 1024 * 128 ) ).toFixed( 2 ), ( totalUsedNodeStorage / ( 1024 * 1024 * 128 ) ).toFixed( 2 ) ];
+                this.chartNodesStorageUsage.update();
+
+            }
 
         } catch( error ) {
 
@@ -1220,13 +1457,200 @@
 
     });
 
+    this.socket.on( "loadTemperatures", ( data ) => {
+
+        const start = document.getElementById( "start" ).value;
+        const end = document.getElementById( "end" ).value;
+
+        const temp = data.filter( ( x ) => {
+
+            const date = new Date( x.timetemp );
+            return date >= new Date( start ) && date <= new Date( end )
+
+        });
+
+        const ctx = document.getElementById( "chartTemp" ).getContext( "2d" );
+
+        // Create gradient based on the ctx size
+        const gradient = ctx.createLinearGradient( 0, 0, 0, ctx.canvas.height );
+        gradient.addColorStop( 0, "red" );
+        gradient.addColorStop( 0.15, "#3d5af1" );
+
+        this.tempChart.data = {
+            labels: temp.map( ( x ) => new Date( x.timetemp ).toLocaleString() ),
+            datasets: [{
+
+                label: "Temperature",
+                data: temp.map( ( x ) =>  x.temp ),
+                animation: {
+                    duration: 0
+                },
+                borderColor: gradient,
+                borderWidth: 4,
+                pointRadius: 0,
+                tension: 0.4,
+                cubicInterpolationMode: 'monotone',
+            }]
+        }
+
+        this.tempChart.update();
+
+    });
+
+    this.socket.on( "createClass", ( data ) => {
+
+        if ( data === "fail" ) {
+
+            alert( "Echec de la création de la classe" );
+            return;
+
+        }
+
+        const classContainer = document.getElementById( "classContainer" );
+
+        const accordionItem = document.createElement( "div" );
+        accordionItem.classList.add( "accordion-item" );
+        accordionItem.dataset.classId = data.ID;
+
+        const accordionItemHeading = document.createElement( "h2" );
+        accordionItemHeading.classList.add( "accordion-header" );
+        accordionItemHeading.id = "accordion-item-heading-" +  data.ID;
+
+        const deleteClass = document.createElement( "button" );
+        deleteClass.classList.add( "btn", "btn-danger", "btn-sm", "me-2", "mt-2", "mb-1" );
+        deleteClass.type = "button";
+        deleteClass.innerText = "Supprimer la classe";
+        deleteClass.onclick = () => {
+            this.socket.emit( "deleteClass",  data.ID );
+            document.querySelector( ".accordion-item[data-class-id='" +  data.ID + "']" ).remove();
+        }
+
+        const startAllVMClass = document.createElement( "button" );
+        startAllVMClass.classList.add( "btn", "btn-primary", "btn-sm", "me-2", "mt-2", "mb-1" );
+        startAllVMClass.type = "button";
+        startAllVMClass.innerText = "Démarrer toutes les VMs des étudiants de la classe";
+        startAllVMClass.onclick = () => {
+            this.socket.emit( "startAllVMClass", key );
+            createPopup( "Démarrage des VMs ajoutées à la file d'attente", "success" );
+        }
+
+        const accordionItemButton = document.createElement( "button" );
+        accordionItemButton.classList.add( "accordion-button", "collapsed" );
+        accordionItemButton.setAttribute( "data-bs-toggle", "collapse" );
+        accordionItemButton.setAttribute( "data-bs-target", "#accordion-item-collapse-" +  data.ID );
+        accordionItemButton.setAttribute( "aria-expanded", "false" );
+        accordionItemButton.setAttribute( "aria-controls", "accordion-item-collapse-" +  data.ID );
+        accordionItemButton.innerText = data.name;
+
+        const accordionItemCollapse = document.createElement( "div" );
+        accordionItemCollapse.classList.add( "accordion-collapse", "collapse" );
+        accordionItemCollapse.id = "accordion-item-collapse-" +  data.ID;
+        accordionItemCollapse.setAttribute( "aria-labelledby", "accordion-item-heading-" +  data.ID );
+
+        const accordionItemCollapseDiv = document.createElement( "div" );
+        accordionItemCollapseDiv.classList.add( "accordion-body" );
+
+        // Create table
+        const table = document.createElement( "table" );
+        table.classList.add( "table", "table-striped" );
+        table.id = "table-" +  data.ID;
+
+        const thead = document.createElement( "thead" );
+        const tr = document.createElement( "tr" );
+        const th1 = document.createElement( "th" );
+        th1.innerText = "Nom";
+        const th2 = document.createElement( "th" );
+        th2.innerText = "Prénom";
+        const th3 = document.createElement( "th" );
+        th3.innerText = "Mail";
+        const th4 = document.createElement( "th" );
+        th4.innerText = "Machines"
+
+        const tbody = document.createElement( "tbody" );
+
+        const noUser = document.createElement( "p" );
+        noUser.innerText = "Aucun utilisateur";
+        noUser.classList.add( "text-center" );
+
+        accordionItemCollapseDiv.appendChild( deleteClass );
+
+        for( const user of data.membersParsed ) {
+
+            const tr = document.createElement( "tr" );
+
+            const td1 = document.createElement( "td" );
+            td1.innerText = user.Nom;
+            td1.classList.add( "text-uppercase" );
+            const td2 = document.createElement( "td" );
+            td2.innerText = user.Prenom;
+            const td3 = document.createElement( "td" );
+            const a = document.createElement( "a" );
+            a.href = "mailto:" + user.Email;
+            a.innerText = user.Email;
+            td3.appendChild( a );
+
+            const td4 = document.createElement( "td" );
+            td4.innerText = user.VM.join( ", " )
+
+            tr.appendChild( td1 );
+            tr.appendChild( td2 );
+            tr.appendChild( td3 );
+            tr.appendChild( td4 );
+
+            tbody.appendChild( tr );
+
+        }
+
+        tr.appendChild( th1 );
+        tr.appendChild( th2 );
+        tr.appendChild( th3 );
+
+        thead.appendChild( tr );
+        table.appendChild( thead );
+        table.appendChild( tbody );
+
+        accordionItem.appendChild( accordionItemHeading );
+        accordionItemHeading.appendChild( accordionItemButton );
+        accordionItem.appendChild( accordionItemCollapse );
+        accordionItemCollapse.appendChild( accordionItemCollapseDiv );
+
+        accordionItemCollapseDiv.appendChild( table );
+
+        classContainer.appendChild( accordionItem );
+
+        createPopup( `La class ${ data.name } a été créée avec succès`, "success" );
+
+    });
+
+
+
+
 } )( );
 
 
-function createPopup( text ) {
+function createPopup( text, type ) {
 
     const toast = document.createElement( "div" );
-    toast.classList.add( "toast", "align-items-center", "text-white", "bg-danger" );
+    toast.classList.add( "toast", "align-items-center", "bottom-0", "end-0" );
+
+    switch ( type ) {
+        case "success":
+            toast.classList.add( "text-bg-success" );
+            break;
+        case "error":
+            toast.classList.add( "text-bg-danger" );
+            break;
+        case "warning":
+            toast.classList.add( "text-bg-warning" );
+            break;
+        case "info":
+            toast.classList.add( "text-bg-info" );
+            break;
+        default:
+            toast.classList.add( "text-bg-primary" );
+            break;
+    }
+
     toast.setAttribute( "role", "alert" );
     toast.setAttribute( "aria-live", "assertive" );
     toast.setAttribute( "aria-atomic", "true" );
@@ -1239,7 +1663,14 @@ function createPopup( text ) {
 
     toastBody.innerHTML = text;
 
+    const toastClose = document.createElement( "button" );
+    toastClose.classList.add( "btn-close", "btn-close-white", "me-2", "m-auto" );
+    toastClose.setAttribute( "type", "button" );
+    toastClose.setAttribute( "aria-label", "Close" );
+    toastClose.dataset.bsDismiss = "toast";
+
     toastFlex.appendChild( toastBody );
+    toastFlex.appendChild( toastClose );
     toast.appendChild( toastFlex );
 
     document.getElementById( "popup" ).appendChild( toast );
@@ -1281,10 +1712,15 @@ function editProjectModalSearchVM( filter ) {
 function editProjectModalSave( ) {
 
     const id    = document.getElementById( "editProjectModal" ).dataset.id;
-    const name  = document.getElementById( "editProjectModalName" ).value;
+    const name  = document.getElementById( "editProjectModalName" );
     const desc  = document.getElementById( "editProjectModalDesc" ).value;
     const users = [];
     const VM    = [];
+
+    if ( !name.value )
+        return name.classList.add( "is-invalid" );
+
+    name.classList.remove( "is-invalid" );
 
     for ( const select of document.getElementById( "editProjectModalSelectUser" ).getElementsByTagName( "input" ) ) {
 
@@ -1302,19 +1738,21 @@ function editProjectModalSave( ) {
 
     if ( id === "newProject" ) {
 
-        this.socket.emit( "createProject", { id: id, name: name, description: desc, users: users, VM: VM } );
+        this.socket.emit( "createProject", { id, name: name.value, description: desc, users, VM } );
 
     } else {
 
-        this.socket.emit( "editProject", { id: id, name: name, description: desc, users: users, VM: VM } );
+        this.socket.emit( "editProject", { id, name: name.value, description: desc, users, VM } );
 
         const projectCard = document.getElementById( "project-" + id );
-        projectCard.querySelector( ".card-title" ).innerText = name;
+        projectCard.querySelector( ".card-title" ).innerText = name.value;
         projectCard.querySelector( ".card-text" ).innerText = desc;
         projectCard.querySelectorAll( "span" )[ 0 ].innerText = users.length;
         projectCard.querySelectorAll( "span" )[ 1 ].innerText = VM.length;
 
     }
+
+    document.getElementById( "closeModal" ).click();
 
 }
 
@@ -1357,7 +1795,24 @@ function startVM( ) {
             continue;
 
         this.socket.emit( "startVMRequest", row.childNodes[ 0 ].innerText );
-        this.VMOperations[ row.childNodes[ 0 ].innerText ] = "running";
+    }
+
+}
+
+function restartVM( ) {
+
+    for ( const row of document.querySelectorAll( ".table-primary" ) ) {
+
+        this.socket.emit( "rebootVMRequest", row.childNodes[ 0 ].innerText );
+    }
+
+}
+
+function resetVM( ) {
+
+    for ( const row of document.querySelectorAll( ".table-primary" ) ) {
+
+        this.socket.emit( "resetVMRequest", row.childNodes[ 0 ].innerText );
     }
 
 }
@@ -1370,7 +1825,7 @@ function stopVM( ) {
             continue;
 
         this.socket.emit( "stopVMRequest", row.childNodes[ 0 ].innerText );
-        this.VMOperations[ row.childNodes[ 0 ].innerText ] = "stopped";
+
     }
 
 }
@@ -1425,8 +1880,6 @@ function createVMActions( ) {
 
     this.socket.emit( "createVMRequest", newVMs );
 
-    // const modal = new bootstrap.Modal( document.getElementById( "createVMModal" ), { } )
-    // console.log( modal.hide( ) )
 
 
 }
@@ -1600,6 +2053,10 @@ function createUserRequest( ) {
         if ( select.checked )
             Class.push( parseInt( select.value ) );
 
+    name.classList.remove( "is-invalid" );
+    fName.classList.remove( "is-invalid" );
+    mail.classList.remove( "is-invalid" );
+
     if ( ID === "newUser" ) {
         this.socket.emit( "createUser", {
             name        : name.value,
@@ -1610,6 +2067,7 @@ function createUserRequest( ) {
             Class       : Class
         } );
     } else {
+
         this.socket.emit( "updateUser", {
             ID          : ID,
             name        : name.value,
@@ -1620,6 +2078,8 @@ function createUserRequest( ) {
             Class       : Class
         } );
     }
+
+    document.getElementById( "closeModal" ).click( );
 
 }
 
@@ -1642,18 +2102,180 @@ function deleteUser( userID ) {
 
 function editClassModalSave( ) {
 
+    const nameDom = document.getElementById( "className" )
 
-    const editClassModal =
+    if ( !className.value )
+        return nameDom.classList.add( "is-invalid" );
 
+    nameDom.classList.remove( "is-invalid" );
 
-    document.getElementById( "editClassModal" ).classList.remove( "show" );
+    const classMembers = [];
 
+    document.getElementById( "classUserList" ).querySelectorAll( "input" ).forEach( ( input ) => {
+        if ( input.checked )
+            classMembers.push( parseInt( input.value ) );
+    });
 
+    const classDescription = document.getElementById( "classDescription" ).value;
+
+    this.socket.emit( "createClass", {
+        name        : className.value,
+        description : classDescription,
+        members     : classMembers
+    } );
+
+    document.getElementById( "closeModal" ).click( );
 
 }
 
-function deleteClass( classID ) {
+function checkState( VM, queue ) {
 
+    let htmlState = "";
+
+    switch ( VM.status ) {
+        case "running":
+            htmlState += `<span class="badge bg-success">Démarrée</span>`;
+            break;
+        case "stopped":
+            htmlState += `<span class="badge bg-danger">Arrêtée</span>`;
+            break;
+        case "suspended":
+            htmlState += `<span class="badge bg-warning">Suspendue</span>`;
+            break;
+        case "paused":
+            htmlState += `<span class="badge bg-info">En pause</span>`;
+            break;
+        case "shutdown":
+            htmlState += `<span class="badge bg-danger">Arrêtée</span>`;
+            break;
+        case "crashed":
+            htmlState += `<span class="badge bg-danger">Crashé</span>`;
+            break;
+        case "migrating":
+            htmlState += `<span class="badge bg-info">Migration</span>`;
+            break;
+        case "restoring":
+            htmlState += `<span class="badge bg-info">Restauration</span>`;
+            break;
+        case "saving":
+            htmlState += `<span class="badge bg-info">Sauvegarde</span>`;
+            break;
+        case "error":
+            htmlState += `<span class="badge bg-danger">Erreur</span>`;
+            break;
+        default:
+            htmlState += `<span class="badge bg-secondary">Inconnue</span>`;
+            break;
+    }
+
+    // Search for the VM in the queue
+    let task = queue[0].find( ( task ) => {
+
+        if ( task.tasktype ) {
+
+            if ( task.upid ) {
+
+                if ( !task.upid.includes( ":" ) )
+                    return false;
+
+                // Split the upid
+                const upid = task.upid.split( ":" );
+
+                if ( upid[ 6 ] == VM.vmid )
+                    return true;
+
+            } else {
+
+                if ( task.args.ID == VM.vmid )
+                    return true;
+
+            }
+        } else if ( task.task ) {
+
+
+            if ( task.id == VM.vmid )
+                return true
+
+        }
+
+    })
+
+    if ( task ) {
+
+
+        let taskType;
+
+        if( task.args )
+            taskType = task.tasktype;
+        else if ( task.upid )
+            taskType = task.upid.split( ":" )[ 5 ];
+        else if ( task.task )
+            taskType = task.task;
+
+        switch ( taskType ) {
+            case "stopVM":
+            case "qmstop":
+                htmlState += ` <span class="badge bg-warning"><div class="spinner-grow spinner-grow-sm text-light" role="status"></div> Arret en cours</span>`;
+                break;
+            case "startVM":
+            case "qmstart":
+                htmlState += ` <span class="badge bg-warning"><div class="spinner-grow spinner-grow-sm text-light" role="status"></div> Démarrage en cours</span>`;
+                break;
+            case "qmsnapshot":
+                htmlState += ` <span class="badge bg-warning"><div class="spinner-grow spinner-grow-sm text-light" role="status"></div> Création d'une snapshot en cours</span>`;
+                break;
+            case "qmcreate":
+            case "createVM":
+                htmlState += ` <span class="badge bg-warning"><div class="spinner-grow spinner-grow-sm text-light" role="status"></div> Création en cours</span>`;
+                break;
+            case "qmdestroy":
+            case "deleteVM":
+                htmlState += ` <span class="badge bg-warning"><div class="spinner-grow spinner-grow-sm text-light" role="status"></div> Destruction en cours</span>`;
+                break;
+            case "qmreboot":
+                htmlState += ` <span class="badge bg-warning"><div class="spinner-grow spinner-grow-sm text-light" role="status"></div> Redémarrage en cours</span>`;
+                break;
+            case "useSnapshot":
+            case "qmrollback":
+                htmlState += ` <span class="badge bg-warning"><div class="spinner-grow spinner-grow-sm text-light" role="status"></div> Utilisation d'une snapshot en cours</span>`;
+            default:
+                break;
+
+        }
+
+    }
+
+    return htmlState;
+
+}
+
+function selectAll( ) {
+
+    document.getElementById( "table_id" ).querySelector( "tbody" ).querySelectorAll( "tr" ).forEach( ( row ) => {
+        row.classList.add( "ui-selectee", "ui-selected", "table-primary" )
+    });
+
+}
+
+function unselectAll( ) {
+
+    document.getElementById( "table_id" ).querySelector( "tbody" ).querySelectorAll( "tr" ).forEach( ( row ) => {
+        row.classList.remove( "ui-selectee", "ui-selected", "table-primary" )
+    });
+
+}
+
+function classModalSearchUser( filter ) {
+
+    const selectUser = document.getElementById( "classUserList" );
+
+    for (const select of selectUser.getElementsByTagName( "label" ) ) {
+
+        selectValue = select.textContent || select.innerText;
+
+        select.parentNode.style.display = selectValue.toLowerCase().indexOf( filter.toLowerCase() ) > -1 ? "" : "none";
+
+    }
 
 
 }
