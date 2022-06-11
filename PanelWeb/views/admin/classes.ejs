@@ -13,7 +13,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="modalClassName">Créer une classe</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeModal"></button>
             </div>
             <div class="modal-body mt-1">
                 <form>
@@ -21,6 +21,15 @@
                         <label for="className" class="form-label">Nom</label>
                         <input type="text" class="form-control" id="className">
                     </div>
+                    <div class="mb-3">
+                        <label for="classDescription" class="form-label">Description</label>
+                        <textarea class="form-control" id="classDescription" rows="3"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="className" class="form-label">Etudiants</label>
+                        <input type="text" class="form-control" id="classUserFilter" onkeyup="classModalSearchUser( this.value )" placeholder="Rechercher un étudiant">
+                    </div>
+                    <div id="classUserList"></div>
                 </form>
             </div>
             <div class="modal-footer">
