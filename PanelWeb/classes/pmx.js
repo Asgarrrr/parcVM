@@ -44,7 +44,7 @@
 
         this.axios = axios.create({
             baseURL     : `https://${ Object.values( this.hosts )[ 0 ] }:${ port }/api2/json/`,
-            timeout     : 10000,
+            timeout     : 0,
             httpsAgent  : new https.Agent({ rejectUnauthorized: false }),
             headers     : {
                 "Authorization": `PVEAPIToken ${ apiToken }`,
@@ -53,12 +53,15 @@
 
         this.axios.interceptors.response.use(
             ( response  ) => response,
-            ( error     ) => ({
-                data: {
-                    error: error.message,
-                },
-            })
-        );
+            ( error     ) => {
+                return {
+                    data: {
+                        data: {
+                            error: error.message,
+                        },
+                    },
+                }
+            });
 
         this.axios.get( ).catch( ( error ) => {
             throw new error( `Unable to connect to ${ this.host }:${ this.port }, ${ error.message }` );
@@ -162,9 +165,9 @@
 
             }
 
-            if ( this.queue.waiting.length && this.queue.inProgress.length < 5 ) {
+            if ( this.queue.waiting.length && this.queue.inProgress.length < 1 ) {
 
-                const slots = 5 - this.queue.inProgress.length;
+                const slots = 1 - this.queue.inProgress.length;
 
                 const tasks = this.queue.waiting.splice( 0, slots );
                 this.getNextVMID( );
@@ -274,10 +277,10 @@
     }
 
     /**
-     * @brief   Start a specific VM
+     * @brief Start a specific VM
      * @param  { Number } ID    ID of the VM to start
      * @return { String }       Processed ID
-     * @throws { Error }        If the request failed
+     * @throws { Error  }       If the request failed
      */
     async startVM( { ID } ) {
 
@@ -299,10 +302,10 @@
     }
 
     /**
-     * @brief   Stop a specific VM
+     * @brief Stop a specific VM
      * @param  { Number } ID    ID of the VM to stop
      * @return { String }       Processed ID
-     * @throws { Error }        If the request failed
+     * @throws { Error  }       If the request failed
      */
     async stopVM( { ID } ) {
 
@@ -314,7 +317,7 @@
             throw new Error( `VM ${ ID } is already stopped` );
 
         // —— Stop the VM
-        const { data: { data: taskID } } = await this.axios.post( `nodes/${ VM[ 0 ].node }/qemu/${ VM[ 0 ].vmid }/status/shutdown` );
+        const { data: { data: taskID } } = await this.axios.post( `nodes/${ VM[ 0 ].node }/qemu/${ VM[ 0 ].vmid }/status/stop` );
 
         if ( !taskID )
             throw new Error( `VM ${ ID } could not be stopped` );
@@ -322,6 +325,32 @@
         return taskID;
 
     }
+
+
+    /**
+     * @brief Reboot a specific VM
+     * @param  { Number } ID    ID of the VM to stop
+     * @return { String }       Processed ID
+     * @throws { Error  }       If the request failed
+     */
+    async rebootVM( { ID } ) {
+
+        // —— Get the VM details
+        const VM = await this.getVMs( ID );
+
+        // —— Check if the VM is already stopped
+        if ( !VM.length )
+            throw new Error( `VM ${ ID } does not exist` );
+
+        // —— Stop the VM
+        const { data: { data: taskID } } = await this.axios.post( `nodes/${ VM[ 0 ].node }/qemu/${ VM[ 0 ].vmid }/status/reboot` );
+
+        if ( !taskID )
+            throw new Error( `VM ${ ID } could not be rebooted` );
+
+        return taskID;
+
+        }
 
     /**
      * @brief   Create a new VM
@@ -414,11 +443,39 @@
         const { data: { data } } = await this.axios.post( `nodes/${ VM[ 0 ].node }/qemu/${ templateID }/clone`, {
             name,
             newid: ID,
-            // full: true
+            full: false
         } );
 
         if ( !data )
             throw new Error( `Failed to clone VM ${ templateID }` );
+
+        return data;
+
+    }
+
+    /**
+     * @brief   Get RRD statistics
+     * @param   { Number } ID       ID of the VM to check
+     * @return  { Object }          RRD statistics
+     * @throws  { Error }           If the request failed
+     */
+    async rrddata( { ID } ) {
+
+        if ( !ID )
+            throw new Error( `No VM ID provided` );
+
+        if ( typeof ID === "string" )
+            ID = parseInt( ID );
+
+        const VM = await this.getVMs( ID );
+
+        if ( !VM.length )
+            throw new Error( `VM ${ ID } not found` );
+
+        const { data: { data } } = await this.axios.get( `nodes/${ VM[ 0 ].node }/qemu/${ ID }/rrddata?timeframe=hour&cf=AVERAGE` );
+
+        if ( !data )
+            throw new Error( `Failed to get RRD data for VM ${ ID }` );
 
         return data;
 
@@ -451,7 +508,7 @@
                     break;
             }
 
-            if ( this.queue.inProgress && this.queue.inProgress.length >= 5 )
+            if ( this.queue.inProgress && this.queue.inProgress.length >= 1 )
                 this.queue.waiting.push( encapsulatedTask );
             else
                 this.queue.inProgress.push( encapsulatedTask );
@@ -498,7 +555,7 @@
      * @throws  { Error }           If the request failed
      * @return  { String }          Processed ID
      */
-    async useSnapshot( { ID, snapshot = "init" } ) {
+    async useSnapshot( { ID, snapshot = "Initial" } ) {
 
         // —— Get the VM details
         const VM = await this.getVMs( ID );
