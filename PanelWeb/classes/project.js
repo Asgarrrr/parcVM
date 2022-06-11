@@ -108,7 +108,7 @@ module.exports = class Project {
             await this.bdd.execute( "DELETE FROM UserProject WHERE IDProject = ?", [ id ] );
 
             for ( let i = 0; i < users.length; i++ )
-                await this.bdd.execute( "INSERT INTO `UserProject` VALUES ( NULL, ?, ? )", [ id, users[ i ] ] );
+                await this.bdd.execute( "INSERT INTO UserProject(IDProject,IDUser) VALUES ( ?, ? )", [ id, users[ i ] ] );
 
         }
 
@@ -136,6 +136,8 @@ module.exports = class Project {
         if ( VM )
             for ( let i = 0; i < VM.length; i++ )
                 await this.bdd.execute( "INSERT INTO `VMProject` VALUES ( NULL, ?, ? )", [ id, VM[ i ] ] );
+
+        return id;
 
     }
 
