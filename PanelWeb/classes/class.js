@@ -46,7 +46,7 @@ module.exports = class Class {
 
     async GetClass( id ) {
 
-        const [ rows, fields ] = await this.bdd.execute( `SELECT * FROM Classes WHERE IdClasse = ?`, [ id ] );
+        const [ rows, fields ] = await this.bdd.execute( `SELECT * FROM Classe WHERE IdClasse = ?`, [ id ] );
         return rows[ 0 ];
 
     }
@@ -57,5 +57,32 @@ module.exports = class Class {
 
     }
 
+    async CreateClass( name, description, users = [ ] ) {
+
+        const [ rows, fields ] = await this.bdd.execute( `INSERT INTO Classe ( Nom, Description ) VALUES ( ?, ? )`, [ name, description ] );
+
+        const id = rows.insertId;
+
+        for( let i = 0; i < users.length; i++ )
+            await this.bdd.execute( `INSERT INTO UserClass ( idUser, idClass ) VALUES ( ?, ? )`, [ users[ i ], id ] );
+
+        return id;
+
+    }
+
+    async DeleteClass( id ) {
+
+        await this.bdd.execute( `DELETE FROM Classe WHERE IdClasse = ?`, [ id ] );
+        await this.bdd.execute( `DELETE FROM UserClass WHERE idClass = ?`, [ id ] );
+
+    }
+
+    async getClassMembers( idClass ) {
+
+        const [ rows, fields ] = await this.bdd.execute( `SELECT users.IdUser, users.Nom, users.Prenom, users.Email FROM Classe, users, UserClass WHERE users.IdUser = UserClass.idUser and Classe.IdClasse = UserClass.idClass and Classe.IdClasse = ?`, [ idClass ] );
+
+        return rows;
+
+    }
 
 }
