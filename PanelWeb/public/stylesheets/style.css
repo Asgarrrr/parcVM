@@ -69,11 +69,16 @@
     animation-name: slidein;
 }
 
+#popup {
+    position: fixed;
+    z-index: 999;
+}
+
 @keyframes slidein {
     from {
       width: 0px;
     }
-  
+
     to {
       width: 260px;
     }

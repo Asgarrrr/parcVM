@@ -47,6 +47,20 @@ ul {
     display: flex;
     flex-direction: column;
     transition: width 0.5s ease-in-out;
+    animation: open 0.5s ease-in-out;
+}
+
+@keyframes open {
+    0% {
+        width: 0;
+        padding: 1.8rem 0rem;
+        overflow: hidden;
+    }
+    100% {
+        width: 16rem;
+        overflow: visible;
+        padding: 1.8rem 0.85rem;
+    }
 }
 
 .navside::before {
@@ -280,7 +294,7 @@ nav:hover .shrink-btn,
     color: #fff;
 }
 
-.tooltip {
+.mtooltip {
     background-color: var(--main-color);
     position: absolute;
     right: -1.2rem;
@@ -302,18 +316,18 @@ nav:hover .shrink-btn,
     white-space: nowrap;
 }
 
-.tooltip span {
+.mtooltip span {
     grid-column: 1 / 2;
     grid-row: 1 / 2;
     opacity: 0;
     transition: 0.3s;
 }
 
-.tooltip span.show {
+.mtooltip span.show {
     opacity: 1;
 }
 
-.tooltip-element:hover~.tooltip {
+.mtooltip-element:hover~.mtooltip {
     opacity: 1;
     pointer-events: all;
 }
@@ -425,12 +439,23 @@ body.shrink .tooltip {
     color: red;
 }
 
-#memoryUsed {
+#memoryUsed, #CPUUsed, #StorageUsed {
     margin-top: 20px;
     margin-bottom: 0px;
     font-size: 40px;
 }
 
-#totalMem {
+#totalMem, #totalCPU, #totalStorage {
     font-size: 80%;
+}
+
+#popup {
+    position: fixed;
+    z-index: 999;
+}
+
+#clickIP:hover {
+    cursor: pointer;
+    background-color: red;
+    border-radius: 5px;
 }
