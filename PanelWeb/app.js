@@ -2,12 +2,13 @@
 require( "dotenv" ).config();
 
 // —— Class
-const Proxmox   = require( "./classes/pmx.js"     )
-    , BDD       = require( "./classes/bdd.js"     )
-    , VM        = require( "./classes/VM.js"      )
-    , User      = require( "./classes/user.js"    )
-    , Project   = require( "./classes/project.js" )
-    , Class     = require( "./classes/class.js"   );
+const Proxmox       = require( "./classes/pmx.js"           )
+    , BDD           = require( "./classes/bdd.js"           )
+    , VM            = require( "./classes/VM.js"            )
+    , User          = require( "./classes/user.js"          )
+    , Project       = require( "./classes/project.js"       )
+    , Class         = require( "./classes/class.js"         )
+    , Temperature   = require( "./classes/temperature.js"   );
 
 // —— Dependencies
 const createError   = require( "http-errors"     )
@@ -36,9 +37,10 @@ const indexRouter = require( "./routes/index" )
 
     const DB    = await ( new BDD( process.env.DBHOST, process.env.DBLOGIN, process.env.DBPASS, process.env.DBTABLENAME ) ).connect( );
 
-    const ProjectManager = new Project( DB );
-    const UserManager    = new User( DB );
-    const ClassManager   = new Class( DB );
+    const ProjectManager     = new Project( DB );
+    const UserManager        = new User( DB );
+    const ClassManager       = new Class( DB );
+    const TemperatureManager = new Temperature( DB );
 
     // —— Session
     const sessionMiddleware = session({
@@ -49,7 +51,7 @@ const indexRouter = require( "./routes/index" )
     });
 
 
-    io.use( ( socket, next ) => sessionMiddleware(socket.request, socket.request.res || {}, next ) );
+    io.use( ( socket, next ) => sessionMiddleware( socket.request, socket.request.res || {}, next ) );
 
     app.use( sessionMiddleware );
 
@@ -109,7 +111,7 @@ const indexRouter = require( "./routes/index" )
     setInterval( async ( ) => {
         VMS     = await PMX.getVMs( );
         queue   = await PMX.getQueueTasks( );
-    }, 5000 );
+    }, 1000 );
 
     io.on( "connection", ( socket ) => {
 
@@ -146,6 +148,13 @@ const indexRouter = require( "./routes/index" )
 
         } );
 
+        socket.on( "rebootVMRequest", async ( data ) => {
+
+            console.log( "Demande de redémarrage de la VM " );
+            PMX.pushTask( PMX.rebootVM, { ID: data } );
+
+        } );
+
         socket.on( "stopVMRequest", async ( data ) => {
 
             console.log( "Demande d'arrêt de la VM " );
@@ -160,6 +169,13 @@ const indexRouter = require( "./routes/index" )
 
         } );
 
+        socket.on( "resetVMRequest", async ( data ) => {
+
+            console.log( "Demande de réinitialisation de la VM " + data );
+            PMX.pushTask( PMX.useSnapshot, { ID: data } );
+
+        });
+
         socket.on( "loadProjets", async ( data ) => {
 
             console.log( socket.request.session );
@@ -173,7 +189,7 @@ const indexRouter = require( "./routes/index" )
             socket.emit( "getProjectDetail", {
                 project : await ProjectManager.GetProject( data ),
                 VM      : VMS.map( ( VM ) => ({ id: VM.vmid, name: VM.name })),
-                users   : await UserManager.GetAllUser( )
+                users   : await UserManager.GetAllUser( ),
             } );
 
         } );
@@ -197,8 +213,8 @@ const indexRouter = require( "./routes/index" )
             try {
 
                 // —— Create project in database
-                await ProjectManager.CreateProject( data );
-                socket.emit( "createProject", data );
+                const id = await ProjectManager.CreateProject( data );
+                socket.emit( "createProject", { ...data, id } );
 
             } catch ( error ) {
                 socket.emit( "createProject", "fail" );
@@ -224,7 +240,6 @@ const indexRouter = require( "./routes/index" )
 
             socket.emit( "loadedUsers", await UserManager.GetAllUserDetails( ) );
 
-
         } );
 
         socket.on( "deletedVM", async ( data ) => {
@@ -239,7 +254,8 @@ const indexRouter = require( "./routes/index" )
 
                 socket.emit( "loadVMDetail", {
                     snapshot: await PMX.getSnapshots( vmid ),
-                    VM      : VMS.find( ( VM ) => VM.vmid == vmid )
+                    VM      : VMS.find( ( VM ) => VM.vmid == vmid ),
+                    RRData  : await PMX.rrddata({ ID: vmid }),
                 } );
 
            } catch ( error ) {
@@ -385,9 +401,22 @@ const indexRouter = require( "./routes/index" )
 
             try {
 
-                socket.emit( "loadClass", await ClassManager.GetAllClass( ) );
+                const allUsers = await UserManager.GetAllUser( )
+                    , allClass = await ClassManager.GetAllClass( );
 
-            } catch (error) {
+                for( [ index, classs ] of Object.entries( allClass ) ) {
+
+                    for ( const user of classs.users )
+                        user.VM = Object.values( await UserManager.GetUserbyId( user.id ) )[ 0 ].VM
+
+                }
+
+                socket.emit( "loadClass", {
+                    classes : allClass,
+                    users   : allUsers
+                } );
+
+            } catch ( error ) {
 
                 console.log( error );
                 socket.emit( "loadClass", "fail" );
@@ -413,7 +442,14 @@ const indexRouter = require( "./routes/index" )
 
             try {
 
-                socket.emit( "loadRessources", await PMX.loadResources( ) );
+                socket.emit( "loadRessources", {
+                    ...await PMX.loadResources( ),
+                    temp: {
+                        current: await TemperatureManager.getLastTemp( ),
+                        max    : process.env.TEMP_MAX,
+                    },
+                    queue: PMX.getQueueTasks( )
+                } );
 
             } catch ( error ) {
 
@@ -422,6 +458,73 @@ const indexRouter = require( "./routes/index" )
 
 
             }
+
+        });
+
+        socket.on( "loadTemperatures", async ( ) => {
+
+            try {
+
+                socket.emit( "loadTemperatures", await TemperatureManager.getTemp( ) );
+
+            } catch ( error ) {
+
+                console.log( error );
+                socket.emit( "loadTemperatures", "fail" );
+
+            }
+
+
+        });
+
+        socket.on( "createClass", async ( { name, description, members } ) => {
+
+            try {
+
+                const membersParsed = ( await UserManager.GetAllUser( ) ).filter( ( user ) => members.includes( user.IdUser ) );
+
+                for ( const member of membersParsed )
+                    member.VM = Object.values( await UserManager.GetUserbyId( member.IdUser ) )[ 0 ].VM;
+
+                const ID = await ClassManager.CreateClass( name, description, members );
+                socket.emit( "createClass", { ID, name, description, membersParsed } );
+
+            } catch ( error ) {
+
+                console.error( error );
+                socket.emit( "createClass", "fail" );
+
+            }
+
+        });
+
+        socket.on( "deleteClass", async( IDClass ) => {
+
+            try {
+
+                await ClassManager.DeleteClass( IDClass );
+                socket.emit( "deleteClass", "success" );
+
+            } catch ( error ) {
+
+                console.error( error );
+                socket.emit( "deleteClass", "fail" );
+
+            }
+
+        });
+
+        socket.on( "startAllVMClass", async ( classID ) => {
+
+            const classMembers = await ClassManager.getClassMembers( classID )
+                , classVMs     = [ ];
+
+            for ( const member of classMembers )
+                classVMs.push( Object.values( await UserManager.GetUserbyId( member.IdUser ) )[ 0 ].VM );
+
+            for ( const VM of [ ...new Set( classVMs.flat( 5 ) ) ] )
+                PMX.pushTask( PMX.startVM, { ID: VM } );
+
 
         });
 
