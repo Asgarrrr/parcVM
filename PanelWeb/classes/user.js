@@ -9,7 +9,7 @@ module.exports = class User {
 
     async GetAllUser() {
 
-        const [ rows ] = await this.bdd.execute( "SELECT Nom, Prenom, IdUser FROM users" );
+        const [ rows ] = await this.bdd.execute( "SELECT Email, Nom, Prenom, IdUser FROM users" );
         return rows;
 
     }
@@ -123,7 +123,7 @@ module.exports = class User {
         await this.bdd.execute( "DELETE FROM UserVM WHERE IdUser = ?", [ id ] );
 
         for ( var i = 0; i < Project.length; i++ )
-            await this.bdd.execute( "INSERT INTO `UserProject` VALUES ( NULL, ?, ? )", [ id, Project[ i ] ] );
+            await this.bdd.execute( "INSERT INTO `UserProject` VALUES ( NULL, ?, ? )", [ Project[ i ], id, ] );
 
         for ( var i = 0; i < Class.length; i++ )
             await this.bdd.execute( "INSERT INTO `UserClass` VALUES ( NULL, ?, ? )", [ id, Class[ i ] ] );
