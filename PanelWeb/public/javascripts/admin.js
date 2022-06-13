@@ -2296,5 +2296,27 @@ function classModalSearchUser( filter ) {
 
     }
 
+}
+
+function saveSettings( ) {
+
+    const mailHost          = document.getElementById( "mailHost" ).value;
+    const mailPort          = document.getElementById( "mailPort" ).value;
+    const mailUser          = document.getElementById( "mailUser" ).value;
+    const mailPassword      = document.getElementById( "mailPassword" ).value;
+    const destMailAdress    = document.getElementById( "destMailAdress" ).value;
+    const mailContent       = document.getElementById( "mailContent" ).value;
+    const MailAutor       = document.getElementById( "MailAutor" ).value;
+
+    // Send the settings to the server
+    this.socket.emit( "saveSettings", {
+        hoteSMTP    : mailHost.trim(),
+        portSMTP    : mailPort.trim(),
+        MailUser    : mailUser.trim(),
+        MailMDPUser : mailPassword.trim(),
+        MailDest    : destMailAdress.trim(),
+        mailContent : mailContent.trim(),
+        MailAutor   : MailAutor.trim()
+    } );
 
 }

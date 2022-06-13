@@ -140,7 +140,6 @@ module.exports = class User {
 
     }
 
-
     async CreateSession( iduser, token ) {
 
         const [ rows ] = await this.bdd.execute( "INSERT INTO `Sessions` VALUES ( NULL, '"+iduser+"', '"+token+"')" );
@@ -201,6 +200,30 @@ module.exports = class User {
         });
 
         return users;
+
+    }
+
+    async getSettings( ) {
+
+        const [ rows ] = await this.bdd.execute( "SELECT * FROM Settings LIMIT 1" );
+        return rows;
+
+    }
+
+    async saveSettings( settings ) {
+
+        try {
+
+            console.log( settings )
+
+            await this.bdd.query( "UPDATE `Settings` SET `hoteSMTP`= ? ,`portSMTP`= ? ,`MailUser`= ? ,`MailMDPUser`= ?,`mailContent`= ?, MailDest = ? WHERE ID = 0", [ settings.hoteSMTP, settings.portSMTP, settings.MailUser, settings.MailMDPUser, settings.mailContent, settings.MailDest, settings.MailAutor ] );
+            return true;
+
+        } catch ( error ) {
+
+            console.log( error );
+
+        }
 
     }
 

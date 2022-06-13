@@ -10,7 +10,6 @@ const nodemailer = require( "nodemailer" )
 
 const Temp = require( "../classes/temperature" );
 
-
 // —— Save temperature on the database
 router.post( "/temp", async ( req, res, next ) => {
 
@@ -55,6 +54,33 @@ router.post( "/temp", async ( req, res, next ) => {
         res.sendStatus( 500 );
 
     }
+
+});
+
+router.get( "/labo", async ( req, res, next ) => {
+
+    console.log( req.query );
+
+    const transporter = nodemailer.createTransport({
+        host: process.env.MAIL_HOST,
+        port: process.env.MAIL_PORT,
+        auth: {
+            user: process.env.MAIL_USER,
+            pass: process.env.MAIL_PASS
+        }
+    });
+
+    transporter.sendMail({
+        from    : "alarme@laboSN1.com",
+        to      : req.query.admin.split( ";" ),
+        subject : "Intrusion détectée",
+        text    : req.query.corps
+    }, ( error, info ) => {
+
+        if ( error )
+            return console.log( error );
+
+    });
 
 });
 

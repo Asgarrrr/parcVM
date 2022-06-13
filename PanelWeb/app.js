@@ -438,6 +438,21 @@ const indexRouter = require( "./routes/index" )
 
         });
 
+        socket.on( "saveSettings", async ( data ) => {
+
+            try {
+
+                await UserManager.saveSettings( data )
+
+            } catch ( error ) {
+
+                console.log( error );
+                socket.emit( "saveSettings", "fail" );
+
+            }
+
+        });
+
         socket.on( "loadRessources", async ( ) => {
 
             try {

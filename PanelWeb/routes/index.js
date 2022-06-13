@@ -1,9 +1,9 @@
 
 const { Router } = require( "express" );
-const router = Router( );
-const auth   = require( "../middlewares/auth" );
-
-const User = require( "../classes/user" );
+const router     = Router( );
+const auth       = require( "../middlewares/auth" );
+const bdd        = require( "../classes/bdd" );
+const User       = require( "../classes/user" );
 
 // —— Route index
 router.get( "/", auth, ( req, res, next ) => {
@@ -141,9 +141,6 @@ router.post( "/login", async ( req, res, next ) => {
         if ( !resp || !resp.length )
             return res.status( 418 ).send( "No users found with this login/password combination" );
 
-
-        console.log( resp[ 0 ].IdUser )
-
         user.CreateSession( resp[ 0 ].IdUser, req.sessionID );
         req.session.user = resp[ 0 ];
 
@@ -178,13 +175,35 @@ router.get( "/settings", auth, async ( req, res, next ) => {
 
     try {
 
-        res.render( "./admin/settings", { } );
+        const user      = await new User( req.app.get( "BDD" ) );
+        const settings  = await user.getSettings( );
+
+        res.render( "./admin/settings", { settings : settings[ 0 ] } );
 
     } catch ( error ) {
+
+        res.status( 418 ).send( error );
+        console.error( error );
+
 
     }
 
 });
+
+router.post( "/settings", auth, async ( req, res, next ) => {
+
+    try {
+
+        console.log( req.body )
+
+    } catch ( error ) {
+
+        console.log( error )
+
+    }
+
+});
+
 
 router.get( "/mdt", auth, async ( req, res, next ) => {
 

@@ -6,19 +6,64 @@
     <h2 class="mt-5"> Configuration mail </h2>
     <hr>
 
-    <div class="row">
+    <div class="row mb-3">
 
-        <div class="row">
-
-            <div class="col-md-6">
-                <form class="form-floating">
-                    <input type="email" class="form-control is-invalid" id="floatingInputInvalid" placeholder="name@example.com" value="test@example.com">
-                    <label for="floatingInputInvalid">Hôte SMTP</label>
-                </form>
-            </div>
-
+        <div class="col-md-6">
+            <form class="form-floating">
+                <input type="text" class="form-control" id="mailHost" placeholder="Hôte SMTP" value="<%= settings.hoteSMTP %>" />
+                <label for="floatingInputInvalid">Hôte SMTP</label>
+            </form>
+        </div>
+        <div class="col-md-6">
+            <form class="form-floating">
+                <input type="number" class="form-control" id="mailPort" placeholder="Port SMTP" value="<%= settings.portSMTP %>" />
+                <label for="floatingInputInvalid">Port SMTP</label>
+            </form>
         </div>
 
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <form class="form-floating">
+                <input type="text" class="form-control" id="mailUser" placeholder="Utilisateur" value="<%= settings.MailUser %>" />
+                <label for="floatingInputInvalid">Utilisateur</label>
+            </form>
+        </div>
+        <div class="col-md-6">
+            <form class="form-floating">
+                <input type="password" class="form-control" id="mailPassword" placeholder="Mot de passe" value="<%= settings.MailMDPUser %>" />
+                <label for="floatingInputInvalid">Mot de passe</label>
+            </form>
+        </div>
+    </div>
+
+    <form class="form-floating mb-3">
+        <input type="email" class="form-control" id="MailAutor" placeholder="Adresse d'envoi" value="<%= settings.MailAutor %>" />
+        <label for="floatingInputInvalid">Adresse d'envoi</label>
+    </form>
+
+    <div class="form-floating">
+        <textarea class="form-control" id="destMailAdress" style="height: 100px"><%= settings.MailDest %></textarea>
+        <label for="floatingTextarea2">Addresse(s) mail(s) destinataire(s)</label>
+        <div id="passwordHelpBlock" class="form-text">
+            Vous pouvez ajouter plusieurs adresses mail séparées par une virgule.
+        </div>
+    </div>
+
+    <div class="form-floating mt-3">
+        <textarea class="form-control" placeholder="Définissez le message en cas de températures" id="mailContent" style="height: 200px"><%= settings.mailContent %></textarea>
+        <label for="floatingTextarea2">Contenu du mail</label>
+    </div>
+    <div id="passwordHelpBlock" class="form-text">
+        Vous pouvez utiliser les variables suivantes : {{temp}} pour la température, pour le seuil {{seuil}}.
+    </div>
+
+    <h2 class="mt-5"> Configuration températures </h2>
+    <hr>
+
+    <div class="d-grid gap-2">
+        <button class="btn btn-primary" type="button" onclick="saveSettings()">Sauvegarder les modifications</button>
     </div>
 
 </div>
