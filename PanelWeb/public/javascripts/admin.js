@@ -10,7 +10,7 @@
     console.log( "https://github.com/Asgarrrr", "https://github.com/LucasGLaPro" );
 
     // Create a new websocket connection
-    this.socket = io( "192.168.64.103" );
+    this.socket = io( "192.168.65.52" );
 
     const shrink_btn = document.querySelector(".shrink-btn");
     const sidebar_links = document.querySelectorAll(".sidebar-links a");
@@ -436,6 +436,27 @@
         end.setAttribute( "max", today );
         end.setAttribute( "value", today );
         end.addEventListener( "change", ( ) => this.socket.emit( "loadTemperatures" ) );
+
+    } );
+
+    document.getElementById( "settings" ).addEventListener( "click", async ( ) => {
+
+        if ( activeArea == 8 )
+            return;
+
+        activeArea = 8;
+        if ( refreshRequest )
+            clearInterval( refreshRequest );
+
+        redrawArea.innerHTML = `<div class="h-100 d-flex justify-content-center align-items-center"><div class="spinner-grow text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>`;
+
+        const response = await fetch( "./settings", {
+            credentials: "same-origin",
+        } ).then( response => response.text() );
+        redrawArea.innerHTML = response;
+
+        //this.socket.emit( "loadRessources" );
+        //refreshRequest = setInterval( ( ) => this.socket.emit( "loadRessources" ), 1000 );
 
     } );
 
@@ -925,8 +946,6 @@
     } );
 
     this.socket.on( "loadVMDetail", async ( data ) => {
-
-        console.log( data )
 
         document.getElementById( "vmStatus"     ).innerHTML = data.VM.status;
         document.getElementById( "vmNode"       ).innerHTML = data.VM.node;
