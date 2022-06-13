@@ -12,6 +12,8 @@
         transports: [ "websocket" ],
     } );
 
+    this.VM = [ ];
+
     const shrink_btn = document.querySelector(".shrink-btn");
     const sidebar_links = document.querySelectorAll(".sidebar-links a");
     const active_tab = document.querySelector(".active-tab");
@@ -68,6 +70,7 @@
         redrawArea.innerHTML = await fetch( "./vm" ).then( res => res.text( ) );
         this.VMtable = new DataTable( "#table_id", {
             stateSave: true,
+            fixedHeader: true,
             columns: [
                 { data: "ID"        },
                 { data: "name"      },
@@ -75,7 +78,7 @@
                 { data: "IP"        },
                 { data: "RAM"       },
                 { data: "CPU"       },
-                { data: "HDD"       },
+                { data: "Actions"       },
             ],
             language: {
                 emptyTable: "Aucune machine disponible",
@@ -153,6 +156,7 @@
 
         this.VMtable = new DataTable( "#table_id", {
             stateSave: true,
+            fixedHeader: true,
             columns: [
                 { data: "ID"        },
                 { data: "name"      },
@@ -160,7 +164,7 @@
                 { data: "IP"        },
                 { data: "RAM"       },
                 { data: "CPU"       },
-                { data: "HDD"       },
+                { data: "Actions"       },
             ],
             language: {
                 emptyTable: "Aucune machine disponible",
@@ -239,135 +243,19 @@
 
 })();
 
-this.socket.on( "loadVM", ( data ) => {
-    try {
-
-        for( const VM of data.VMS ) {
-
-            const matchdata = this.VMtable.rows( ( idx, rowdata, node ) => {
-                return rowdata.ID === VM.vmid;
-            }).data();
-
-            // Check if the VM is already in the table
-            if( matchdata.length === 0 ) {
-
-                let IP = null;
-
-                if ( VM.network ) {
-
-                    if ( VM.network.find( ( interface ) => interface.name == "ens18" ) ) {
-
-                        const interface = VM.network.find( ( interface ) => interface.name == "ens18" );
-
-                        if ( interface ) {
-
-                            if ( !interface["ip-addresses"] )
-                                return;
-
-                            IP = interface["ip-addresses"].find( ( type ) => type["ip-address-type"] == "ipv4" );
-
-                            if ( IP )
-                                IP = IP["ip-address"];
-
-                        }
-
-                    }
-
-                }
-
-                // Add the VM to the table
-                this.VMtable.row.add( {
-                    ID      : VM.vmid || "-",
-                    name    : VM.name || "-",
-                    status  : `<span class="badge text-bg-${ VM.status === "running" ? "success" : "danger" }">${ VM.status || "-" }</span>`,
-                    IP      : IP || "-",
-                    CPU     : VM.cpu ? Math.round( VM.cpu * 100 ) + " %" : "-",
-                    RAM     : VM.mem ? Math.round( ( VM.mem / VM.maxmem ) * 100 ) + " %" : "-",
-                    HDD     : VM.disk ? Math.round( ( VM.disk / VM.maxdisk ) * 100 || 0 ) + "%" : "-",
-
-                } ).draw( );
-
-            } else {
-
-
-                let IP = null;
-
-                if ( VM.network ) {
-
-                    if ( VM.network.find( ( interface ) => interface.name == "ens18" ) ) {
-
-                        const interface = VM.network.find( ( interface ) => interface.name == "ens18" );
-
-                        if ( interface ) {
-
-                            IP = interface[ "ip-addresses" ].find( ( type ) => type["ip-address-type"] == "ipv4" );
-
-                            if ( IP )
-                                IP = IP[ "ip-address" ];
-
-                        }
-
-                    }
-
-                }
-
-                // Update the VM in the table
-                this.VMtable.row( function ( idx, rowdata, node ) {
-                    return rowdata.ID === VM.vmid;
-                }).data( {
-                    ID      : VM.vmid || "-",
-                    name    : VM.name || "-",
-                    status  : `<span class="badge text-bg-${ VM.status === "running" ? "success" : "danger" }">${ VM.status || "-" }</span>`,
-                    IP      : IP || "-",
-                    CPU     : VM.cpu ? Math.round( VM.cpu * 100 ) / 100 + "%" : "-",
-                    RAM     : VM.mem ? Math.round( ( VM.mem / VM.maxmem ) * 100 ) + "%" : "-",
-                    HDD     : VM.disk ? Math.round( ( VM.disk / VM.maxdisk ) * 100 || 0 ) + "%" : "-",
-                } ).draw( );
-
-            }
-
-        }
-
-        data?.queue[ 0 ] && data.queue[ 0 ].forEach( ( task ) => {
-
-            if ( task.args )
-            task.id = task.args.ID;
-
-            // Update the VM in the table
-            const row = this.VMtable.row( function ( idx, rowdata, node ) {
-                return rowdata.ID == task.id;
-            });
-
-            if( row.data( ) ) {
-
-                const VM = row.data( );
-
-                row.data( {
-                    ID      : VM.ID || "-",
-                    name    : VM.name || "-",
-                    status  : `<span class="badge bg-secondary"><div class="spinner-grow spinner-grow-sm" role="status"><span class="visually-hidden">Loading</span></div></span>`,
-                    IP      : VM.ip || "-",
-                    CPU     : VM.cpu ? Math.round( VM.cpu * 100 ) / 100 + "%" : "-",
-                    RAM     : VM.mem ? Math.round( ( VM.mem / VM.maxmem ) * 100 ) + "%" : "-",
-                    HDD     : VM.disk ? Math.round( ( VM.disk / VM.maxdisk ) * 100 || 0 ) + "%" : "-",
-                } ).draw( );
-
-            }
-
-        } );
-
-    } catch ( error ) {
-
-        console.error( error );
-
-    }
-
-} );
-
 function startVM( ) {
 
     for ( const row of document.querySelectorAll( ".table-primary" ) )
         this.socket.emit( "startVMRequest", row.childNodes[ 0 ].innerText );
+
+}
+
+function restartVM( ) {
+
+    for ( const row of document.querySelectorAll( ".table-primary" ) ) {
+
+        this.socket.emit( "rebootVMRequest", row.childNodes[ 0 ].innerText );
+    }
 
 }
 
@@ -513,24 +401,28 @@ this.socket.on( "loadVM", ( data ) => {
 
     try {
 
+        data.queue[ 0 ] = data.queue[ 0 ].map( ( q ) => {
+
+            const parsed = q.upid.split( ":" );
+            return {
+                id  : parsed[6],
+                pve : parsed[1],
+                task: parsed[5]
+            };
+
+        } );
+
+    } catch ( error ) { }
+
+    try {
+
         for( const VM of data.VMS ) {
 
             if ( VM.vmid === 104 )
                 continue;
 
-            if ( VM.template ) {
-
-                const select = document.getElementById( "createVMNameTemplate" );
-
-                // Get all options contents
-                const options = [ ...select.options ].map( ( option ) => option.text );
-
-                if ( !options.includes( VM.name ) )
-                    select.add( new Option( VM.name, VM.vmid ) );
-
+            if ( VM.template )
                 continue;
-
-            }
 
             const matchdata = this.VMtable.rows( ( idx, rowdata, node ) => {
                 return rowdata.ID === VM.vmid;
@@ -564,11 +456,12 @@ this.socket.on( "loadVM", ( data ) => {
 
                 }
 
+
                 // Add the VM to the table
                 this.VMtable.row.add( {
                     ID      : VM.vmid || "-",
                     name    : VM.name || "-",
-                    status  : `<span class="badge text-bg-${ VM.status === "running" ? "success" : "danger" }">${ VM.status || "-" }</span>`,
+                    status  : checkState( VM, data.queue ),
                     IP      : VM.status === "running" ? IP || "-" : "-",
                     CPU     : VM.cpu ? ( VM.cpu  * 100 ).toFixed( 2 ) + "%": "-",
                     RAM     : VM.mem ? Math.round( ( VM.mem / VM.maxmem ) * 100 ) + " %" : "-",
@@ -598,9 +491,6 @@ this.socket.on( "loadVM", ( data ) => {
 
                 }
 
-                if ( this.VMOperations[ String( VM.vmid ) ] )
-                    if ( this.VMOperations[ String( VM.vmid ) ] == VM.status )
-                        delete this.VMOperations[ String( VM.vmid ) ];
 
                 // Update the VM in the table
                 this.VMtable.row( function ( idx, rowdata, node ) {
@@ -608,8 +498,8 @@ this.socket.on( "loadVM", ( data ) => {
                 }).data( {
                     ID      : VM.vmid || "-",
                     name    : VM.name || "-",
-                    status  : this.VMOperations[ String( VM.vmid ) ] ? `<span class="badge bg-secondary"><div class="spinner-grow spinner-grow-sm" role="status"><span class="visually-hidden">Loading</span></div></span>` : `<span class="badge text-bg-${ VM.status === "running" ? "success" : "danger" }">${ VM.status || "-" }</span>`,
-                    IP      : VM.status === "running" ? `<span data-bs-toggle="tooltip" data-bs-placement="top" title="Tooltip on top"> ${ IP }</span>` || "-" : "-",
+                    status  : checkState( VM, data.queue ),
+                    IP      : VM.status === "running" ? IP || "-" : "-",
                     CPU     : VM.cpu ? ( VM.cpu  * 100 ).toFixed( 2 ) + "%": "-",
                     RAM     : VM.mem ? Math.round( ( VM.mem / VM.maxmem ) * 100 ) + "%" : "-",
                     Actions : "<button class='btn btn-primary btn-sm' style='--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;' onclick='editVMModal(this)' data-id='" + VM.vmid + "'>Modifier</button>"
@@ -638,6 +528,10 @@ this.socket.on( "loadVM", ( data ) => {
         console.error( error );
 
     }
+
+    $( '[data-bs-toggle="tooltip"]' ).tooltip({
+        trigger: "hover"
+    });
 
 } );
 
@@ -877,6 +771,63 @@ function createVMActions( ) {
 
 }
 
+function useVMSnapshot( VMID, snapshot ) {
+
+    this.socket.emit( "useVMSnapshot", { VMID, snapshot } );
+
+}
+
+function deleteVMSnapshot( VMID, snapshot ) {
+
+    this.socket.emit( "deleteVMSnapshot", { VMID, snapshot } );
+
+    const table = document.getElementById( "snapshotSelectionTable" );
+
+    // Remove the row
+    for ( const row of table.querySelectorAll( "tr" ) )
+        if ( row.childNodes[ 1 ].innerText === snapshot )
+            return table.removeChild( row );
+
+}
+
+function createVMSnapshot( ) {
+
+    const modalDom      = document.getElementById( "editVMModal" )
+        , table         = document.getElementById( "snapshotSelectionTable" )
+        , name          = document.getElementById( "createVMSnapshotName" )
+        , description   = document.getElementById( "createVMSnapshotDesc" );
+
+    if ( !name.value )
+        return name.classList.add( "is-invalid" );
+
+    // Check if name is already used
+    for ( const row of table.childNodes )
+        if ( row.childNodes.length && row.childNodes[ 1 ].innerText === name.value )
+            return name.classList.add( "is-invalid" );
+
+    this.socket.emit( "createVMSnapshot", {
+        VMID        : modalDom.dataset.id,
+        snapname    : name.value,
+        description : description.value
+    } );
+
+
+    const tr = document.createElement( "tr" );
+    tr.innerHTML = `
+        <td>${ name.value }</td>
+        <td>${ description.value }</td>
+        <td>${ new Date( ).toLocaleString( ) }</td>
+        <td><button class='btn btn-primary btn-sm me-2' style='--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;' onclick='useVMSnapshot( ${ modalDom.dataset.id }, "${ name.value }" )'>Utiliser</button><button class='btn btn-danger btn-sm' style='--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;' onclick='deleteVMSnapshot( ${ modalDom.dataset.id }, "${ name.value }" )'>Supprimer</button></td>
+    `;
+
+    // Append the new row before "current" row
+    snapshotSelectionTable.insertBefore( tr, snapshotSelectionTable.querySelector( "tr:last-child" ) );
+
+    name.value = "";
+    description.value = "";
+
+}
+
 function editVMModal( trigger ) {
 
     const modalDom  = document.getElementById( "editVMModal" )
@@ -893,8 +844,186 @@ function editVMModal( trigger ) {
 
 this.socket.on( "loadVMDetail", async ( data ) => {
 
+    document.getElementById( "vmStatus"     ).innerHTML = data.VM.status;
+    document.getElementById( "vmNode"       ).innerHTML = data.VM.node;
+    document.getElementById( "vmCPUUsage"   ).innerHTML = data.VM.cpu ? ( data.VM.cpu  * 100 ).toFixed( 2 ) + "%" + " de " + data.VM.maxcpu + " coeur" : "-";
+    document.getElementById( "vmRAMUsage"   ).innerHTML = data.VM.mem ? Math.round( ( data.VM.mem / data.VM.maxmem ) * 100 ) + " %"  + " / " + data.VM.maxmem / (1024 * 1024 * 1024)  + " Go" : "-";
+
+    try {
+        document.getElementById( "vmIPs" ).innerHTML = data.VM.network.find( ( interface ) => interface.name == "ens18" ) ? data.VM.network.find( ( interface ) => interface.name == "ens18" )["ip-addresses"].find( ( type ) => type["ip-address-type"] == "ipv4" )["ip-address"] : "-";
+    } catch (error) {
+        document.getElementById( "vmIPs" ).innerHTML = "-";
+    }
+
     document.getElementById( "VMEditLoader" ).style.display = "none";
     document.getElementById( "VMEditData" ).style.display   = "block";
 
+    const modalDom  = document.getElementById( "editVMModal" );
+    const snapshotSelectionTable = document.getElementById( "snapshotSelectionTable" );
+    const VMID = modalDom.dataset.id;
+
+    snapshotSelectionTable.innerHTML = "";
+
+    for ( const snapshot of data.snapshot ) {
+
+        const snapshotRow = document.createElement( "tr" );
+        snapshotRow.innerHTML = `
+            <td>${ snapshot.name }</td>
+            <td>${ snapshot.description }</td>
+            <td>${ snapshot.snaptime ? new Date( snapshot.snaptime * 1000 ).toLocaleString(): "-" }</td>
+
+            <td>
+                ${ snapshot.name !== "current" 
+                ? `<button class='btn btn-primary btn-sm me-2' style='--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;' onclick='useVMSnapshot( ${ VMID }, "${ snapshot.name }" )'>Utiliser</button> 
+                    ${ snapshot.name !== "Initial" 
+                        ? `<button class='btn btn-danger btn-sm' style='--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;' onclick='deleteVMSnapshot( ${ VMID }, "${ snapshot.name }" )'>Supprimer</button>` 
+                        : "" 
+                    } ` : ""
+                } </td> ` 
+
+        snapshotSelectionTable.appendChild( snapshotRow );
+
+    }
 
 });
+
+
+function checkState( VM, queue ) {
+
+    let htmlState = "";
+
+    switch ( VM.status ) {
+        case "running":
+            htmlState += `<span class="badge bg-success">Démarrée</span>`;
+            break;
+        case "stopped":
+            htmlState += `<span class="badge bg-danger">Arrêtée</span>`;
+            break;
+        case "suspended":
+            htmlState += `<span class="badge bg-warning">Suspendue</span>`;
+            break;
+        case "paused":
+            htmlState += `<span class="badge bg-info">En pause</span>`;
+            break;
+        case "shutdown":
+            htmlState += `<span class="badge bg-danger">Arrêtée</span>`;
+            break;
+        case "crashed":
+            htmlState += `<span class="badge bg-danger">Crashé</span>`;
+            break;
+        case "migrating":
+            htmlState += `<span class="badge bg-info">Migration</span>`;
+            break;
+        case "restoring":
+            htmlState += `<span class="badge bg-info">Restauration</span>`;
+            break;
+        case "saving":
+            htmlState += `<span class="badge bg-info">Sauvegarde</span>`;
+            break;
+        case "error":
+            htmlState += `<span class="badge bg-danger">Erreur</span>`;
+            break;
+        default:
+            htmlState += `<span class="badge bg-secondary">Inconnue</span>`;
+            break;
+    }
+
+    // Search for the VM in the queue
+    let task = queue[0].find( ( task ) => {
+
+        if ( task.tasktype ) {
+
+            if ( task.upid ) {
+
+                if ( !task.upid.includes( ":" ) )
+                    return false;
+
+                // Split the upid
+                const upid = task.upid.split( ":" );
+
+                if ( upid[ 6 ] == VM.vmid )
+                    return true;
+
+            } else {
+
+                if ( task.args.ID == VM.vmid )
+                    return true;
+
+            }
+        } else if ( task.task ) {
+
+
+            if ( task.id == VM.vmid )
+                return true
+
+        }
+
+    })
+
+    if ( task ) {
+
+
+        let taskType;
+
+        if( task.args )
+            taskType = task.tasktype;
+        else if ( task.upid )
+            taskType = task.upid.split( ":" )[ 5 ];
+        else if ( task.task )
+            taskType = task.task;
+
+        switch ( taskType ) {
+            case "stopVM":
+            case "qmstop":
+                htmlState += ` <span class="badge bg-warning"><div class="spinner-grow spinner-grow-sm text-light" role="status"></div> Arret en cours</span>`;
+                break;
+            case "startVM":
+            case "qmstart":
+                htmlState += ` <span class="badge bg-warning"><div class="spinner-grow spinner-grow-sm text-light" role="status"></div> Démarrage en cours</span>`;
+                break;
+            case "qmsnapshot":
+                htmlState += ` <span class="badge bg-warning"><div class="spinner-grow spinner-grow-sm text-light" role="status"></div> Création d'une snapshot en cours</span>`;
+                break;
+            case "qmcreate":
+            case "createVM":
+                htmlState += ` <span class="badge bg-warning"><div class="spinner-grow spinner-grow-sm text-light" role="status"></div> Création en cours</span>`;
+                break;
+            case "qmdestroy":
+            case "deleteVM":
+                htmlState += ` <span class="badge bg-warning"><div class="spinner-grow spinner-grow-sm text-light" role="status"></div> Destruction en cours</span>`;
+                break;
+            case "qmreboot":
+                htmlState += ` <span class="badge bg-warning"><div class="spinner-grow spinner-grow-sm text-light" role="status"></div> Redémarrage en cours</span>`;
+                break;
+            case "useSnapshot":
+            case "qmrollback":
+                htmlState += ` <span class="badge bg-warning"><div class="spinner-grow spinner-grow-sm text-light" role="status"></div> Utilisation d'une snapshot en cours</span>`;
+            default:
+                break;
+
+        }
+
+    }
+
+    return htmlState;
+
+}
+
+function selectAll( ) {
+
+    document.getElementById( "table_id" ).querySelector( "tbody" ).querySelectorAll( "tr" ).forEach( ( row ) => {
+        row.classList.add( "ui-selectee", "ui-selected", "table-primary" )
+    });
+
+}
+
+function unselectAll( ) {
+
+    document.getElementById( "table_id" ).querySelector( "tbody" ).querySelectorAll( "tr" ).forEach( ( row ) => {
+        row.classList.remove( "ui-selectee", "ui-selected", "table-primary" )
+    });
+
+}
+
+
+
