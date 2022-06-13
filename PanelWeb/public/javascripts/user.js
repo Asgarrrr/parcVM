@@ -871,16 +871,19 @@ this.socket.on( "loadVMDetail", async ( data ) => {
             <td>${ snapshot.name }</td>
             <td>${ snapshot.description }</td>
             <td>${ snapshot.snaptime ? new Date( snapshot.snaptime * 1000 ).toLocaleString(): "-" }</td>
-            <td>${ snapshot.name !== "current" ? `<button class='btn btn-primary btn-sm me-2' style='--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;' onclick='useVMSnapshot( ${ VMID }, "${ snapshot.name }" )'>Utiliser</button><button class='btn btn-danger btn-sm' style='--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;' onclick='deleteVMSnapshot( ${ VMID }, "${ snapshot.name }" )'>Supprimer</button>` : "" } </td>
-        `;
+
+            <td>
+                ${ snapshot.name !== "current" 
+                ? `<button class='btn btn-primary btn-sm me-2' style='--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;' onclick='useVMSnapshot( ${ VMID }, "${ snapshot.name }" )'>Utiliser</button> 
+                    ${ snapshot.name !== "Initial" 
+                        ? `<button class='btn btn-danger btn-sm' style='--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;' onclick='deleteVMSnapshot( ${ VMID }, "${ snapshot.name }" )'>Supprimer</button>` 
+                        : "" 
+                    } ` : ""
+                } </td> ` 
 
         snapshotSelectionTable.appendChild( snapshotRow );
 
     }
-
-    const shellPanel = document.getElementById( "openShell" );
-    shellPanel.onclick = () => this.socket.emit( "startvncproxy", { VMID } );
-
 
 });
 
