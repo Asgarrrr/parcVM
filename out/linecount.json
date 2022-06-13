@@ -1,0 +1,3424 @@
+{
+    "extension": "linecount",
+    "version": "0.1.7",
+    "workspace": "c:\\Users\\Asgarrrr\\Documents\\parcVM",
+    "linecount": [
+        {
+            "version": "0.1.7",
+            "counttime": "2022-06-01 16:29:45",
+            "filesum": 175,
+            "codesum": 11633,
+            "commentsum": 1098,
+            "blanksum": 1790,
+            "filelist": [
+                {
+                    "blank": 5,
+                    "code": 31,
+                    "comment": 2,
+                    "filename": "AntiIncendie\\Database.cpp"
+                },
+                {
+                    "blank": 5,
+                    "code": 16,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\Database.h"
+                },
+                {
+                    "blank": 7,
+                    "code": 152,
+                    "comment": 20,
+                    "filename": "AntiIncendie\\K8055Adapter.cpp"
+                },
+                {
+                    "blank": 9,
+                    "code": 48,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\K8055Adapter.h"
+                },
+                {
+                    "filename": "AntiIncendie\\K8055D.dll",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 135,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\K8055VS.vcxproj"
+                },
+                {
+                    "blank": 0,
+                    "code": 4,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\K8055VS.vcxproj.user"
+                },
+                {
+                    "blank": 7,
+                    "code": 15,
+                    "comment": 1,
+                    "filename": "AntiIncendie\\main.cpp"
+                },
+                {
+                    "blank": 1,
+                    "code": 6,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\parcvm.cpp"
+                },
+                {
+                    "blank": 4,
+                    "code": 11,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\parcvm.h"
+                },
+                {
+                    "blank": 0,
+                    "code": 4,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\parcvm.qrc"
+                },
+                {
+                    "blank": 0,
+                    "code": 28,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\parcvm.ui"
+                },
+                {
+                    "blank": 0,
+                    "code": 121,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\parcvm.vcxproj"
+                },
+                {
+                    "blank": 0,
+                    "code": 74,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\parcvm.vcxproj.filters"
+                },
+                {
+                    "blank": 0,
+                    "code": 10,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\parcvm.vcxproj.user"
+                },
+                {
+                    "blank": 8,
+                    "code": 28,
+                    "comment": 5,
+                    "filename": "AntiIncendie\\Timer.cpp"
+                },
+                {
+                    "blank": 5,
+                    "code": 21,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\Timer.h"
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\bearer\\qgenericbearerd.dll",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 2,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Debug\\config.ini"
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\Database.obj",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 1,
+                    "code": 14,
+                    "comment": 7,
+                    "filename": "AntiIncendie\\x64\\Debug\\K8055.h"
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\K8055Adapter.obj",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\K8055D.dll",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 8,
+                    "code": 27,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Debug\\K8055D.h"
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\k8055d.lib",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\libmysql.dll",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\main.obj",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\moc\\K8055D.dll",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\moc\\k8055d.lib",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 13,
+                    "code": 74,
+                    "comment": 19,
+                    "filename": "AntiIncendie\\x64\\Debug\\moc\\moc_Database.cpp"
+                },
+                {
+                    "blank": 13,
+                    "code": 74,
+                    "comment": 19,
+                    "filename": "AntiIncendie\\x64\\Debug\\moc\\moc_K8055Adapter.cpp"
+                },
+                {
+                    "blank": 13,
+                    "code": 74,
+                    "comment": 19,
+                    "filename": "AntiIncendie\\x64\\Debug\\moc\\moc_parcvm.cpp"
+                },
+                {
+                    "blank": 15,
+                    "code": 94,
+                    "comment": 23,
+                    "filename": "AntiIncendie\\x64\\Debug\\moc\\moc_Timer.cpp"
+                },
+                {
+                    "blank": 13,
+                    "code": 73,
+                    "comment": 19,
+                    "filename": "AntiIncendie\\x64\\Debug\\moc\\Timer.moc"
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\moc_Database.obj",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\moc_K8055Adapter.obj",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\moc_parcvm.obj",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\moc_Timer.obj",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Debug\\parcvm.log"
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\parcvm.obj",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\parcvm.tlog\\CL.command.1.tlog",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\parcvm.tlog\\CL.read.1.tlog",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\parcvm.tlog\\CL.write.1.tlog",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Debug\\parcvm.tlog\\link.692.read.1.tlog"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Debug\\parcvm.tlog\\link.692.write.1.tlog"
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\parcvm.tlog\\link.command.1.tlog",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\parcvm.tlog\\link.read.1.tlog",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\parcvm.tlog\\link.write.1.tlog",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\parcvm.tlog\\moc.read.1u.tlog",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\parcvm.tlog\\moc.write.1u.tlog",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 2,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Debug\\parcvm.tlog\\parcvm.lastbuildstate"
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\parcvm.tlog\\parcvm.write.1u.tlog",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\parcvm.tlog\\rcc.read.1u.tlog",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\parcvm.tlog\\rcc.write.1u.tlog",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\parcvm.tlog\\uic.read.1u.tlog",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\parcvm.tlog\\uic.write.1u.tlog",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 59,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Debug\\qmake\\qtvars_x64_Debug.props"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Debug\\qmake\\temp\\B1527488-8504-4F6E-9D68-39A49582058E.parcvm.designtime.idx"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Debug\\qmake\\temp\\moc_predefs.h.cbt"
+                },
+                {
+                    "blank": 0,
+                    "code": 25,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Debug\\qmake\\temp\\props.txt"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Debug\\qmake\\temp\\qtvars.log"
+                },
+                {
+                    "blank": 0,
+                    "code": 2,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Debug\\qmake\\temp\\qtvars.pro"
+                },
+                {
+                    "blank": 0,
+                    "code": 83,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Debug\\qmake\\temp\\qtvars.vcxproj"
+                },
+                {
+                    "blank": 0,
+                    "code": 14,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Debug\\qmake\\temp\\qtvars.vcxproj.filters"
+                },
+                {
+                    "blank": 0,
+                    "code": 59,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Debug\\qmake\\temp\\qtvars_x64_Debug.props"
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\qrc_parcvm.obj",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\Qt5Cored.dll",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\Qt5Networkd.dll",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\Qt5Sqld.dll",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\Qt5WebSocketsd.dll",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\qt_work.log",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 6,
+                    "code": 33,
+                    "comment": 7,
+                    "filename": "AntiIncendie\\x64\\Debug\\rcc\\qrc_parcvm.cpp"
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\sqldrivers\\qsqlite.dll",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\sqldrivers\\qsqlited.dll",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\sqldrivers\\qsqlmysql.dll",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\sqldrivers\\qsqlmysqld.dll",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\sqldrivers\\qsqlodbc.dll",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\sqldrivers\\qsqlodbcd.dll",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\sqldrivers\\qsqlpsql.dll",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\sqldrivers\\qsqlpsqld.dll",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\translations\\qt_ar.qm",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\translations\\qt_bg.qm",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\translations\\qt_ca.qm",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\translations\\qt_cs.qm",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\translations\\qt_da.qm",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\translations\\qt_de.qm",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\translations\\qt_en.qm",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\translations\\qt_es.qm",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\translations\\qt_fi.qm",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\translations\\qt_fr.qm",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\translations\\qt_gd.qm",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\translations\\qt_he.qm",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\translations\\qt_hu.qm",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\translations\\qt_it.qm",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\translations\\qt_ja.qm",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\translations\\qt_ko.qm",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\translations\\qt_lv.qm",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\translations\\qt_pl.qm",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\translations\\qt_ru.qm",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\translations\\qt_sk.qm",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\translations\\qt_uk.qm",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\translations\\qt_zh_TW.qm",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 12,
+                    "code": 47,
+                    "comment": 11,
+                    "filename": "AntiIncendie\\x64\\Debug\\uic\\ui_parcvm.h"
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\vc141.pdb",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\K8055D.dll",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\k8055d.lib",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 13,
+                    "code": 74,
+                    "comment": 19,
+                    "filename": "AntiIncendie\\x64\\Release\\moc\\moc_Database.cpp"
+                },
+                {
+                    "blank": 13,
+                    "code": 74,
+                    "comment": 19,
+                    "filename": "AntiIncendie\\x64\\Release\\moc\\moc_parcvm.cpp"
+                },
+                {
+                    "blank": 15,
+                    "code": 94,
+                    "comment": 23,
+                    "filename": "AntiIncendie\\x64\\Release\\moc\\moc_Timer.cpp"
+                },
+                {
+                    "blank": 13,
+                    "code": 73,
+                    "comment": 19,
+                    "filename": "AntiIncendie\\x64\\Release\\moc\\Timer.moc"
+                },
+                {
+                    "blank": 0,
+                    "code": 59,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Release\\qmake\\qtvars_x64_Release.props"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Release\\qmake\\temp\\B1527488-8504-4F6E-9D68-39A49582058E.parcvm.designtime.idx"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Release\\qmake\\temp\\moc_predefs.h.cbt"
+                },
+                {
+                    "blank": 0,
+                    "code": 25,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Release\\qmake\\temp\\props.txt"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Release\\qmake\\temp\\qtvars.log"
+                },
+                {
+                    "blank": 0,
+                    "code": 2,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Release\\qmake\\temp\\qtvars.pro"
+                },
+                {
+                    "blank": 0,
+                    "code": 87,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Release\\qmake\\temp\\qtvars.vcxproj"
+                },
+                {
+                    "blank": 0,
+                    "code": 14,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Release\\qmake\\temp\\qtvars.vcxproj.filters"
+                },
+                {
+                    "blank": 0,
+                    "code": 59,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Release\\qmake\\temp\\qtvars_x64_Release.props"
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Release\\qt_work.log",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 6,
+                    "code": 33,
+                    "comment": 7,
+                    "filename": "AntiIncendie\\x64\\Release\\rcc\\qrc_parcvm.cpp"
+                },
+                {
+                    "blank": 12,
+                    "code": 47,
+                    "comment": 11,
+                    "filename": "AntiIncendie\\x64\\Release\\uic\\ui_parcvm.h"
+                },
+                {
+                    "blank": 47,
+                    "code": 70,
+                    "comment": 87,
+                    "filename": "lucaslapro_projetvm (1).sql"
+                },
+                {
+                    "blank": 18,
+                    "code": 25,
+                    "comment": 8,
+                    "filename": "ModulesDeTest\\Module de test GHYSELEN\\bdd.js"
+                },
+                {
+                    "blank": 5,
+                    "code": 6,
+                    "comment": 0,
+                    "filename": "ModulesDeTest\\Module de test GHYSELEN\\index.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 79,
+                    "comment": 0,
+                    "filename": "ModulesDeTest\\Module de test GHYSELEN\\package-lock.json"
+                },
+                {
+                    "blank": 0,
+                    "code": 5,
+                    "comment": 0,
+                    "filename": "ModulesDeTest\\Module de test GHYSELEN\\package.json"
+                },
+                {
+                    "blank": 1,
+                    "code": 9,
+                    "comment": 0,
+                    "filename": "PanelWeb\\.env"
+                },
+                {
+                    "blank": 0,
+                    "code": 2,
+                    "comment": 0,
+                    "filename": "PanelWeb\\.gitignore"
+                },
+                {
+                    "blank": 90,
+                    "code": 149,
+                    "comment": 26,
+                    "filename": "PanelWeb\\app.js"
+                },
+                {
+                    "blank": 19,
+                    "code": 30,
+                    "comment": 0,
+                    "filename": "PanelWeb\\classes\\bdd.js"
+                },
+                {
+                    "blank": 7,
+                    "code": 9,
+                    "comment": 8,
+                    "filename": "PanelWeb\\classes\\index.js"
+                },
+                {
+                    "blank": 171,
+                    "code": 259,
+                    "comment": 88,
+                    "filename": "PanelWeb\\classes\\pmx.js"
+                },
+                {
+                    "blank": 55,
+                    "code": 96,
+                    "comment": 1,
+                    "filename": "PanelWeb\\classes\\project.js"
+                },
+                {
+                    "blank": 10,
+                    "code": 12,
+                    "comment": 0,
+                    "filename": "PanelWeb\\classes\\temperature.js"
+                },
+                {
+                    "blank": 84,
+                    "code": 86,
+                    "comment": 75,
+                    "filename": "PanelWeb\\classes\\Untitled-1.js"
+                },
+                {
+                    "blank": 44,
+                    "code": 84,
+                    "comment": 0,
+                    "filename": "PanelWeb\\classes\\user.js"
+                },
+                {
+                    "blank": 19,
+                    "code": 23,
+                    "comment": 0,
+                    "filename": "PanelWeb\\classes\\VM.js"
+                },
+                {
+                    "blank": 14,
+                    "code": 24,
+                    "comment": 0,
+                    "filename": "PanelWeb\\middlewares\\auth.js"
+                },
+                {
+                    "blank": 2,
+                    "code": 6135,
+                    "comment": 0,
+                    "filename": "PanelWeb\\package-lock.json"
+                },
+                {
+                    "blank": 0,
+                    "code": 26,
+                    "comment": 0,
+                    "filename": "PanelWeb\\package.json"
+                },
+                {
+                    "blank": 0,
+                    "code": 2,
+                    "comment": 0,
+                    "filename": "PanelWeb\\public\\assets\\logo\\logo.svg"
+                },
+                {
+                    "filename": "PanelWeb\\public\\assets\\logo\\logo_large.png",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "PanelWeb\\public\\assets\\logo\\logo_small.png",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "PanelWeb\\public\\assets\\logo\\logo_small_icon_only.png",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "PanelWeb\\public\\assets\\logo\\logo_small_icon_only_inverted.png",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "PanelWeb\\public\\assets\\logo\\logo_small_only.png",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "PanelWeb\\public\\assets\\logo\\logo_white_large.png",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "PanelWeb\\public\\assets\\menu.png",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 262,
+                    "code": 547,
+                    "comment": 24,
+                    "filename": "PanelWeb\\public\\javascripts\\admin.js"
+                },
+                {
+                    "blank": 105,
+                    "code": 11,
+                    "comment": 156,
+                    "filename": "PanelWeb\\public\\javascripts\\app.js"
+                },
+                {
+                    "blank": 46,
+                    "code": 60,
+                    "comment": 5,
+                    "filename": "PanelWeb\\public\\javascripts\\appuser.js"
+                },
+                {
+                    "blank": 177,
+                    "code": 113,
+                    "comment": 358,
+                    "filename": "PanelWeb\\public\\javascripts\\mdt.js"
+                },
+                {
+                    "blank": 55,
+                    "code": 317,
+                    "comment": 2,
+                    "filename": "PanelWeb\\public\\stylesheets\\admin.css"
+                },
+                {
+                    "blank": 22,
+                    "code": 56,
+                    "comment": 2,
+                    "filename": "PanelWeb\\public\\stylesheets\\style.css"
+                },
+                {
+                    "blank": 19,
+                    "code": 21,
+                    "comment": 4,
+                    "filename": "PanelWeb\\routes\\API.js"
+                },
+                {
+                    "blank": 51,
+                    "code": 99,
+                    "comment": 2,
+                    "filename": "PanelWeb\\routes\\index.js"
+                },
+                {
+                    "blank": 2,
+                    "code": 6,
+                    "comment": 1,
+                    "filename": "PanelWeb\\routes\\users.js"
+                },
+                {
+                    "blank": 60,
+                    "code": 292,
+                    "comment": 0,
+                    "filename": "PanelWeb\\views\\admin.ejs"
+                },
+                {
+                    "blank": 1,
+                    "code": 2,
+                    "comment": 0,
+                    "filename": "PanelWeb\\views\\admin\\dashboard.ejs"
+                },
+                {
+                    "blank": 8,
+                    "code": 148,
+                    "comment": 0,
+                    "filename": "PanelWeb\\views\\admin\\index.ejs"
+                },
+                {
+                    "blank": 18,
+                    "code": 75,
+                    "comment": 0,
+                    "filename": "PanelWeb\\views\\admin\\mdt.ejs"
+                },
+                {
+                    "blank": 15,
+                    "code": 71,
+                    "comment": 0,
+                    "filename": "PanelWeb\\views\\admin\\project.ejs"
+                },
+                {
+                    "blank": 13,
+                    "code": 37,
+                    "comment": 0,
+                    "filename": "PanelWeb\\views\\admin\\user.ejs"
+                },
+                {
+                    "blank": 11,
+                    "code": 66,
+                    "comment": 0,
+                    "filename": "PanelWeb\\views\\admin\\vm.ejs"
+                },
+                {
+                    "blank": 0,
+                    "code": 3,
+                    "comment": 0,
+                    "filename": "PanelWeb\\views\\error.ejs"
+                },
+                {
+                    "blank": 8,
+                    "code": 25,
+                    "comment": 0,
+                    "filename": "PanelWeb\\views\\index.ejs"
+                },
+                {
+                    "blank": 61,
+                    "code": 134,
+                    "comment": 0,
+                    "filename": "PanelWeb\\views\\login.ejs"
+                },
+                {
+                    "blank": 28,
+                    "code": 82,
+                    "comment": 0,
+                    "filename": "PanelWeb\\views\\test.ejs"
+                },
+                {
+                    "blank": 9,
+                    "code": 41,
+                    "comment": 0,
+                    "filename": "PanelWeb\\views\\testuser.ejs"
+                },
+                {
+                    "blank": 1,
+                    "code": 2,
+                    "comment": 0,
+                    "filename": "PanelWeb\\views\\user\\dashboard.ejs"
+                },
+                {
+                    "blank": 8,
+                    "code": 137,
+                    "comment": 0,
+                    "filename": "PanelWeb\\views\\user\\index.ejs"
+                },
+                {
+                    "blank": 2,
+                    "code": 20,
+                    "comment": 0,
+                    "filename": "PanelWeb\\views\\user\\vm.ejs"
+                },
+                {
+                    "blank": 3,
+                    "code": 11,
+                    "comment": 0,
+                    "filename": "PanelWeb\\views\\users.ejs"
+                },
+                {
+                    "blank": 2,
+                    "code": 16,
+                    "comment": 1,
+                    "filename": "README.md"
+                }
+            ]
+        },
+        {
+            "version": "0.1.7",
+            "counttime": "2022-06-05 13:30:42",
+            "filesum": 175,
+            "codesum": 12145,
+            "commentsum": 943,
+            "blanksum": 1874,
+            "filelist": [
+                {
+                    "blank": 5,
+                    "code": 31,
+                    "comment": 2,
+                    "filename": "AntiIncendie\\Database.cpp"
+                },
+                {
+                    "blank": 5,
+                    "code": 16,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\Database.h"
+                },
+                {
+                    "blank": 7,
+                    "code": 152,
+                    "comment": 20,
+                    "filename": "AntiIncendie\\K8055Adapter.cpp"
+                },
+                {
+                    "blank": 9,
+                    "code": 48,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\K8055Adapter.h"
+                },
+                {
+                    "filename": "AntiIncendie\\K8055D.dll",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 135,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\K8055VS.vcxproj"
+                },
+                {
+                    "blank": 0,
+                    "code": 4,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\K8055VS.vcxproj.user"
+                },
+                {
+                    "blank": 7,
+                    "code": 15,
+                    "comment": 1,
+                    "filename": "AntiIncendie\\main.cpp"
+                },
+                {
+                    "blank": 1,
+                    "code": 6,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\parcvm.cpp"
+                },
+                {
+                    "blank": 4,
+                    "code": 11,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\parcvm.h"
+                },
+                {
+                    "blank": 0,
+                    "code": 4,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\parcvm.qrc"
+                },
+                {
+                    "blank": 0,
+                    "code": 28,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\parcvm.ui"
+                },
+                {
+                    "blank": 0,
+                    "code": 121,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\parcvm.vcxproj"
+                },
+                {
+                    "blank": 0,
+                    "code": 74,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\parcvm.vcxproj.filters"
+                },
+                {
+                    "blank": 0,
+                    "code": 10,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\parcvm.vcxproj.user"
+                },
+                {
+                    "blank": 8,
+                    "code": 28,
+                    "comment": 5,
+                    "filename": "AntiIncendie\\Timer.cpp"
+                },
+                {
+                    "blank": 5,
+                    "code": 21,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\Timer.h"
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\bearer\\qgenericbearerd.dll",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 2,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Debug\\config.ini"
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\Database.obj",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 1,
+                    "code": 14,
+                    "comment": 7,
+                    "filename": "AntiIncendie\\x64\\Debug\\K8055.h"
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\K8055Adapter.obj",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\K8055D.dll",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 8,
+                    "code": 27,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Debug\\K8055D.h"
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\k8055d.lib",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\libmysql.dll",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\main.obj",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\moc\\K8055D.dll",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\moc\\k8055d.lib",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 13,
+                    "code": 74,
+                    "comment": 19,
+                    "filename": "AntiIncendie\\x64\\Debug\\moc\\moc_Database.cpp"
+                },
+                {
+                    "blank": 13,
+                    "code": 74,
+                    "comment": 19,
+                    "filename": "AntiIncendie\\x64\\Debug\\moc\\moc_K8055Adapter.cpp"
+                },
+                {
+                    "blank": 13,
+                    "code": 74,
+                    "comment": 19,
+                    "filename": "AntiIncendie\\x64\\Debug\\moc\\moc_parcvm.cpp"
+                },
+                {
+                    "blank": 15,
+                    "code": 94,
+                    "comment": 23,
+                    "filename": "AntiIncendie\\x64\\Debug\\moc\\moc_Timer.cpp"
+                },
+                {
+                    "blank": 13,
+                    "code": 73,
+                    "comment": 19,
+                    "filename": "AntiIncendie\\x64\\Debug\\moc\\Timer.moc"
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\moc_Database.obj",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\moc_K8055Adapter.obj",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\moc_parcvm.obj",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\moc_Timer.obj",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Debug\\parcvm.log"
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\parcvm.obj",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\parcvm.tlog\\CL.command.1.tlog",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\parcvm.tlog\\CL.read.1.tlog",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\parcvm.tlog\\CL.write.1.tlog",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Debug\\parcvm.tlog\\link.692.read.1.tlog"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Debug\\parcvm.tlog\\link.692.write.1.tlog"
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\parcvm.tlog\\link.command.1.tlog",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\parcvm.tlog\\link.read.1.tlog",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\parcvm.tlog\\link.write.1.tlog",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\parcvm.tlog\\moc.read.1u.tlog",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\parcvm.tlog\\moc.write.1u.tlog",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 2,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Debug\\parcvm.tlog\\parcvm.lastbuildstate"
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\parcvm.tlog\\parcvm.write.1u.tlog",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\parcvm.tlog\\rcc.read.1u.tlog",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\parcvm.tlog\\rcc.write.1u.tlog",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\parcvm.tlog\\uic.read.1u.tlog",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\parcvm.tlog\\uic.write.1u.tlog",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 59,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Debug\\qmake\\qtvars_x64_Debug.props"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Debug\\qmake\\temp\\B1527488-8504-4F6E-9D68-39A49582058E.parcvm.designtime.idx"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Debug\\qmake\\temp\\moc_predefs.h.cbt"
+                },
+                {
+                    "blank": 0,
+                    "code": 25,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Debug\\qmake\\temp\\props.txt"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Debug\\qmake\\temp\\qtvars.log"
+                },
+                {
+                    "blank": 0,
+                    "code": 2,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Debug\\qmake\\temp\\qtvars.pro"
+                },
+                {
+                    "blank": 0,
+                    "code": 83,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Debug\\qmake\\temp\\qtvars.vcxproj"
+                },
+                {
+                    "blank": 0,
+                    "code": 14,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Debug\\qmake\\temp\\qtvars.vcxproj.filters"
+                },
+                {
+                    "blank": 0,
+                    "code": 59,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Debug\\qmake\\temp\\qtvars_x64_Debug.props"
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\qrc_parcvm.obj",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\Qt5Cored.dll",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\Qt5Networkd.dll",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\Qt5Sqld.dll",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\Qt5WebSocketsd.dll",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\qt_work.log",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 6,
+                    "code": 33,
+                    "comment": 7,
+                    "filename": "AntiIncendie\\x64\\Debug\\rcc\\qrc_parcvm.cpp"
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\sqldrivers\\qsqlite.dll",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\sqldrivers\\qsqlited.dll",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\sqldrivers\\qsqlmysql.dll",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\sqldrivers\\qsqlmysqld.dll",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\sqldrivers\\qsqlodbc.dll",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\sqldrivers\\qsqlodbcd.dll",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\sqldrivers\\qsqlpsql.dll",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\sqldrivers\\qsqlpsqld.dll",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\translations\\qt_ar.qm",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\translations\\qt_bg.qm",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\translations\\qt_ca.qm",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\translations\\qt_cs.qm",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\translations\\qt_da.qm",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\translations\\qt_de.qm",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\translations\\qt_en.qm",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\translations\\qt_es.qm",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\translations\\qt_fi.qm",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\translations\\qt_fr.qm",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\translations\\qt_gd.qm",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\translations\\qt_he.qm",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\translations\\qt_hu.qm",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\translations\\qt_it.qm",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\translations\\qt_ja.qm",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\translations\\qt_ko.qm",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\translations\\qt_lv.qm",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\translations\\qt_pl.qm",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\translations\\qt_ru.qm",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\translations\\qt_sk.qm",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\translations\\qt_uk.qm",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\translations\\qt_zh_TW.qm",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 12,
+                    "code": 47,
+                    "comment": 11,
+                    "filename": "AntiIncendie\\x64\\Debug\\uic\\ui_parcvm.h"
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\vc141.pdb",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\K8055D.dll",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\k8055d.lib",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 13,
+                    "code": 74,
+                    "comment": 19,
+                    "filename": "AntiIncendie\\x64\\Release\\moc\\moc_Database.cpp"
+                },
+                {
+                    "blank": 13,
+                    "code": 74,
+                    "comment": 19,
+                    "filename": "AntiIncendie\\x64\\Release\\moc\\moc_parcvm.cpp"
+                },
+                {
+                    "blank": 15,
+                    "code": 94,
+                    "comment": 23,
+                    "filename": "AntiIncendie\\x64\\Release\\moc\\moc_Timer.cpp"
+                },
+                {
+                    "blank": 13,
+                    "code": 73,
+                    "comment": 19,
+                    "filename": "AntiIncendie\\x64\\Release\\moc\\Timer.moc"
+                },
+                {
+                    "blank": 0,
+                    "code": 59,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Release\\qmake\\qtvars_x64_Release.props"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Release\\qmake\\temp\\B1527488-8504-4F6E-9D68-39A49582058E.parcvm.designtime.idx"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Release\\qmake\\temp\\moc_predefs.h.cbt"
+                },
+                {
+                    "blank": 0,
+                    "code": 25,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Release\\qmake\\temp\\props.txt"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Release\\qmake\\temp\\qtvars.log"
+                },
+                {
+                    "blank": 0,
+                    "code": 2,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Release\\qmake\\temp\\qtvars.pro"
+                },
+                {
+                    "blank": 0,
+                    "code": 87,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Release\\qmake\\temp\\qtvars.vcxproj"
+                },
+                {
+                    "blank": 0,
+                    "code": 14,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Release\\qmake\\temp\\qtvars.vcxproj.filters"
+                },
+                {
+                    "blank": 0,
+                    "code": 59,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Release\\qmake\\temp\\qtvars_x64_Release.props"
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Release\\qt_work.log",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 6,
+                    "code": 33,
+                    "comment": 7,
+                    "filename": "AntiIncendie\\x64\\Release\\rcc\\qrc_parcvm.cpp"
+                },
+                {
+                    "blank": 12,
+                    "code": 47,
+                    "comment": 11,
+                    "filename": "AntiIncendie\\x64\\Release\\uic\\ui_parcvm.h"
+                },
+                {
+                    "blank": 47,
+                    "code": 70,
+                    "comment": 87,
+                    "filename": "lucaslapro_projetvm (1).sql"
+                },
+                {
+                    "blank": 18,
+                    "code": 25,
+                    "comment": 8,
+                    "filename": "ModulesDeTest\\Module de test GHYSELEN\\bdd.js"
+                },
+                {
+                    "blank": 5,
+                    "code": 6,
+                    "comment": 0,
+                    "filename": "ModulesDeTest\\Module de test GHYSELEN\\index.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 79,
+                    "comment": 0,
+                    "filename": "ModulesDeTest\\Module de test GHYSELEN\\package-lock.json"
+                },
+                {
+                    "blank": 0,
+                    "code": 5,
+                    "comment": 0,
+                    "filename": "ModulesDeTest\\Module de test GHYSELEN\\package.json"
+                },
+                {
+                    "blank": 1,
+                    "code": 9,
+                    "comment": 0,
+                    "filename": "PanelWeb\\.env"
+                },
+                {
+                    "blank": 0,
+                    "code": 2,
+                    "comment": 0,
+                    "filename": "PanelWeb\\.gitignore"
+                },
+                {
+                    "blank": 117,
+                    "code": 213,
+                    "comment": 28,
+                    "filename": "PanelWeb\\app.js"
+                },
+                {
+                    "blank": 19,
+                    "code": 30,
+                    "comment": 0,
+                    "filename": "PanelWeb\\classes\\bdd.js"
+                },
+                {
+                    "blank": 22,
+                    "code": 38,
+                    "comment": 1,
+                    "filename": "PanelWeb\\classes\\class.js"
+                },
+                {
+                    "blank": 7,
+                    "code": 9,
+                    "comment": 8,
+                    "filename": "PanelWeb\\classes\\index.js"
+                },
+                {
+                    "blank": 182,
+                    "code": 285,
+                    "comment": 87,
+                    "filename": "PanelWeb\\classes\\pmx.js"
+                },
+                {
+                    "blank": 54,
+                    "code": 95,
+                    "comment": 1,
+                    "filename": "PanelWeb\\classes\\project.js"
+                },
+                {
+                    "blank": 10,
+                    "code": 12,
+                    "comment": 0,
+                    "filename": "PanelWeb\\classes\\temperature.js"
+                },
+                {
+                    "blank": 84,
+                    "code": 86,
+                    "comment": 75,
+                    "filename": "PanelWeb\\classes\\Untitled-1.js"
+                },
+                {
+                    "blank": 47,
+                    "code": 91,
+                    "comment": 0,
+                    "filename": "PanelWeb\\classes\\user.js"
+                },
+                {
+                    "blank": 19,
+                    "code": 23,
+                    "comment": 0,
+                    "filename": "PanelWeb\\classes\\VM.js"
+                },
+                {
+                    "blank": 14,
+                    "code": 24,
+                    "comment": 0,
+                    "filename": "PanelWeb\\middlewares\\auth.js"
+                },
+                {
+                    "blank": 2,
+                    "code": 6135,
+                    "comment": 0,
+                    "filename": "PanelWeb\\package-lock.json"
+                },
+                {
+                    "blank": 0,
+                    "code": 26,
+                    "comment": 0,
+                    "filename": "PanelWeb\\package.json"
+                },
+                {
+                    "blank": 0,
+                    "code": 2,
+                    "comment": 0,
+                    "filename": "PanelWeb\\public\\assets\\logo\\logo.svg"
+                },
+                {
+                    "filename": "PanelWeb\\public\\assets\\logo\\logo_large.png",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "PanelWeb\\public\\assets\\logo\\logo_small.png",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "PanelWeb\\public\\assets\\logo\\logo_small_icon_only.png",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "PanelWeb\\public\\assets\\logo\\logo_small_icon_only_inverted.png",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "PanelWeb\\public\\assets\\logo\\logo_small_only.png",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "PanelWeb\\public\\assets\\logo\\logo_white_large.png",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "PanelWeb\\public\\assets\\menu.png",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 360,
+                    "code": 783,
+                    "comment": 23,
+                    "filename": "PanelWeb\\public\\javascripts\\admin.js"
+                },
+                {
+                    "blank": 46,
+                    "code": 60,
+                    "comment": 5,
+                    "filename": "PanelWeb\\public\\javascripts\\appuser.js"
+                },
+                {
+                    "blank": 177,
+                    "code": 113,
+                    "comment": 358,
+                    "filename": "PanelWeb\\public\\javascripts\\mdt.js"
+                },
+                {
+                    "blank": 57,
+                    "code": 323,
+                    "comment": 2,
+                    "filename": "PanelWeb\\public\\stylesheets\\admin.css"
+                },
+                {
+                    "blank": 22,
+                    "code": 56,
+                    "comment": 2,
+                    "filename": "PanelWeb\\public\\stylesheets\\style.css"
+                },
+                {
+                    "blank": 19,
+                    "code": 21,
+                    "comment": 4,
+                    "filename": "PanelWeb\\routes\\API.js"
+                },
+                {
+                    "blank": 51,
+                    "code": 99,
+                    "comment": 2,
+                    "filename": "PanelWeb\\routes\\index.js"
+                },
+                {
+                    "blank": 2,
+                    "code": 6,
+                    "comment": 1,
+                    "filename": "PanelWeb\\routes\\users.js"
+                },
+                {
+                    "blank": 60,
+                    "code": 292,
+                    "comment": 0,
+                    "filename": "PanelWeb\\views\\admin.ejs"
+                },
+                {
+                    "blank": 1,
+                    "code": 2,
+                    "comment": 0,
+                    "filename": "PanelWeb\\views\\admin\\dashboard.ejs"
+                },
+                {
+                    "blank": 9,
+                    "code": 149,
+                    "comment": 0,
+                    "filename": "PanelWeb\\views\\admin\\index.ejs"
+                },
+                {
+                    "blank": 18,
+                    "code": 75,
+                    "comment": 0,
+                    "filename": "PanelWeb\\views\\admin\\mdt.ejs"
+                },
+                {
+                    "blank": 15,
+                    "code": 71,
+                    "comment": 0,
+                    "filename": "PanelWeb\\views\\admin\\project.ejs"
+                },
+                {
+                    "blank": 29,
+                    "code": 110,
+                    "comment": 0,
+                    "filename": "PanelWeb\\views\\admin\\user.ejs"
+                },
+                {
+                    "blank": 21,
+                    "code": 139,
+                    "comment": 0,
+                    "filename": "PanelWeb\\views\\admin\\vm.ejs"
+                },
+                {
+                    "blank": 0,
+                    "code": 3,
+                    "comment": 0,
+                    "filename": "PanelWeb\\views\\error.ejs"
+                },
+                {
+                    "blank": 8,
+                    "code": 25,
+                    "comment": 0,
+                    "filename": "PanelWeb\\views\\index.ejs"
+                },
+                {
+                    "blank": 61,
+                    "code": 134,
+                    "comment": 0,
+                    "filename": "PanelWeb\\views\\login.ejs"
+                },
+                {
+                    "blank": 28,
+                    "code": 82,
+                    "comment": 0,
+                    "filename": "PanelWeb\\views\\test.ejs"
+                },
+                {
+                    "blank": 9,
+                    "code": 41,
+                    "comment": 0,
+                    "filename": "PanelWeb\\views\\testuser.ejs"
+                },
+                {
+                    "blank": 1,
+                    "code": 2,
+                    "comment": 0,
+                    "filename": "PanelWeb\\views\\user\\dashboard.ejs"
+                },
+                {
+                    "blank": 8,
+                    "code": 137,
+                    "comment": 0,
+                    "filename": "PanelWeb\\views\\user\\index.ejs"
+                },
+                {
+                    "blank": 2,
+                    "code": 20,
+                    "comment": 0,
+                    "filename": "PanelWeb\\views\\user\\vm.ejs"
+                },
+                {
+                    "blank": 3,
+                    "code": 11,
+                    "comment": 0,
+                    "filename": "PanelWeb\\views\\users.ejs"
+                },
+                {
+                    "blank": 2,
+                    "code": 16,
+                    "comment": 1,
+                    "filename": "README.md"
+                }
+            ]
+        },
+        {
+            "version": "0.1.7",
+            "counttime": "2022-06-09 16:42:21",
+            "filesum": 177,
+            "codesum": 13125,
+            "commentsum": 947,
+            "blanksum": 2122,
+            "filelist": [
+                {
+                    "blank": 5,
+                    "code": 31,
+                    "comment": 2,
+                    "filename": "AntiIncendie\\Database.cpp"
+                },
+                {
+                    "blank": 5,
+                    "code": 16,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\Database.h"
+                },
+                {
+                    "blank": 7,
+                    "code": 152,
+                    "comment": 20,
+                    "filename": "AntiIncendie\\K8055Adapter.cpp"
+                },
+                {
+                    "blank": 9,
+                    "code": 48,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\K8055Adapter.h"
+                },
+                {
+                    "filename": "AntiIncendie\\K8055D.dll",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 135,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\K8055VS.vcxproj"
+                },
+                {
+                    "blank": 0,
+                    "code": 4,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\K8055VS.vcxproj.user"
+                },
+                {
+                    "blank": 7,
+                    "code": 15,
+                    "comment": 1,
+                    "filename": "AntiIncendie\\main.cpp"
+                },
+                {
+                    "blank": 1,
+                    "code": 6,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\parcvm.cpp"
+                },
+                {
+                    "blank": 4,
+                    "code": 11,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\parcvm.h"
+                },
+                {
+                    "blank": 0,
+                    "code": 4,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\parcvm.qrc"
+                },
+                {
+                    "blank": 0,
+                    "code": 28,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\parcvm.ui"
+                },
+                {
+                    "blank": 0,
+                    "code": 121,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\parcvm.vcxproj"
+                },
+                {
+                    "blank": 0,
+                    "code": 74,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\parcvm.vcxproj.filters"
+                },
+                {
+                    "blank": 0,
+                    "code": 10,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\parcvm.vcxproj.user"
+                },
+                {
+                    "blank": 8,
+                    "code": 28,
+                    "comment": 5,
+                    "filename": "AntiIncendie\\Timer.cpp"
+                },
+                {
+                    "blank": 5,
+                    "code": 21,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\Timer.h"
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\bearer\\qgenericbearerd.dll",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 2,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Debug\\config.ini"
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\Database.obj",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 1,
+                    "code": 14,
+                    "comment": 7,
+                    "filename": "AntiIncendie\\x64\\Debug\\K8055.h"
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\K8055Adapter.obj",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\K8055D.dll",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 8,
+                    "code": 27,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Debug\\K8055D.h"
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\k8055d.lib",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\libmysql.dll",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\main.obj",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\moc\\K8055D.dll",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\moc\\k8055d.lib",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 13,
+                    "code": 74,
+                    "comment": 19,
+                    "filename": "AntiIncendie\\x64\\Debug\\moc\\moc_Database.cpp"
+                },
+                {
+                    "blank": 13,
+                    "code": 74,
+                    "comment": 19,
+                    "filename": "AntiIncendie\\x64\\Debug\\moc\\moc_K8055Adapter.cpp"
+                },
+                {
+                    "blank": 13,
+                    "code": 74,
+                    "comment": 19,
+                    "filename": "AntiIncendie\\x64\\Debug\\moc\\moc_parcvm.cpp"
+                },
+                {
+                    "blank": 15,
+                    "code": 94,
+                    "comment": 23,
+                    "filename": "AntiIncendie\\x64\\Debug\\moc\\moc_Timer.cpp"
+                },
+                {
+                    "blank": 13,
+                    "code": 73,
+                    "comment": 19,
+                    "filename": "AntiIncendie\\x64\\Debug\\moc\\Timer.moc"
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\moc_Database.obj",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\moc_K8055Adapter.obj",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\moc_parcvm.obj",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\moc_Timer.obj",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Debug\\parcvm.log"
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\parcvm.obj",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\parcvm.tlog\\CL.command.1.tlog",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\parcvm.tlog\\CL.read.1.tlog",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\parcvm.tlog\\CL.write.1.tlog",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Debug\\parcvm.tlog\\link.692.read.1.tlog"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Debug\\parcvm.tlog\\link.692.write.1.tlog"
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\parcvm.tlog\\link.command.1.tlog",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\parcvm.tlog\\link.read.1.tlog",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\parcvm.tlog\\link.write.1.tlog",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\parcvm.tlog\\moc.read.1u.tlog",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\parcvm.tlog\\moc.write.1u.tlog",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 2,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Debug\\parcvm.tlog\\parcvm.lastbuildstate"
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\parcvm.tlog\\parcvm.write.1u.tlog",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\parcvm.tlog\\rcc.read.1u.tlog",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\parcvm.tlog\\rcc.write.1u.tlog",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\parcvm.tlog\\uic.read.1u.tlog",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\parcvm.tlog\\uic.write.1u.tlog",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 59,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Debug\\qmake\\qtvars_x64_Debug.props"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Debug\\qmake\\temp\\B1527488-8504-4F6E-9D68-39A49582058E.parcvm.designtime.idx"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Debug\\qmake\\temp\\moc_predefs.h.cbt"
+                },
+                {
+                    "blank": 0,
+                    "code": 25,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Debug\\qmake\\temp\\props.txt"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Debug\\qmake\\temp\\qtvars.log"
+                },
+                {
+                    "blank": 0,
+                    "code": 2,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Debug\\qmake\\temp\\qtvars.pro"
+                },
+                {
+                    "blank": 0,
+                    "code": 83,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Debug\\qmake\\temp\\qtvars.vcxproj"
+                },
+                {
+                    "blank": 0,
+                    "code": 14,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Debug\\qmake\\temp\\qtvars.vcxproj.filters"
+                },
+                {
+                    "blank": 0,
+                    "code": 59,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Debug\\qmake\\temp\\qtvars_x64_Debug.props"
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\qrc_parcvm.obj",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\Qt5Cored.dll",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\Qt5Networkd.dll",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\Qt5Sqld.dll",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\Qt5WebSocketsd.dll",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\qt_work.log",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 6,
+                    "code": 33,
+                    "comment": 7,
+                    "filename": "AntiIncendie\\x64\\Debug\\rcc\\qrc_parcvm.cpp"
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\sqldrivers\\qsqlite.dll",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\sqldrivers\\qsqlited.dll",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\sqldrivers\\qsqlmysql.dll",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\sqldrivers\\qsqlmysqld.dll",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\sqldrivers\\qsqlodbc.dll",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\sqldrivers\\qsqlodbcd.dll",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\sqldrivers\\qsqlpsql.dll",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\sqldrivers\\qsqlpsqld.dll",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\translations\\qt_ar.qm",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\translations\\qt_bg.qm",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\translations\\qt_ca.qm",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\translations\\qt_cs.qm",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\translations\\qt_da.qm",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\translations\\qt_de.qm",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\translations\\qt_en.qm",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\translations\\qt_es.qm",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\translations\\qt_fi.qm",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\translations\\qt_fr.qm",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\translations\\qt_gd.qm",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\translations\\qt_he.qm",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\translations\\qt_hu.qm",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\translations\\qt_it.qm",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\translations\\qt_ja.qm",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\translations\\qt_ko.qm",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\translations\\qt_lv.qm",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\translations\\qt_pl.qm",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\translations\\qt_ru.qm",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\translations\\qt_sk.qm",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\translations\\qt_uk.qm",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\translations\\qt_zh_TW.qm",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 12,
+                    "code": 47,
+                    "comment": 11,
+                    "filename": "AntiIncendie\\x64\\Debug\\uic\\ui_parcvm.h"
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Debug\\vc141.pdb",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\K8055D.dll",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\k8055d.lib",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 13,
+                    "code": 74,
+                    "comment": 19,
+                    "filename": "AntiIncendie\\x64\\Release\\moc\\moc_Database.cpp"
+                },
+                {
+                    "blank": 13,
+                    "code": 74,
+                    "comment": 19,
+                    "filename": "AntiIncendie\\x64\\Release\\moc\\moc_parcvm.cpp"
+                },
+                {
+                    "blank": 15,
+                    "code": 94,
+                    "comment": 23,
+                    "filename": "AntiIncendie\\x64\\Release\\moc\\moc_Timer.cpp"
+                },
+                {
+                    "blank": 13,
+                    "code": 73,
+                    "comment": 19,
+                    "filename": "AntiIncendie\\x64\\Release\\moc\\Timer.moc"
+                },
+                {
+                    "blank": 0,
+                    "code": 59,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Release\\qmake\\qtvars_x64_Release.props"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Release\\qmake\\temp\\B1527488-8504-4F6E-9D68-39A49582058E.parcvm.designtime.idx"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Release\\qmake\\temp\\moc_predefs.h.cbt"
+                },
+                {
+                    "blank": 0,
+                    "code": 25,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Release\\qmake\\temp\\props.txt"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Release\\qmake\\temp\\qtvars.log"
+                },
+                {
+                    "blank": 0,
+                    "code": 2,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Release\\qmake\\temp\\qtvars.pro"
+                },
+                {
+                    "blank": 0,
+                    "code": 87,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Release\\qmake\\temp\\qtvars.vcxproj"
+                },
+                {
+                    "blank": 0,
+                    "code": 14,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Release\\qmake\\temp\\qtvars.vcxproj.filters"
+                },
+                {
+                    "blank": 0,
+                    "code": 59,
+                    "comment": 0,
+                    "filename": "AntiIncendie\\x64\\Release\\qmake\\temp\\qtvars_x64_Release.props"
+                },
+                {
+                    "filename": "AntiIncendie\\x64\\Release\\qt_work.log",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 6,
+                    "code": 33,
+                    "comment": 7,
+                    "filename": "AntiIncendie\\x64\\Release\\rcc\\qrc_parcvm.cpp"
+                },
+                {
+                    "blank": 12,
+                    "code": 47,
+                    "comment": 11,
+                    "filename": "AntiIncendie\\x64\\Release\\uic\\ui_parcvm.h"
+                },
+                {
+                    "blank": 47,
+                    "code": 70,
+                    "comment": 87,
+                    "filename": "lucaslapro_projetvm (1).sql"
+                },
+                {
+                    "blank": 18,
+                    "code": 25,
+                    "comment": 8,
+                    "filename": "ModulesDeTest\\Module de test GHYSELEN\\bdd.js"
+                },
+                {
+                    "blank": 5,
+                    "code": 6,
+                    "comment": 0,
+                    "filename": "ModulesDeTest\\Module de test GHYSELEN\\index.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 79,
+                    "comment": 0,
+                    "filename": "ModulesDeTest\\Module de test GHYSELEN\\package-lock.json"
+                },
+                {
+                    "blank": 0,
+                    "code": 5,
+                    "comment": 0,
+                    "filename": "ModulesDeTest\\Module de test GHYSELEN\\package.json"
+                },
+                {
+                    "blank": 10,
+                    "code": 23,
+                    "comment": 1,
+                    "filename": "PanelWeb\\.env"
+                },
+                {
+                    "blank": 0,
+                    "code": 2,
+                    "comment": 0,
+                    "filename": "PanelWeb\\.gitignore"
+                },
+                {
+                    "blank": 163,
+                    "code": 279,
+                    "comment": 29,
+                    "filename": "PanelWeb\\app.js"
+                },
+                {
+                    "blank": 19,
+                    "code": 30,
+                    "comment": 0,
+                    "filename": "PanelWeb\\classes\\bdd.js"
+                },
+                {
+                    "blank": 22,
+                    "code": 38,
+                    "comment": 1,
+                    "filename": "PanelWeb\\classes\\class.js"
+                },
+                {
+                    "blank": 7,
+                    "code": 9,
+                    "comment": 8,
+                    "filename": "PanelWeb\\classes\\index.js"
+                },
+                {
+                    "blank": 204,
+                    "code": 342,
+                    "comment": 92,
+                    "filename": "PanelWeb\\classes\\pmx.js"
+                },
+                {
+                    "blank": 54,
+                    "code": 95,
+                    "comment": 1,
+                    "filename": "PanelWeb\\classes\\project.js"
+                },
+                {
+                    "blank": 10,
+                    "code": 12,
+                    "comment": 0,
+                    "filename": "PanelWeb\\classes\\temperature.js"
+                },
+                {
+                    "blank": 84,
+                    "code": 86,
+                    "comment": 75,
+                    "filename": "PanelWeb\\classes\\Untitled-1.js"
+                },
+                {
+                    "blank": 65,
+                    "code": 142,
+                    "comment": 0,
+                    "filename": "PanelWeb\\classes\\user.js"
+                },
+                {
+                    "blank": 19,
+                    "code": 23,
+                    "comment": 0,
+                    "filename": "PanelWeb\\classes\\VM.js"
+                },
+                {
+                    "blank": 14,
+                    "code": 24,
+                    "comment": 0,
+                    "filename": "PanelWeb\\middlewares\\auth.js"
+                },
+                {
+                    "blank": 2,
+                    "code": 6458,
+                    "comment": 0,
+                    "filename": "PanelWeb\\package-lock.json"
+                },
+                {
+                    "blank": 0,
+                    "code": 27,
+                    "comment": 0,
+                    "filename": "PanelWeb\\package.json"
+                },
+                {
+                    "blank": 0,
+                    "code": 2,
+                    "comment": 0,
+                    "filename": "PanelWeb\\public\\assets\\logo\\logo.svg"
+                },
+                {
+                    "filename": "PanelWeb\\public\\assets\\logo\\logo_large.png",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "PanelWeb\\public\\assets\\logo\\logo_small.png",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "PanelWeb\\public\\assets\\logo\\logo_small_icon_only.png",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "PanelWeb\\public\\assets\\logo\\logo_small_icon_only_inverted.png",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "PanelWeb\\public\\assets\\logo\\logo_small_only.png",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "PanelWeb\\public\\assets\\logo\\logo_white_large.png",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "PanelWeb\\public\\assets\\menu.png",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 485,
+                    "code": 1086,
+                    "comment": 21,
+                    "filename": "PanelWeb\\public\\javascripts\\admin.js"
+                },
+                {
+                    "blank": 46,
+                    "code": 60,
+                    "comment": 5,
+                    "filename": "PanelWeb\\public\\javascripts\\appuser.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 7,
+                    "comment": 0,
+                    "filename": "PanelWeb\\public\\javascripts\\config.js"
+                },
+                {
+                    "blank": 177,
+                    "code": 113,
+                    "comment": 358,
+                    "filename": "PanelWeb\\public\\javascripts\\mdt.js"
+                },
+                {
+                    "blank": 62,
+                    "code": 362,
+                    "comment": 2,
+                    "filename": "PanelWeb\\public\\stylesheets\\admin.css"
+                },
+                {
+                    "blank": 22,
+                    "code": 56,
+                    "comment": 2,
+                    "filename": "PanelWeb\\public\\stylesheets\\style.css"
+                },
+                {
+                    "blank": 19,
+                    "code": 21,
+                    "comment": 4,
+                    "filename": "PanelWeb\\routes\\API.js"
+                },
+                {
+                    "blank": 57,
+                    "code": 119,
+                    "comment": 2,
+                    "filename": "PanelWeb\\routes\\index.js"
+                },
+                {
+                    "blank": 60,
+                    "code": 292,
+                    "comment": 0,
+                    "filename": "PanelWeb\\views\\admin.ejs"
+                },
+                {
+                    "blank": 4,
+                    "code": 28,
+                    "comment": 0,
+                    "filename": "PanelWeb\\views\\admin\\classes.ejs"
+                },
+                {
+                    "blank": 9,
+                    "code": 65,
+                    "comment": 0,
+                    "filename": "PanelWeb\\views\\admin\\dashboard.ejs"
+                },
+                {
+                    "blank": 9,
+                    "code": 151,
+                    "comment": 0,
+                    "filename": "PanelWeb\\views\\admin\\index.ejs"
+                },
+                {
+                    "blank": 18,
+                    "code": 75,
+                    "comment": 0,
+                    "filename": "PanelWeb\\views\\admin\\mdt.ejs"
+                },
+                {
+                    "blank": 15,
+                    "code": 71,
+                    "comment": 0,
+                    "filename": "PanelWeb\\views\\admin\\project.ejs"
+                },
+                {
+                    "blank": 5,
+                    "code": 6,
+                    "comment": 0,
+                    "filename": "PanelWeb\\views\\admin\\tasks.ejs"
+                },
+                {
+                    "blank": 29,
+                    "code": 110,
+                    "comment": 0,
+                    "filename": "PanelWeb\\views\\admin\\user.ejs"
+                },
+                {
+                    "blank": 23,
+                    "code": 145,
+                    "comment": 0,
+                    "filename": "PanelWeb\\views\\admin\\vm.ejs"
+                },
+                {
+                    "blank": 0,
+                    "code": 3,
+                    "comment": 0,
+                    "filename": "PanelWeb\\views\\error.ejs"
+                },
+                {
+                    "blank": 8,
+                    "code": 25,
+                    "comment": 0,
+                    "filename": "PanelWeb\\views\\index.ejs"
+                },
+                {
+                    "blank": 61,
+                    "code": 134,
+                    "comment": 0,
+                    "filename": "PanelWeb\\views\\login.ejs"
+                },
+                {
+                    "blank": 28,
+                    "code": 82,
+                    "comment": 0,
+                    "filename": "PanelWeb\\views\\test.ejs"
+                },
+                {
+                    "blank": 9,
+                    "code": 41,
+                    "comment": 0,
+                    "filename": "PanelWeb\\views\\testuser.ejs"
+                },
+                {
+                    "blank": 1,
+                    "code": 2,
+                    "comment": 0,
+                    "filename": "PanelWeb\\views\\user\\dashboard.ejs"
+                },
+                {
+                    "blank": 8,
+                    "code": 137,
+                    "comment": 0,
+                    "filename": "PanelWeb\\views\\user\\index.ejs"
+                },
+                {
+                    "blank": 2,
+                    "code": 20,
+                    "comment": 0,
+                    "filename": "PanelWeb\\views\\user\\vm.ejs"
+                },
+                {
+                    "blank": 3,
+                    "code": 11,
+                    "comment": 0,
+                    "filename": "PanelWeb\\views\\users.ejs"
+                },
+                {
+                    "blank": 2,
+                    "code": 16,
+                    "comment": 1,
+                    "filename": "README.md"
+                }
+            ]
+        }
+    ]
+}

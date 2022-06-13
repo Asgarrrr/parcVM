@@ -173,6 +173,19 @@ router.get( "/logout", auth, async ( req, res, next ) => {
 
 });
 
+
+router.get( "/settings", auth, async ( req, res, next ) => {
+
+    try {
+
+        res.render( "./admin/settings", { } );
+
+    } catch ( error ) {
+
+    }
+
+});
+
 router.get( "/mdt", auth, async ( req, res, next ) => {
 
     try {
